@@ -1,0 +1,71 @@
+<head>
+	<link rel=stylesheet href="../style/main.css" type="text/css" />
+	<script type="text/javascript" src="../js/prototype.js"></script>
+	<script type="text/javascript">
+		var bag = window.parent.task.bag;
+		var task = window.parent.task;
+		var selectedItem = 0;
+	
+		function setTab(no) {
+			document.getElementById("item"+selectedItem).className = "";
+			selectedItem = no;
+			document.getElementById("item"+selectedItem).className = "highlight";
+			var content;
+			if (selectedItem==0) {
+				content = '<h3>Notebook</h3> \
+				<textarea id="note" rows="20" cols="60" onblur="saveNote();"></textarea><br /> \
+				* Your notes will be automatically saved.<br /> \
+				';
+				document.getElementById("content").innerHTML = content;
+				document.getElementById("note").value = window.parent.task.notes;
+			} else {			
+				content = "<h3>"+bag[selectedItem-1].title + "</h3>";
+				if (bag[selectedItem-1].imgUrl!=null && bag[selectedItem-1].imgUrl!="") {
+					content += "<img src='"+bag[selectedItem-1].imgUrl + "' class='large' />";
+				}
+				if (bag[selectedItem-1].note!=null && bag[selectedItem-1].note!="") {
+					content += "<div class='note'>"+bag[selectedItem-1].note + "</div>";
+				}
+				document.getElementById("content").innerHTML = content;
+			}
+		}
+		
+		function saveNote()
+		{
+			window.parent.task.updateNotes(document.getElementById("note").value);
+		}
+		
+	</script>
+</head>
+<body>
+<center>
+	You have total [
+	<span style='color:red'>
+	<script type="text/javascript">
+		document.write(""+(bag.length+1));
+	</script>
+	</span>
+	] item(s) in your bag: 
+	<div id="menu">
+		<script type="text/javascript">
+			if (0 == selectedItem)
+				document.write('<a id="item0" href="javascript:setTab(0)" class="highlight">notebook</a> ');
+			else
+				document.write('<a id="item0" href="javascript:setTab(0)">notebook</a> ');
+		
+			for (var i = 1; i <= bag.length; i++) {
+				if (i == selectedItem)
+					document.write('<a id="item'+i+'" href="javascript:setTab('+i+')" class="highlight">'+bag[i-1].title+'</a> ');
+				else
+					document.write('<a id="item'+i+'" href="javascript:setTab('+i+')">'+bag[i-1].title+'</a> ');	
+			}
+		</script>
+	</div>
+
+<div id='content'>	
+	<script type="text/javascript">
+		setTab(selectedItem);
+	</script>
+</div>
+</center>
+</body>

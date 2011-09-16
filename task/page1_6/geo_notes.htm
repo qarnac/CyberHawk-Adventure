@@ -1,0 +1,61 @@
+<head>
+	<link rel=stylesheet href="../../style/main.css" type="text/css" />
+	<script type="text/javascript">
+	var marker = window.parent.task.closestMarker;
+	// we know this is the 1st page of the marker, so we just hardcode 1 here
+	// status 2 means the problem is solved
+	var currentPage = 2;
+	
+		function saveBook() {
+			if ( marker.getPageStatus(currentPage) != 2 ) {
+				marker.setPageStatus(currentPage, 2);				
+				window.parent.appendMessageToInfoBox("The geo note is saved to your bag. You could reference it in the 'Bag' tab. [+50 points]", "yes");
+				window.parent.task.reward(50);
+				marker.addScore(50);
+				marker.setPageStatus(currentPage, 2);	
+				window.parent.updatePageBar(currentPage);			
+				var content = document.getElementById("note_content").innerHTML;
+				
+				window.parent.task.saveItemToBag("Geo note", "", content);	
+			} else {
+				window.parent.appendMessageToInfoBox("The geo note has been saved to your bag already.", "hint");
+			}
+		}
+	</script>
+	
+</head>
+
+<body>
+<table border="0">
+<tr height="20px" valign="middle">
+	<th colspan="2">Bailey's Cabin</th>
+</tr>
+
+<tr>
+	<td width="2%"/>
+	 
+	<td>
+		<br/>
+		<div id='note_content'>
+		<p>
+It looks like a geologist left their notes about their travels through this part of the park!.  Read carefully.  You may find this information helpful for the challenges you have seen or have yet to discover. 
+		</p>
+		<br/>
+
+		<p align="left">
+		Mountains dominate this part of the park.  The mountains you are exploring are a part of the <b>Santa Rosa Mountain Range</b>.  
+		These mountains are a result of <b>colliding tectonic plates</b>. Two plates, the <b>Pacific Plate</b> and the <b>North American Plate</b>
+		still battle for space at the edge of California.  But did you know, there is a plate that no longer exists?  
+		The <b>Farallon Plate</b> was subducted under the North American Plate, and all that <b>subduction</b> caused the <b>uplift</b> of the 
+		Earth where you are now.  The material that makes these mountains are <b>igneous</b> and <b>metamorphic</b> rocks.  
+		These kinds of rocks are formed by <b>intense heat and pressure</b>.  The formation of crystals in a rock is a tell-tale sign 
+		that it is classified as metamorphic rocks.
+		</p>
+		</div>
+		<br />
+		<center><button onclick="saveBook();">Save to my bag</button></center>
+	</td>
+</tr>
+</table>
+
+</body>

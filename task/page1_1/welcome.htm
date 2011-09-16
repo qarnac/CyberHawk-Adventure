@@ -1,0 +1,86 @@
+<head>
+	<link rel=stylesheet href="../../style/main.css" type="text/css" />
+	<script type="text/javascript">
+	// void when page refresh
+
+	function saveMap()
+	{
+		var marker = window.parent.task.closestMarker;
+
+		// we know this is the 1st page of the marker, so we just hardcode 1 here
+		// status 2 means the problem is solved
+		var currentPage = 1;
+		if ( marker.getPageStatus(currentPage) != 2 ) {
+			marker.setPageStatus(currentPage, 2);
+			marker.addScore(50);
+			window.parent.appendMessageToInfoBox("The map is saved to your bag. You could reference it in the 'Bag' tab. [+50 points]", "yes");
+			window.parent.task.reward(50);
+			window.parent.updatePageBar(currentPage);
+			window.parent.task.saveItemToBag("Anza Map", "images/map.jpg", "");	
+		} else {
+			window.parent.appendMessageToInfoBox("The map has been saved to your bag already.", "hint");
+		}
+	}
+	
+	// slide show
+	var photoTitles = [
+				  "Visitor center with Indian head above",
+				  "Visitor center info board",
+				  "Visitor center door",
+				  "Visitor center inside",
+				  "Indian head mountain"];
+	var photoCount = photoTitles.length;
+	
+	var id = 0;
+	var auto = true;
+	
+	function setNextPhoto()
+	{
+		id = (++id)%photoCount;
+		var path = "images/"+(id+1)+".jpg";
+		document.getElementById("photo").src=path;
+		document.getElementById("photo_title").innerHTML = photoTitles[id];
+	}
+	
+	function setPrevPhoto()
+	{
+		--id;
+		if (id < 0) id = photoCount-1;
+		var path = "images/"+(id+1)+".jpg";
+		document.getElementById("photo").src=path;
+		document.getElementById("photo_title").innerHTML = photoTitles[id];
+	}
+	
+	function autoDemo() {
+		if (auto) {
+			setNextPhoto();
+		}
+		setTimeout("autoDemo();", 2000);
+	}
+	
+	function startAuto() {
+		auto = true;
+	}
+	
+	function stopAuto() {
+		auto = false;
+	}
+
+	</script>
+</head>
+<body onload="setTimeout('autoDemo();', 2000)">
+<center>
+<h3> Anza Borrego </h3>
+You’ve found the Visitor Center! Click on the image of the visitor center to learn more about the park. Download or view the park map for more information.
+<br />
+<Button onclick="saveMap();">Download map to my bag</Button>.
+<br />
+<h3 id="photo_title">Visitor center with Indian head above</h3>
+<img id="photo" src="images/1.jpg" class="large" /> <br />
+<button onclick="stopAuto();setPrevPhoto();">Prev</button>
+<button onclick="stopAuto();setNextPhoto();">Next</button>
+<button onclick="startAuto();">Start rolling</button>
+<button onclick="stopAuto();">Stop rolling</button>
+</center>
+</body>
+

@@ -1,0 +1,91 @@
+<head>
+	<link rel=stylesheet href="../../style/main.css" type="text/css" />
+
+	<script type="text/javascript">
+	var rewardScore = 100;
+	var correctAnswer = "B";
+
+	var marker = window.parent.task.closestMarker;
+	// hardcode page 1
+	var currentPage = 1;
+
+	function verifyAnswer()
+	{
+		var radioButtons = document.getElementsByName("select");
+		if ( marker.getPageStatus(currentPage) != 2) {
+			for (var i = 0; i < radioButtons.length; i++) {
+				if ( radioButtons[i].checked ) {
+					//alert(radioButtons[i].value);	
+					if ( radioButtons[i].value == correctAnswer ) {
+						window.parent.appendMessageToInfoBox("Correct! They are big horn sheep. [+ " + rewardScore + " points]", "yes");
+						window.parent.task.reward(rewardScore);
+						marker.addScore(rewardScore);
+						marker.setPageStatus(currentPage, 2);
+						window.parent.updatePageBar(currentPage);
+					} else {
+						window.parent.appendMessageToInfoBox("You are getting closer. Try again! ", "hint");
+						radioButtons[i].parentNode.innerHTML = "";
+						rewardScore -= 25;
+					}
+					break;
+				}
+			}
+		} else {
+			window.parent.appendMessageToInfoBox("You've answered this question", "hint");
+		}
+	}
+
+	</script>	
+</head>
+<body>
+<table border="0">
+<tr height="20px" valign="middle">
+	<th colspan="2">What Animal Is This?</th>
+</tr>
+<tr>
+	<td colspan="2" align="center">		
+		<img src="images/1.jpg" class="medium" align="center"/>
+	</td>
+</tr>
+<tr>
+	<td width="2%"/>
+	 
+	<td>
+		<p>
+			Did something on that boulder just move? Can you name these animals?
+			Click on the 'Submit' button when you have selected the correct name.
+		</p>
+		<script type="text/javascript">
+			if ( marker.getPageStatus(currentPage) != 2 ) {				
+				var content = '<form action="" method=""> \
+					<div align="left" style="font-size:12px"> \
+					<span id="selectA" > <input type="RADIO" name="select" value="A"> \
+						A. Mountain Goat <br /> \
+					</span> \
+					<span id="selectB" > <input type="RADIO" name="select" value="B"> \
+						B. Big Horn Sheep <br /> \
+					</span> \
+					<span id="selectC" > <input type="RADIO" name="select" value="C"> \
+						C. Desert Antelope <br /> \
+					</span> \
+					<span id="selectD" > <input type="RADIO" name="select" value="D"> \
+						D. Red Rock Deer <br /> \
+					</span> \
+					</div> \
+					<input type="BUTTON" onclick="verifyAnswer();" value="Submit" /> \
+				</form> \
+				';
+				document.write(content);
+			} else {
+				var content = '<br/> \
+				<center> \
+					Big Horn Sheep \
+				</center>';
+				document.write(content);			
+			}
+		</script>
+	</td>
+</tr>
+</table>
+</body>
+

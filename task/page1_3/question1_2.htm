@@ -1,0 +1,90 @@
+<head>
+<link rel=stylesheet href="../../style/main.css" type="text/css" />
+<style type="text/css">
+	#letter {font-size: 200%}
+</style>
+<script type="text/javascript">
+	var marker = window.parent.task.closestMarker;
+	var currPage = 1;
+	
+	var keywords = new Array("stripe", "stripes", "striped layer", "layers", "mineral", "minerals", "wave",
+"wavy line", "lines", "swirl", "swirls");
+
+	function verifyAnswer() {
+		var hasKeyword = false;
+		var answer = document.getElementById("textAnswer").value.toLowerCase();
+		for (var i = 0; i < keywords.length; i++) {
+			if ( answer.indexOf(keywords[i]) != -1 ) {
+				hasKeyword = true;
+				break;
+			}
+		}
+		if ( marker.getPageStatus(currPage) != 2) {
+			if ( hasKeyword ) {
+				window.parent.appendMessageToInfoBox("Nice work!  Crystals form as a result of slow cooling. [+100 points]", "yes");
+				window.parent.task.reward(100);
+				marker.addScore(100);
+				
+				marker.setPageStatus(currPage, 2);
+				window.parent.updatePageBar(currPage);
+			} else {
+				window.parent.appendMessageToInfoBox("You are very close. Try again.", "hint");
+			}
+		} else {
+			window.parent.appendMessageToInfoBox("You've answered this question", "hint");			
+		}
+	}
+
+	function prevQuestion() {
+		window.parent.document.getElementById("myframe").src="task/page1_3/question1.htm";
+		alert("if u don't alert, the new page will not show");
+	}	
+
+</script>
+</head>
+
+<body>
+<table border="0">
+<tr height="20px" valign="middle">
+	<th colspan="2">North FK Palm Canyon</th>
+</tr>
+<tr>
+	<td colspan="2" align="center">		
+		<img src="images/1-2.jpg" class="embedded" align="center"/>
+	</td>
+</tr>
+<tr>
+	<td width="2%"/>
+	 
+	<td>
+		<br/>
+		<p>
+You are looking at a picture of granite under a microscope.  How can you tell this is an igneous rock that cooled slowly inside the earth?  What do you see? Type your observations in the box.
+			<br />
+		</p>
+		<br/>
+		<div id='answerBoard'>
+		<form>
+		<center>
+			<script type="text/javascript">
+				if ( marker.getPageStatus(currPage) != 2 ) {
+					var content = '<textarea rows="1" cols="50" id="textAnswer" /></textarea> <br><br> \
+					<button onclick="verifyAnswer();return;">Submit</button> \
+					';
+					document.write(content);
+				} else {
+					document.write("Crystals form as a result of slow cooling.<br><br>");
+					//document.write('<button onclick="prevQuestion();">Previous question</button>');
+				}
+			</script>
+						
+		</center>
+		</form>
+		</div>
+	</td>
+</tr>
+</table>
+</body>
+
+
+
