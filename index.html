@@ -28,14 +28,18 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 <html>
 	<head>
 		<title>Anza Borrego Earth</title>
-		<style type="text/css">@import "stylesheets/main.css";</style>
+		<!-- link rel=stylesheet href="style/main.css" type="text/css" /-->
+		<style type="text/css">@import "style/main.css";</style>
 		<!--Google Earth API-->
-		<script src="http://www.google.com/jsapi?key=ABQIAAAAwhHeQjK0ZkFFgSoMfo3cjhS-TW2UwVlVAmzR_05yukNi-zKj5xSwxWc-qh4iJ38H90pLU7fJsSud9Q"></script>
+		<!--
+		<script src="http://www.google.com/jsapi?key=ABQIAAAAjJS31XbBbTXTCi1L37JcJhTl9s7MnzgLT3d2GCuni2bnWak-_BRvkE3J74xt9UAU79-6Tf9EPZUzQg"></script>
+		-->
+		<script src="http://www.google.com/jsapi?key=ABQIAAAANWOaKPrC7BPv8En1-4e7_RRv34DhkIv4P6E_y0Nz-udjNQaaVBSRLWoZdw_CDtI5NyEuBmfDRvBlTQ"></script>
 		<!--Google Map API
-		<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;sensor=true_or_false&amp;key=ABQIAAAAwhHeQjK0ZkFFgSoMfo3cjhS-TW2UwVlVAmzR_05yukNi-zKj5xSwxWc-qh4iJ38H90pLU7fJsSud9Q" type="text/javascript"></script>
+		<script src="http://maps.google.com/maps?file=api&v=2&key=ABQIAAAAjJS31XbBbTXTCi1L37JcJhTl9s7MnzgLT3d2GCuni2bnWak-_BRvkE3J74xt9UAU79-6Tf9EPZUzQg"></script>
 		-->
 		<script type="text/javascript" src="js/config.js"></script>
-		<script type="text/javascript" src="js/index.js"></script>
+		<script type="text/javascript" src="index.js"></script>
 
 		<!-- fix diffrences in xml readng between IE and Firefox-->
 		<script type="text/javascript" src="js/Xml.js"></script>
@@ -52,75 +56,7 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 
 		<script type="text/javascript">
 
-		function runGetTitles(){
-			downloadUrl("/getQuadrant", "POST", "", completed);
-		}		
-		
-		function completed(responseText) {
-			task = new Task(responseText);
-			task.parse();  
-
-			task.addMarkersTo(ge, gm);
-			task.start();
-
-			truck = new Truck();			
-			
-			EnableControlKeys();			
-			
-			//Ouyang: The quandrant1.xml file contains the initial position of the eagle via the first lat/long tag pair.				
-			
-			document.getElementById("response").innerHTML = responseText;
-		}		
-		
-		function downloadUrl(url, type, data, callback) {
-			var status = -1;
-			var request = createXmlHttpRequest();
-			if (!request) {
-				return false;
-			}
-
-			request.onreadystatechange = function() {
-				if (request.readyState == 4) {
-					try {
-						status = request.status;
-					} catch (e) {
-					}
-					if (status == 200) {
-						callback(request.responseText);
-						request.onreadystatechange = function() {};
-					}
-				}
-			}
-
-			request.open(type, url, true);
-
-			if (type == "POST") {
-				request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-				request.setRequestHeader("Content-length", data.length);
-				request.setRequestHeader("Connection", "close");
-			}
-
-			try {
-				request.send(data);
-			} catch (e) {
-				changeStatus(e);
-			}
-		}
-
-		function createXmlHttpRequest() {
-			try {
-				if (typeof ActiveXObject != 'undefined') {
-					return new ActiveXObject('Microsoft.XMLHTTP');
-				} else if (window["XMLHttpRequest"]) {
-					return new XMLHttpRequest();
-				}
-			} catch (e) {
-				changeStatus(e);
-			}
-			return null;
-		}
-
-			google.load("earth", "1");
+			google.load("earth", "1.x");
 			google.load("maps", "2.99");
 			
 			var ge = null;
@@ -146,7 +82,18 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 				ge.getOptions().setMouseNavigationEnabled(false);
 				ge.getOptions().setFlyToSpeed(100);
 
-				downloadUrl("/getQuadrant", "POST", "", completed);			
+				task = new Task('task/quadrant1.xml');
+				task.parse();  
+
+				task.addMarkersTo(ge, gm);
+				task.start();	
+				
+				
+				truck = new Truck();
+				
+				EnableControlKeys();
+				
+				//Ouyang: The quandrant1.xml file contains the initial position of the eagle via the first lat/long tag pair.				
 			}
 
 			function failureCallback(object) {
@@ -184,139 +131,136 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 				object.blur();
 			}
 
-		</script>
+</script>
 
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	</head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
 
-	<body onload='init();this.focus();' onunload="GUnload();">
+<body onload='init();this.focus();' onUnload="GUnload();">
 
-	<table class="main" align="center">
-		<!-- the first row is the header -->
-		<tr>
-			<td width="9" style="border-bottom: 2px solid #96C2F1"/>
-			<td height="100" colspan="4" style="border-bottom: 2px solid #96C2F1">
-				<h5 align="center">CyberHawk Adventure</h5>
-				<div class="description">
-					This adventure provides a close-up exploration of the geological features, habitats and resources located in the Anza Borrego State Park 
-					through the Google Earth browser plugin. Use keyboard controls on your computer to fly a hawk 
-					through the park region and investigate specific defined locations that contain photos, directions, clues and/or questions. 
-					Points are earned during the tour that may be printed as evidence of your visit. Have fun on your tour!
-				</div>
-			</td>
-		</tr>
-		<!-- a narrow row is added to allow gaps between the first and the second rows -->
-		<tr height="5">
-			<td colspan="5"/>
-		</tr>
+<table class="main" align="center">
+	<!-- the first row is the header -->
+	<tr>
+		<td width="9" style="border-bottom: 2px solid #96C2F1"/>
+		<td height="100" colspan="4" style="border-bottom: 2px solid #96C2F1">
+			<h5 align="center">CyberHawk Adventure</h5>
+			<div class="description">
+				This adventure provides a close-up exploration of the geological features, habitats and resources located in the Anza Borrego Desert State Park. 
+				Use the arrow keys to fly the hawk forward, backward, left, and right. Use the SPACE bar to pause the hawk when you see additional tabs show up 
+				next to the "Earth"tab. Click on the additional tabs to view photos, directions, clues and/or questions. 
+				Points are earned during the tour that may be printed as evidence of your visit. Have fun on your tour!
+			</div>
+		</td>
+	</tr>
+	<!-- a narrow row is added to allow gaps between the first and the second rows -->
+	<tr height="5">
+		<td colspan="5"/>
+	</tr>
 	
-		<!-- the second row has two columns -->
-		<tr>
-			<!-- a narrow column is added to allow gaps between the border and the first column -->
-			<td width="1%" />
-			<!-- The first column contains three sections -->
-			<td width="34%">
-				<!-- The first component is the small map -->
-				<div id="map_canvas" ></div>
-				<form>
-					<input name="ZoomLevel" type="radio" checked="true" onclick="SetZoom(this, 13)">Zoom In&nbsp;
-					<input name="ZoomLevel" type="radio" onclick="SetZoom(this, 11)">Zoom Out
-				</form>
-				<!-- The second component is the palyer information -->
-				<br />
-				<table width="100%" caption="top">
-					<caption>Player Status</caption>
-					<tr>
-						<th width="50%" align="right" font-size="10">Total Score:</th>
-						<td width="50%" align="left"><span id="playerscore">0</span> out of 700</td>
-					</tr>
-					<tr>
-						<th align="right">Time Used:</th>
-						<td align="left"><span id="playertime">0:00:00</span></td>
-					</tr>
-					<tr height="5">
-						<td colspan="2" />
-					</tr>
-				</table>
+	<!-- the second row has two columns -->
+	<tr>
+		<!-- a narrow column is added to allow gaps between the border and the first column -->
+		<td width="1%" />
+		<!-- The first column contains three sections -->
+		<td width="34%">
+			<!-- The first component is the small map -->
+			<div id="map_canvas" ></div>
+			<form>
+				<input name="ZoomLevel" type="radio" checked="true" onClick="SetZoom(this, 13)">Zoom In&nbsp;
+				<input name="ZoomLevel" type="radio" onClick="SetZoom(this, 11)">Zoom Out
+			</form>
+			<!-- The second component is the palyer information -->
+			<br />
+			<table width="100%" caption="top">
+				<caption>Player Status</caption>
+				<tr>
+					<th width="50%" align="right" font-size="10">Total Score:</th>
+					<td width="50%" align="left"><span id="playerscore">0</span> out of 700</td>
+				</tr>
+				<tr>
+					<th align="right">Time Used:</th>
+					<td align="left"><span id="playertime">0:00:00</span></td>
+				</tr>
+				<tr height="5">
+					<td colspan="2" />
+				</tr>
+			</table>
 		
-				<!-- The third section contains credits and logos -->
-				<p>
-					This project was developed through a partnership between <a href="http://www.csusm.edu/">CSUSM</a> 
-					and California State Parks' <a href="http://ports.parks.ca.gov/">PORTS</a> program as part of the <a href="http://www.csusm.edu/cyberteam">CyberTEAM</a>
-					project sponsored by NSF.
-				</p>
+			<!-- The third section contains credits and logos -->
+			<p>
+				This project was developed through a partnership between <a href="http://www.csusm.edu/">CSUSM</a> 
+				and California State Parks' <a href="http://ports.parks.ca.gov/">PORTS</a> program as part of the <a href="http://www.csusm.edu/cyberteam">CyberTEAM</a>
+				project sponsored by NSF.
+			</p>
+			<br/>
+			<p>
+				Credit...
+			</p>
+			<br/>
+			<div class="logo">
 				<br/>
-				<p>
-					Credit...
-				</p>
-				<br/>
-				<div class="logo">
-					<br/>
-					<img src="images/csusm_blue_small.gif" height="70" width="120" />
-					<img src="images/csp_tiny.jpg" height="70" width="70"/>
-					<img src="images/nsflogo_small.jpg" height="70" width="70"/>
-				</div>
-				<br/><br/><br/>
-			</td>
+				<img src="images/csusm_blue_small.gif" height="70" width="120" />
+				<img src="images/csp_tiny.jpg" height="70" width="70"/>
+				<img src="images/nsflogo_small.jpg" height="70" width="70"/>
+			</div>
+			<br/><br/><br/>
+		</td>
 		
-			<!-- a narrow column is added to allow gaps between the first and second column -->
-			<td width="1%" />
+		<!-- a narrow column is added to allow gaps between the first and second column -->
+		<td width="1%" />
 			
-			<!-- The second column is a table of two rows. -->
-			<td width="63%" valign="top" cellpadding="0">
-				<table cellpadding="0" width="100%">
-					<!-- The first row is the google earth -->
-					<tr>
-						<td>
-							<div id="pagebar">
-								<span class="page_now">Earth</span>
-							</div>
-							<div id='map3d_container' >
-								<div id='map3d' style='height: 100%;'></div>
-							</div>
-							<div id="page_container" style="display:none">
-							</div>
-						</td>
-					</tr>
+		<!-- The second column is a table of two rows. -->
+		<td width="63%" valign="top" cellpadding="0">
+			<table cellpadding="0" width="100%">
+				<!-- The first row is the google earth -->
+				<tr>
+					<td>
+						<div id="pagebar">
+							<span class="page_now">Earth</span>
+						</div>
+						<div id='map3d_container' >
+							<div id='map3d' style='height: 100%;'></div>
+						</div>
+						<div id="page_container" style="display:none">
+						</div>
+					</td>
+				</tr>
 				
-					<!-- The second row is the information section. -->
-					<tr>
-						<td>
-							<div id="info_box">
-								<div id="info_content">
-								</div>
-								<br/>
-								<!-- uncommented on June 6 -->
-								<h5>For quick stops during demo, use the following drop-down list.</h5>
-								<div id="quadrant">
-									<center>
-										<button type="button" onclick="teleportTo(document.getElementById('quickstop').value);this.blur();">Teleport to</Button>
-</Button>
-										<select name="quickstop" id="quickstop">
-											<option value="0" selected>Visitor Center</option>
-											<option value="1">Mountain Range</option>
-											<option value="2">North Fk Palm Canyon</option>
-											<option value="3">Collins Valley</option>
-											<option value="4">Sheep Canyon</option>
-											<option value="5">Bailey's Cabin</option>
-											<option value="6">Maidenhair Falls</option>
-											<option value="7">Hidden Spring</option>
-										</select>
-									</center>
-								</div>
+				<!-- The second row is the information section. -->
+				<tr>
+					<td>
+						<div id="info_box">
+							<div id="info_content">
+							</div>
+							<br/>
 							<!-- uncommented on June 6 -->
+							<h5>For quick stops during demo, use the following drop-down list.</h5>
+							<div id="quadrant">
+								<center>
+									<button type="button" onClick="teleportTo(document.getElementById('quickstop').value);this.blur();">Teleport to</Button>
+</Button>
+									<select name="quickstop" id="quickstop">
+										<option value="0" selected>Visitor Center</option>
+										<option value="1">Mountain Range</option>
+										<option value="2">North Fk Palm Canyon</option>
+										<option value="3">Collins Valley</option>
+										<option value="4">Sheep Canyon</option>
+										<option value="5">Bailey's Cabin</option>
+										<option value="6">Maidenhair Falls</option>
+										<option value="7">Hidden Spring</option>
+									</select>
+								</center>
 							</div>
-						</td>
-					</tr>
-				</table>
-				
-				<!-- End of the table in the second column of the second row. -->
-				</td>
-				<!-- a narrow column is added to allow gaps between the border and the second column -->
-				<td width="1%" />
-			</tr>
-<		</table>
-	</body>
+							<!-- uncommented on June 6 -->
+						</div>
+					</td>
+				</tr>
+			</table>
+			<!-- End of the table in the second column of the second row. -->
+		</td>
+		<!-- a narrow column is added to allow gaps between the border and the second column -->
+		<td width="1%" />
+	</tr>
+</table>
+</body>
 </html>
-
- 

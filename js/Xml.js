@@ -126,25 +126,3 @@ LoadXML = function(xmlFile)
 	}
 	return xmlDoc;
 }
-
-//load XML file and return XML object
-LoadXMLString = function(xmlString)
-{
-	var doc; 
-	
-	// code for IE
-	if (window.ActiveXObject)
-  	{
-  		doc=new ActiveXObject("Microsoft.XMLDOM");
-  		doc.async="false";
-  		doc.loadXML(xmlString);
-  	}
-	// code for Mozilla, Firefox, Opera, etc.
-	else
-  	{
-  		var parser=new DOMParser();
-  		doc=parser.parseFromString(xmlString,"text/xml");
-  	}
-	
-	return doc;
-}
