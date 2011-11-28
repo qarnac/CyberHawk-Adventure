@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0056)http://www.sohtanaka.com/web-design/examples/image-zoom/ -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<head>
+ <title>Instant Youtube</title>
+  <meta name="description" content="Plays and search youtube video instantly.! Surfs YouTube Instantly in Realtime" />
+  <meta name="keywords" content="youtube,instant,google instant,videos,videos instant,instantly,videos instantly,seedspirit,youtube instant,realtime,realtime search" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+ 
+<script type="text/javascript" src="./jq/jquery-latest.js"></script> 
+<script type="text/javascript" src="./jq/jscript.js"></script> 
+
+
+<style type="text/css">
+
+.container {
+	height:800px;
+	width:1230px;
+	
+	position:relative;
+	background-color:#FFF;
+	border-width:thick;
+	border-spacing:30px;
+
+	
+    
+}
+ul.thumb {
+	float: left;
+	list-style: none;
+	margin: 0; padding: 40px;
+	width: 360px;
+}
+ul.thumb li {
+	margin: 0; padding: 5px;
+	float: left;
+	position: relative;
+	width: 110px;
+	height: 110px;
+}
+ul.thumb li img {
+	width: 100px; height: 100px;
+	border: 1px solid #ddd;
+	padding: 5px;
+	background: #f0f0f0;
+	position: absolute;
+	left: 0; top: 0;
+	-ms-interpolation-mode: bicubic; 
+}
+ul.thumb li img.hover {
+	background:url(thumb_bg.png) no-repeat center center;
+	border: none;
+}
+#main_view {
+	float: left;
+	padding: 9px 0;
+	margin-left: 10px;
+}
+.tb11 {
+	background:#FFFFFF url(images/search.png) no-repeat 4px 4px;
+	padding:4px 4px 4px 22px;
+	border:1px solid #CCCCCC;
+	width:230px;
+	height:18px;
+}
+</style>
+
+</head>
+
+<body onload="showHint()" bgcolor="#FFFBF0">
+
+<div class="container">
+ 
+    <form> 
+	<font size="+2">&nbsp;&nbsp;&nbsp;&nbsp;Instant You</font><font face="Comic Sans MS, cursive" color="#FF0000" size="+2">Tube ~&gt;</font> 
+	  <input type="text" class="tb11" value="Far East Movement" id="sertext" onkeyup="showHint()" onchange="showHint()" size="40" height="60px" />
+      <span>&nbsp;&nbsp; sort &nbsp;&nbsp; <select name="sorter" id="sort" onChange="showHint()">
+<option value="relevance" selected="selected">Relevance</option>
+<option value="viewCount">ViewCount</option>
+<option value="published">Published</option>
+<option value="rating" >Rating</option>
+
+</select>
+	</span></form>
+    
+
+    <div id="ajax">
+    </div>
+    <div id="social" align="left" >
+<g:plusone annotation="inline"></g:plusone>
+
+<!-- Place this render call where appropriate -->
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+   <a href="https://www.facebook.com/profile.php?id=617596664" >Find me in Facebook</a>
+ <div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=210617989002570&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+<div class="fb-like" data-href="seedspirit.com" data-send="true" data-width="450" data-show-faces="true"></div>
+</div>
+</div>
+
+
+
+</body></html>

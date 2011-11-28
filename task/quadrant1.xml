@@ -28,7 +28,7 @@
 	  <longitude>-116.40678830241175</longitude>
       <icon>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</icon>
 	  <content>
-			<page_dir>./task/page1_1/</page_dir>
+			<page_dir>./task/quadrant1/page1_1/</page_dir>
 	  		<pages>
 				<page>
 					<path>welcome.htm</path>
@@ -38,6 +38,34 @@
 				<page>
 					<path>indianhead.htm</path>
 					<name>Indian Head Mountain</name>
+					<status>1</status>
+				</page>
+				<page>
+					<path>multi.htm</path>
+					<name>Himalayas Mountain</name>
+					<status>1</status>
+				</page>
+			</pages>
+	  </content>
+    </marker>
+	<marker type="question">
+      <title>Everest</title>
+	  <synopsis>Himalayas</synopsis>
+	  <latitude>33.236913416340254</latitude>
+	  <longitude>-116.38678830241175</longitude>
+      <icon>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</icon>
+	  <content>
+			<page_dir>./task/quadrant1/page1_9/</page_dir>
+	  		<pages>
+			
+				<page>
+					<path>welcome.htm</path>
+					<name>Meditation</name>
+					<status>1</status>
+				</page>
+				<page>
+					<path>multi.htm</path>
+					<name>Himalayas Mountain</name>
 					<status>1</status>
 				</page>
 			</pages>
@@ -53,7 +81,7 @@
       <longitude>-116.43086386903215</longitude>
       <icon>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</icon>
 	  <content>
-			<page_dir>./task/page1_2/</page_dir>
+			<page_dir>./task/quadrant1/page1_2/</page_dir>
 	  		<pages>		
 				<page>
 					<path>question1.htm</path>
@@ -78,7 +106,7 @@
       <longitude>-116.47093917557069</longitude>
       <icon>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</icon>
 	  <content>
-			<page_dir>./task/page1_3/</page_dir>
+			<page_dir>./task/quadrant1/page1_3/</page_dir>
 	  		<pages>
 				<page>
 					<path>question1.htm</path>
@@ -103,7 +131,7 @@
       <longitude>-116.44033418366281</longitude>
       <icon>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</icon>
 	  <content>
-			<page_dir>./task/page1_4/</page_dir>
+			<page_dir>./task/quadrant1/page1_4/</page_dir>
 	  		<pages>
 				<page>
 					<path>animals.htm</path>
@@ -123,7 +151,7 @@
       <longitude>-116.485251</longitude>
       <icon>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</icon>
 	  <content>
-			<page_dir>./task/page1_5/</page_dir>
+			<page_dir>./task/quadrant1/page1_5/</page_dir>
 	  		<pages>
 				<page>
 					<path>ident.htm</path>
@@ -143,7 +171,7 @@
       <longitude>-116.522465</longitude>
       <icon>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</icon>
 	  <content>
-			<page_dir>./task/page1_6/</page_dir>
+			<page_dir>./task/quadrant1/page1_6/</page_dir>
 	  		<pages>
 				<page>
 					<path>welcome.htm</path>
@@ -173,7 +201,7 @@
       <longitude>-116.43968353252764</longitude>
       <icon>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</icon>
 	  <content>
-			<page_dir>./task/page1_7/</page_dir>
+			<page_dir>./task/quadrant1/page1_7/</page_dir>
 	  		<pages>
 				<page>
 					<path>water.htm</path>
@@ -193,7 +221,7 @@
       <longitude>-116.387439</longitude>
       <icon>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</icon>
 	  <content>
-			<page_dir>./task/page1_8/</page_dir>
+			<page_dir>./task/quadrant1/page1_8/</page_dir>
 	  		<pages>
 				<page>
 					<path>views.htm</path>

@@ -1,0 +1,171 @@
+/*
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
+*/
+
+body {
+	margin: 0;
+	padding: 0;
+	background: #fff;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #333333;
+}
+
+
+
+
+.container {
+	height:800px;
+	width:auto;
+	margin-top:100px;
+	position:inherit;
+	 z-index:100;
+	background-color:#FFF;
+	border-width:thick;
+	border-spacing:30px;
+
+	
+    
+}
+ul.thumb {
+	float: left;
+	list-style: none;
+	margin: 0; padding: 40px;
+	width: 360px;
+}
+ul.thumb li {
+	margin: 0; padding: 5px;
+	float: left;
+	position: relative;
+	width: 110px;
+	height: 110px;
+}
+ul.thumb li img {
+	width: 100px; height: 100px;
+	border: 1px solid #ddd;
+	padding: 5px;
+	background: #f0f0f0;
+	position: absolute;
+	left: 0; top: 0;
+	-ms-interpolation-mode: bicubic; 
+}
+ul.thumb li img.hover {
+	background:url(thumb_bg.png) no-repeat center center;
+	border: none;
+}
+#main_view {
+	float: left;
+	padding: 9px 0;
+	margin-left: 10px;
+}
+.tb11 {
+	background:#FFFFFF url(images/search.png) no-repeat 4px 4px;
+	padding:4px 4px 4px 22px;
+	border:1px solid #CCCCCC;
+	width:230px;
+	height:18px;
+}
+.tb12 {
+	background:#FFFFFF ;
+	padding:4px 4px 4px 22px;
+	border:1px solid #CCCCCC;
+	width:150px;
+	height:18px;
+}
+#social{
+	margin-left:10px;
+	
+	}
+
+#new{
+	margin-top:10px;
+	
+	position:fixed;
+	border:thin;
+	 z-index:5000;
+	 background-color:#fff;
+	
+	}
+
+
+
+/* Header */
+
+#header {
+	width: 939px;
+	margin: 0 auto;
+}
+#disp
+{
+	 z-index:100;
+}
+
+
+
+
+
+/* Page */
+
+
+
+/* Content */
+
+#content {
+	float: right;
+	width: 960px;
+	
+	}
+
+
+/* Footer */
+#footer-wrap {
+	width: 1300px;
+	height: auto;
+	margin: 0 auto;
+	background: #fff;
+}
+
+#footer {
+	margin: 0 auto;
+	height: 80px;
+	min-height: 64px;
+	padding: 0;
+	text-transform: uppercase;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+html>body #footer {
+	height: auto;
+}
+
+
+
+#legal {
+	clear: both;
+	padding-top: 30px;
+	
+	color: #000000;
+}
+
+#legal a {
+	text-decoration: none;
+	color: #000000;
+}
+
+
+/* POSITIVE */button.positive, .buttons a.positive{
+    color:#529214;
+}
+.buttons a.positive:hover, button.positive:hover{
+    background-color:#E6EFC2;
+    border:1px solid #C6D880;
+    color:#529214;
+}
+.buttons a.positive:active{
+    background-color:#529214;
+    border:1px solid #529214;
+    color:#fff;
+}

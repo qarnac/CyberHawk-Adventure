@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">
+
+  <Folder>
+    <name>HIMALAYAS</name>
+    <description>Created with
+      <a href="http://sketchup.google.com"> Google SketchUp</a>
+    </description>
+    <visibility>1</visibility>
+    <LookAt>
+      <heading>26.91965100057</heading>
+      <tilt>52.04598564176</tilt>
+     <latitude>33.236913416340254</latitude>
+	  <longitude>-116.38678830241175</longitude>
+      <range>215.9753446486</range>
+      <altitude>122.0812738201</altitude>
+    </LookAt>
+    <Folder>
+      <name>Tour</name>
+      <Placemark>
+        <name>Scene 1</name>
+        <visibility>1</visibility>
+        <LookAt>
+          <heading>26.91965100057</heading>
+          <tilt>52.04598564176</tilt>
+          <latitude>33.236913416340254</latitude>
+	  <longitude>-116.38678830241175</longitude>
+     <range>215.9753446486</range>
+          <altitude>122.0812738201</altitude>
+        </LookAt>
+      </Placemark>
+    </Folder>
+    <Placemark>
+      <name>Model</name>
+      <description></description>
+      <Style id="default"/>
+      <Model>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <Location>
+         <latitude>33.236913416340254</latitude>
+	  <longitude>-116.38678830241175</longitude>
+      <altitude>0</altitude>
+        </Location>
+        <Orientation>
+          <heading>0.3255016664287</heading>
+          <tilt>0</tilt>
+          <roll>0</roll>
+        </Orientation>
+        <Scale>
+          <x>1</x>
+          <y>1</y>
+          <z>1</z>
+        </Scale>
+        <Link>
+          <href>models/untitled.dae</href>
+        </Link>
+      </Model>
+    </Placemark>
+  </Folder>
+
+</kml>

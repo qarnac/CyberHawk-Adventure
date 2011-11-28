@@ -53,11 +53,13 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 		<script type="text/javascript" src="js/SideMap.js"></script>
 		<script type="text/javascript" src="js/AnzaMarker.js"></script>
 		<script type="text/javascript" src="js/Task.js"></script>
-
+		<script type="text/javascript" src="js/ajax.js"></script>
+		
 		<script type="text/javascript">
 
 			google.load("earth", "1.x");
 			google.load("maps", "2.99");
+	
 			
 			var ge = null;
 			var gm = null;
@@ -65,13 +67,44 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 			var truck = null;
 			var task = null;
 			var sideMap = null;
+			function tele()
+			{
+				var id=document.getElementById("quadrant").value;
+				if(id=="00")
+				{
+					document.getElementById("quickstop").innerHTML="";
+				}
+				else if(id=="10")
+				{
+					document.getElementById("quickstop").innerHTML="<option value='0' selected>Visitor Center</option><option value='1'>Mountain Range</option><option value='2'>North Fk Palm Canyon</option><option value='3'>Collins Valley</option><option value='4'>Sheep Canyon</option><option value='5'>Bailey's Cabin</option><option value='6'>Maidenhair Falls</option><option value='7'>Hidden Spring</option>";
+				}
+				else if(id=="20")
+				{
+								document.getElementById("quickstop").innerHTML="<option value='0' selected>Raibow wash</option><option value='1'>Seventeen Palms</option><option value='2'>Vista del malpais</option><option value='3'>The Slot</option><option value='4'>Ant Hill</option><option value='5'>Clark Dry Lake</option><option value='6'>Rattlesnake Spring</option><option value='7'>Villager Peak</option><option value='8'>Calcite mine</option><option value='9'>OWSVRA</option>";
+								}
+				else if(id=="30")
+				{
+								document.getElementById("quickstop").innerHTML="<option value='0' selected>Elephant Knees</option><option value='1'>Anticle / landslide</option><option value='2'>Diablo Dropoff</option><option value='3'>Wind caves</option><option value='4'>Lycium wash</option><option value='5'>US Gypsum Mine</option><option value='6'>Lake Cahuilla shoreline</option><option value='7'>Carrizo Stage Station</option><option value='8'>Strontium/Celestite Mine</option>";
+					}
+				else if(id=="40")
+				{
+								document.getElementById("quickstop").innerHTML="<option value='0' selected>Red Hill</option><option value='1'>Agua Caliente</option><option value='2'>Bow Willow</option><option value='3'>Egg Mountain</option><option value='4'>Mud Caves</option><option value='5'>Mtn Palm/Mary's Grove</option><option value='6'>Stromatolites</option><option value='7'>G0at Canyon Trestle</option><option value='8'>Dolomite Mine</option>";
+					}
+						
+			
+			}
 
 			function init() {
 				if (GBrowserIsCompatible()) {
 					gm = new GMap2(document.getElementById("map_canvas"));
 					sideMap = new SideMap(gm);
 				}
-				google.earth.createInstance("map3d", initCallback, failureCallback);
+				
+				document.getElementById("map3d").innerHTML=""
+				document.getElementById("tele").focus();
+				tele();
+								google.earth.createInstance("map3d", initCallback, failureCallback);
+				
 			}
 
 			function initCallback(object) {
@@ -81,8 +114,10 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 				//added by Ouyang per Curtis' suggestion
 				ge.getOptions().setMouseNavigationEnabled(false);
 				ge.getOptions().setFlyToSpeed(100);
-
-				task = new Task('task/quadrant1.xml');
+				var id=document.getElementById("quadrant").value;
+				if(id!="00")
+				{
+				task = new Task('php/generate.php?q='+id);
 				task.parse();  
 
 				task.addMarkersTo(ge, gm);
@@ -92,6 +127,10 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 				truck = new Truck();
 				
 				EnableControlKeys();
+				}// remo();
+			
+				//task = new Task('task/quadrant1.xml');
+			
 				
 				//Ouyang: The quandrant1.xml file contains the initial position of the eagle via the first lat/long tag pair.				
 			}
@@ -136,7 +175,7 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 
-<body onload='init();this.focus();' onUnload="GUnload();">
+<body onload='init(),this.focus();' onUnload="GUnload();">
 
 <table class="main" align="center">
 	<!-- the first row is the header -->
@@ -148,7 +187,14 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 				This adventure provides a close-up exploration of the geological features, habitats and resources located in the Anza Borrego Desert State Park. 
 				Use the arrow keys to fly the hawk forward, backward, left, and right. Use the SPACE bar to pause the hawk when you see additional tabs show up 
 				next to the "Earth"tab. Click on the additional tabs to view photos, directions, clues and/or questions. 
-				Points are earned during the tour that may be printed as evidence of your visit. Have fun on your tour!
+				Points are earned during the tour that may be printed as evidence of your visit. Have fun on your tour!<div id="ajax">	Select one : <select name="quadrant" id="quadrant" onChange="init()" >
+										<option value="00" selected>Select Quadrant</option>
+                                        <option value="10">Coyote Canyon</option>
+                                        <option value="20">Borrego Badlands</option>
+										<option value="30">Fish Creek</option>
+										<option value="40">Volcanic Hills</option>
+										
+									</select></div>
 			</div>
 		</td>
 	</tr>
@@ -235,19 +281,11 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 							<br/>
 							<!-- uncommented on June 6 -->
 							<h5>For quick stops during demo, use the following drop-down list.</h5>
-							<div id="quadrant">
-								<center>
-									<button type="button" onClick="teleportTo(document.getElementById('quickstop').value);this.blur();">Teleport to</Button>
-</Button>
+							<div id="quadrant"><center>
+												<button type="button" id="tele" onClick="teleportTo(document.getElementById('quickstop').value);this.blur();">Teleport to</Button>
+</Button>  
 									<select name="quickstop" id="quickstop">
-										<option value="0" selected>Visitor Center</option>
-										<option value="1">Mountain Range</option>
-										<option value="2">North Fk Palm Canyon</option>
-										<option value="3">Collins Valley</option>
-										<option value="4">Sheep Canyon</option>
-										<option value="5">Bailey's Cabin</option>
-										<option value="6">Maidenhair Falls</option>
-										<option value="7">Hidden Spring</option>
+                                  
 									</select>
 								</center>
 							</div>
@@ -262,5 +300,6 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 		<td width="1%" />
 	</tr>
 </table>
+
 </body>
 </html>

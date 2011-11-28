@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>Instant Youtube</title>
+  <meta name="description" content="Plays and search youtube video instantly" />
+  <meta name="keywords" content="youtube,instant,google instant,videos,videos instant,instantly,videos instantly,seedspirit" />
+  <meta http-equiv="content-type" content="text/html; charset=windows-1252" />
+  <link rel="stylesheet" type="text/css" href="style/style.css" />
+  <script type="text/javascript">
+function showHint(str)
+{
+if (str.length==0)
+  { 
+  document.getElementById("vid").innerHTML="";
+  return;
+  }
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    document.getElementById("moni").innerHTML=xmlhttp.responseText;
+    }
+  }
+xmlhttp.open("GET","pars.php?q="+str,true);
+xmlhttp.send();
+}
+</script>
+<script type="text/javascript">       
+function replace1(str)
+{
+	alert(str);
+	document.getElementById('disp').src="http://www.youtube.com/embed/"+str+"?autoplay=1";
+}
+</script>
+</head>
+
+<body>
+  <div id="main">
+    <div id="header">
+      <div id="logo">
+        <div id="logo_text">
+          <!-- class="logo_colour", allows you to change the colour of the text---->
+          <h1><a href="index.html">Instant You<span class="logo_colour">Tube</span></a></h1>
+          <h2>Videos</h2>
+        </div>
+      </div>
+      <div id="menubar">
+        <ul id="menu">
+          <!-- put class="selected" in the li tag for the selected page - to highlight which page you're on -->
+          <li class="selected"><a href="index.html">Instant</a></li>
+         
+        </ul>
+      </div>
+    </div>
+    <div id="site_content">
+    <div id="content">
+    <span id="search">
+    <form> 
+	Search <input type="text" onkeyup="showHint(this.value)" size="20" />
+	</form>
+
+    </span>
+    </div>
+    <span id="moni">
+    </span>
+   
+    </div>
+    <div id="footer">
+ 
+      <p>Copyright &copy; SeedSpirit > </p>
+    </div>
+  </div>
+<div style="text-align: center; font-size: 0.75em;">Spirit for you <a href="http://seedspirit.com/"> Dreampowers</a>.</div></body>
+</html>
