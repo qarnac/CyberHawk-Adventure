@@ -20,8 +20,7 @@ $result=mysql_fetch_array($ques);
 	<script type="text/javascript">
 	// void when page refresh
 
-	var photoTitles = [
-				  <?php echo $result['titles'];?>];
+	var photoTitles = [<?php echo $result['titles'];?>];
 	var photoCount = photoTitles.length;
 	
 	var id = 0;
@@ -64,9 +63,11 @@ $result=mysql_fetch_array($ques);
 <body onLoad="setTimeout('autoDemo();', 2000)">
 <center>
 <h3><?php echo $result['title'];?></h3>
-<br />
+
+<?php echo $result['title2'];?>
+
 <h3 id="photo_title"><?php echo $result['description'];?></h3>
-<img id="photo" src="<?php echo $result['imagid']."1.jpg";?>" class="large" /> <br />
+<img id="photo" src="<?php echo $result['imagid']."1.jpg";?>" class="<?php echo $result['class'];?>" align="center" /> <br />
 <button onClick="stopAuto();setPrevPhoto();">Prev</button>
 <button onClick="stopAuto();setNextPhoto();">Next</button>
 <button onClick="startAuto();">Start rolling</button>

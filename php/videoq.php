@@ -66,12 +66,15 @@ $result=mysql_fetch_array($ques);
 </head>
 
 <body>
-<h1><?php echo $result['title'];?></h1>
+<h3 align="center"><?php echo $result['title'];?></h3>
 <table border="0">
 <tr>
 	<td colspan="2" align="center">
+    <?php if($result['obj']=="obj"){ ?>
     
-		<object width="425" height="250"><param name="movie" value="<?php echo $result['vsrc'];?>"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="<?php echo $result['vsrc'];?>" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="250"></embed></object>
+		<object width="425" height="250"><param name="movie" value="<?php echo $result['vsrc'];?>"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="<?php echo $result['vsrc'];?>" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="250"></embed></object><? }else { ?>
+        <iframe height="260" width="425" frameborder="0"   src="<? echo $result['vsrc'];?>"></iframe>
+        <? } ?>
 	</td>
 </tr>
 <tr>
@@ -81,12 +84,12 @@ $result=mysql_fetch_array($ques);
 		<p>
 <?php echo $result['description'];?>
 		</p>
-		<br/>
+		
 		<form>
 		<center>
 			<script type="text/javascript">
 				if ( marker.getPageStatus(currentPage) != 2 ) {
-					var content = '<textarea id="textAnswer" rows="1" cols="50"> </textarea><br/><br/><button type="button" onclick="verifyAnswer()">submit</button>';
+					var content = '<textarea id="textAnswer" rows="1" cols="50"> </textarea><br/><button type="button" onclick="verifyAnswer()">submit</button>';
 					document.write(content);
 				} else {
 					document.write("<?php echo $result['appreciate'];?>");

@@ -1,0 +1,111 @@
+<html>
+	<head>
+		<link rel=stylesheet href="style/main.css" type="text/css" />
+		<script type="text/javascript" src="../js/config.js"></script>
+		
+		<script type="text/javascript">
+
+
+			function getCertificate() {
+				var task = window.parent.task;
+				var s = "Final score is : " + task.playerScore + "\n";
+				s += "-----------------------\n";
+				var i=0;
+				for(var i in task.markers) {
+					var marker = task.markers[i];
+					s += marker.title + " : + " + marker.score + "\n";
+				}
+				s += "-----------------------\n";
+				return s;
+			}
+
+			function loadNote() {
+				document.getElementById("note").value = window.parent.task.notes;
+
+				document.getElementById("certificate").value = getCertificate();
+			}
+
+			function saveNote()
+			{
+				window.parent.task.updateNotes(document.getElementById("note").value);
+			}
+
+			function isemail(){
+				var strg = document.getElementById("email").value;
+				if(!(strg.indexOf("@")>4 && strg.indexOf(".")>1)) return false;
+				if(strg.indexOf("@",strg.indexOf("@")+1)>0)  return false;
+				var strarray=new Array("@@" , "@." , "..")
+					for(i=0;i<strarray.length;i++)
+						if(strg.indexOf(strarray[i])>0) return false;
+				for(i=0;i<strg.length;i++)
+					if(strg.substr(i,1)<="," || strg.substr(i,1)=="/" || (strg.substr(i,1)>="["&&strg.substr(i,1)<="") || strg.substr(i,1)=="`" || (strg.substr(i,1)>=":"&&strg.substr(i,1)<="?") || strg.substr(i,1)>="{") return false;
+				return true
+			}  
+
+			function isempty() {
+				var name = document.getElementById("username").value;
+				if (name == null || trim(name) == "")
+					return true;
+				else
+					return false;
+			}
+
+			// This function is for stripping leading and trailing spaces
+			function trim(str) { 
+				if (str != null) {
+					var i; 
+					for (i=0; i<str.length; i++) {
+						if (str.charAt(i)!=" ") {
+							str=str.substring(i,str.length); 
+							break;
+						} 
+					} 
+				
+					for (i=str.length-1; i>=0; i--) {
+						if (str.charAt(i)!=" ") {
+							str=str.substring(0,i+1); 
+							break;
+						} 
+					} 
+					
+					if (str.charAt(0)==" ") {
+						return ""; 
+					} else {
+						return str; 
+					}
+				}
+			}
+
+			function isvalid() {
+				if (isempty()) {
+					alert('Your name could not be empty.'); 
+					return false;
+				} 
+				if (!isemail()) { 
+					alert('Email address is invalid.'); 
+					return false;
+				}
+				return true;
+			}
+
+		</script>
+</head>
+
+<body onLoad="loadNote();">
+	<center>
+		<h5>Please use the following text area to keep notes of information that you have found while exploring. You could send the note
+			to other explorers to see and your notes may be posted on the Cyberhawk home page.</h5>
+			<form action="../task/php/sendMail.php" method='post'>
+			<textarea id="note" name="note" rows="19" cols="60" onBlur="saveNote();"></textarea><br />
+			* Your notes will be automaticly saved.<br />
+			From : <input id='username' name='username' type='text'></input>
+			To (Email): <input id='email' name='email' type='text'></input>&nbsp;
+			<input id='certificate' name='certificate' type='hidden'></input>
+			<input type="submit" value="Send!" 
+			onclick="return isvalid();"/>
+		</form>
+	</center>
+
+</body>
+</html>
+
