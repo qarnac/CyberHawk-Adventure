@@ -1,8 +1,9 @@
 
 <?php 
  //connects to databse and retrives data from table
-if(!$dbconnect = mysql_connect('localhost', 'root', 'wingrider')) {
-   echo "Connection failed to the host 'localhost'.";
+include "credentials.php";
+if(!$dbconnect = mysql_connect($host, $user, $pass)) {
+   echo "Connection failed to the host";
    exit;
 } // if
 if (!mysql_select_db('cyberhawk')) {
@@ -11,7 +12,7 @@ if (!mysql_select_db('cyberhawk')) {
 } // if
 $qid=$_REQUEST['qid'];//get realltime question id
 
-$query = "SELECT * FROM dualslide where qid=$qid";
+$query = "SELECT * FROM dualslide where qid=$qid";  // retrives necessary data
 $ques = mysql_query($query, $dbconnect);
 $result=mysql_fetch_array($ques);
 ?><head>

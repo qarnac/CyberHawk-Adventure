@@ -2,8 +2,9 @@
 
 <?php 
  //connects to databse and retrives data from table
-if(!$dbconnect = mysql_connect('localhost', 'root', 'wingrider')) {
-   echo "Connection failed to the host 'localhost'.";
+include "credentials.php";
+if(!$dbconnect = mysql_connect($host, $user, $pass)) {
+   echo "Connection failed to the host";
    exit;
 } // if
 if (!mysql_select_db('cyberhawk')) {

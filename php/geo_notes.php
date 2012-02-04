@@ -58,7 +58,12 @@ $result=mysql_fetch_array($ques);
 <?php echo $result['notes'];?>
 		</div>
 		<br />
+        <? if($result['type']=="geo") { ?>
 		<center><button onClick="saveBook();">Save to my bag</button></center>
+        <? }else { ?>
+        
+        <? }  ?>
+        
 	</td>
 </tr>
 </table>

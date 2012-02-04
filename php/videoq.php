@@ -1,8 +1,9 @@
 
 <?php 
  //connects to databse and retrives data from table
-if(!$dbconnect = mysql_connect('localhost', 'root', 'wingrider')) {
-   echo "Connection failed to the host 'localhost'.";
+include "credentials.php";
+if(!$dbconnect = mysql_connect($host, $user, $pass)) {
+   echo "Connection failed to the host";
    exit;
 } // if
 if (!mysql_select_db('cyberhawk')) {
@@ -13,6 +14,13 @@ $qid=$_REQUEST['qid'];//get realltime question id
 $query = "SELECT * FROM videoq where qid='$qid'";
 $ques = mysql_query($query, $dbconnect);
 $result=mysql_fetch_array($ques);
+if($result['type']=="matchf")
+{
+	$qid=$result['eid'];
+	$query="SELECT * FROM ".$result['type'] ." where eid='$qid'";
+	$ques=mysql_query($query);
+	$result1=mysql_fetch_array($ques);
+}
 ?>
 <head>
 	<link rel=stylesheet href="style/main.css" type="text/css" />
@@ -31,15 +39,42 @@ $result=mysql_fetch_array($ques);
 
 	function verifyAnswer()
 	{
-		var answer = document.getElementById("textAnswer").value.toLowerCase();
+		
 
 		var keywordFound = 0;	
+		<?php if($result['type']=="matchf")
+		{
+			?>
+			var user,k=0;
+		var ans=new Array(<?php echo $result1['answer']; ?>);
+		for(var i=0;i<ans.length;i++)
+		{
+			user=document.getElementById("m"+i).value;
+			
+			if(ans[i]==user)
+			{
+				
+				k++;
+			}
+		}
+
+		if(k==i)
+		{
+		keywordFound=1;
+		}
+		
+		<?php } else
+		{
+			?>
+			var answer = document.getElementById("textAnswer").value.toLowerCase();
 		for (var i = 0; i < keywords.length; i++) {
 			if ( answer.indexOf(keywords[i]) != -1 && used[i]==0 ) {
 				keywordFound++;
 				used[i] = 1;
 			}
 		}
+		
+		<? } ?>
 		
 		if ( ((marker.getPageStatus(currentPage) != 2) || (marker.getPageStatus(currentPage)==2 &&
 						solvedThisTime==true)) ) {
@@ -70,11 +105,9 @@ $result=mysql_fetch_array($ques);
 <table border="0">
 <tr>
 	<td colspan="2" align="center">
-    <?php if($result['obj']=="obj"){ ?>
-    
-		<object width="425" height="250"><param name="movie" value="<?php echo $result['vsrc'];?>"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="<?php echo $result['vsrc'];?>" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="250"></embed></object><? }else { ?>
+  <div id="obj">
         <iframe height="260" width="425" frameborder="0"   src="<? echo $result['vsrc'];?>"></iframe>
-        <? } ?>
+      </div>
 	</td>
 </tr>
 <tr>
@@ -88,14 +121,45 @@ $result=mysql_fetch_array($ques);
 		<form>
 		<center>
 			<script type="text/javascript">
+			
 				if ( marker.getPageStatus(currentPage) != 2 ) {
-					var content = '<textarea id="textAnswer" rows="1" cols="50"> </textarea><br/><button type="button" onclick="verifyAnswer()">submit</button>';
-					document.write(content);
+			
+					
+					<? if($result['type']=="matchf")
+					{ ?>
+					
+					document.write('<div id="rew"></br> </br><button type="button" onClick="spage()" >Reward </button></div>');
+				
+					
+					<? }else {
+						?>
+						var content = '<textarea id="textAnswer" rows="1" cols="50"> </textarea><br/><button type="button" onClick="verifyAnswer()">submit</button>';document.write(content);
+					<? } ?>
+					
+					
 				} else {
 					document.write("<?php echo $result['appreciate'];?>");
 				}
+						function spage()
+					{
+						document.getElementById("rew").innerHTML=""; 
+					var matcha = new Array(<?php echo $result1['matcha'];?>);
+					var matchb = new Array(<?php echo $result1['matchb'];?>);
+						var content="<table border='8'>";
+					if(matcha.length==matchb.length)
+					{
+					for(var i=0;i<matcha.length;i++)
+					{
+					content =content+"<tr><td>"+(i+1)+"."+matcha[i]+"</td><td width='10%' align='center'> <input type='text' size='1' id='m"+i+"'/> </td><td>"+matchb[i]+"</td></tr>";
+					}
+					content=content+"</table></br><p>Fill in the text box with the correct number</p></br><button type='button' onClick='verifyAnswer()'>submit</button><button type='button' onClick='window.location.reload()'>Video</button>";
+					
+					}
+					document.getElementById("obj").innerHTML=content;
+					}
 			</script>			
 		</center>
+        
 		</form>
 	</td>
 </tr>

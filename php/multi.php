@@ -1,8 +1,9 @@
 
 <?php 
  //connects to databse and retrives data from table
-if(!$dbconnect = mysql_connect('localhost', 'root', 'wingrider')) {
-   echo "Connection failed to the host 'localhost'.";
+include "credentials.php";
+if(!$dbconnect = mysql_connect($host, $user, $pass)) {
+   echo "Connection failed to the host";
    exit;
 } // if
 if (!mysql_select_db('cyberhawk')) {
@@ -19,17 +20,23 @@ $result=mysql_fetch_array($ques);
 	<link rel=stylesheet href="../../style/main.css" type="text/css" />
 
 	<script type="text/javascript">
+	function video()
+	{
+					document.getElementById("content").innerHTML="<iframe src='"+alt+"' height='230' width='450'></iframe>" ;	
+
+	}
 	var rewardScore = <?php echo $result['reward'];?>;//assigns value to reward score from database
 	var correctAnswer = "<?php echo $result['answer'] ?>";//assigns the correct answer 
 
 	var marker = window.parent.task.closestMarker;
 	// hardcode page 1
 	var currentPage = <?php echo $result['currentpage'];?>;//assigns what is current page . the arrangement of page
+	var alt="<?php echo $result['alt'];?>";
 
 	function verifyAnswer()
 	{
 		var radioButtons = document.getElementsByName("select");
-		if ( marker.getPageStatus(currentPage) != 2) {
+		if ( marker.getPageStatus(currentPage) != 2 ) {
 			for (var i = 0; i < radioButtons.length; i++) {
 				if ( radioButtons[i].checked ) {
 					//alert(radioButtons[i].value);	
@@ -39,16 +46,28 @@ $result=mysql_fetch_array($ques);
 						marker.addScore(rewardScore);
 						marker.setPageStatus(currentPage, 2);
 						window.parent.updatePageBar(currentPage);
+						window.location.reload();
 					} else {
 						window.parent.appendMessageToInfoBox("You are getting closer. Try again! ", "hint");
 						radioButtons[i].parentNode.innerHTML = "";
-						rewardScore -= 25;
+						rewardScore -=<?php echo $result['red'];?>;
+						if(radioButtons.length<2)
+						{
+						marker.setPageStatus(currentPage, 2);
+						window.parent.updatePageBar(currentPage);
+						window.parent.appendMessageToInfoBox(" <?php echo $result['hint'];?>", "hint");
+						window.location.reload();
+						
+						
+						}
 					}
 					break;
 				}
 			}
 		} else {
-			window.parent.appendMessageToInfoBox("You've answered this question", "hint");
+			window.parent.appendMessageToInfoBox("<?php echo $result['hint']?>", "hint");
+	
+
 		}
 	}
 
@@ -61,8 +80,14 @@ $result=mysql_fetch_array($ques);
     
 </tr>
 <tr>
-	<td colspan="2" align="center">		
-		<img src="<?php echo $result['img'];?>" class="medium" align="center"/> 
+	<td colspan="2" align="center">	
+    <div id ="content">	
+    <? if($result['type']=="video")
+	{ ?>
+    <iframe src="<?php echo $result['img'];?>" height="230" width="450"></iframe>
+    <? }else if($result['type']=="img") { ?>
+		<div id="img"><img src="<?php echo $result['img'];?>" class="medium" align="center"/> </div>
+        <? } ?></div>
 	</td>
 </tr>
 <tr>
@@ -87,12 +112,19 @@ foreach ($array as $i => $value)
 					</div> \<input type='BUTTON' onclick='verifyAnswer();' value='Submit' /> \</form> \	";	
 		
 				document.write(content);
-			} else {
+			} else  {
+					if(alt.length>3)
+				{
+				
+				document.write("<center><input type='BUTTON' onclick='video();' value='Video' /></center>");
+				}
 				var content = '<br/> \
 				<center> \
-					<?php echo $result[$result['answer']]?>  \
+					<?php
+					 echo $result[$result['answer']];?>  \
 				</center>';
-				document.write(content);			
+				document.write(content);
+			
 			}
 		</script>
 	</td>

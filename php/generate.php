@@ -1,8 +1,9 @@
 <?php 
-header ("Content-Type:text/xml");  
+header ("Content-Type:text/xml");  //php will act as a xml document to the client side
 
-if(!$dbconnect = mysql_connect('localhost', 'root', 'wingrider')) {
-   echo "Connection failed to the host 'localhost'.";
+include "credentials.php";
+if(!$dbconnect = mysql_connect($host, $user, $pass)) {
+   echo "Connection failed to the host";
    exit;
 } // if
 if (!mysql_select_db('cyberhawk')) {
@@ -10,13 +11,14 @@ if (!mysql_select_db('cyberhawk')) {
    exit;
 } // if
 $what=$_REQUEST['q'];
+//pulls necessar data from database
 $table_id = 'location';
 $query = "SELECT * FROM $table_id where belong=$what";
 $location = mysql_query($query, $dbconnect);
 $table_id = 'quadrants';
 $query = "SELECT * FROM $table_id where id=$what";
 $quadrants = mysql_query($query, $dbconnect);
-
+//---
 
 
 $doc=new DOMDocument('1.0');
@@ -81,10 +83,11 @@ while ($result=mysql_fetch_array($location)) {
 	$pagedir=$content->appendChild($pagedir);
 	$pages=$doc->createElement("pages");
 	$id=$result['id'];
+	// pulls all the activities
 	$table_id = 'questions';
 	$query = "SELECT * FROM $table_id where qbelong=$id";
 	$questions = mysql_query($query, $dbconnect);
-	
+	//
 	while($p=mysql_fetch_array($questions))
 	{
 		$page=$doc->createElement("page");

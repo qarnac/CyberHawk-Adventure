@@ -1,8 +1,9 @@
 
 <?php 
  //connects to databse and retrives data from table
-if(!$dbconnect = mysql_connect('localhost', 'root', 'wingrider')) {
-   echo "Connection failed to the host 'localhost'.";
+include "credentials.php";
+if(!$dbconnect = mysql_connect($host, $user, $pass)) {
+   echo "Connection failed to the host";
    exit;
 } // if
 if (!mysql_select_db('cyberhawk')) {
@@ -67,7 +68,7 @@ $result=mysql_fetch_array($ques);
 <?php echo $result['title2'];?>
 
 <h3 id="photo_title"><?php echo $result['description'];?></h3>
-<img id="photo" src="<?php echo $result['imagid']."1.jpg";?>" class="<?php echo $result['class'];?>" align="center" /> <br />
+<img id="photo" src="<?php echo $result['imagid']."1.jpg";?>" class="<?php echo $result['class'];?>" align="center" /> <br/><br/>
 <button onClick="stopAuto();setPrevPhoto();">Prev</button>
 <button onClick="stopAuto();setNextPhoto();">Next</button>
 <button onClick="startAuto();">Start rolling</button>
