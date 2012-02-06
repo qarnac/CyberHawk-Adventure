@@ -1,17 +1,20 @@
 
 <?php 
  //connects to databse and retrives data from table
-if(!$dbconnect = mysql_connect('localhost', 'root', 'wingrider')) {
-   echo "Connection failed to the host 'localhost'.";
+include "credentials.php";  //dbase credentials
+if(!$dbconnect = mysql_connect($host, $user, $pass)) {  //connects to dbase host
+   echo "Connection failed to the host";
    exit;
 } // if
-if (!mysql_select_db('cyberhawk')) {
+if (!mysql_select_db('cyberhawk')) {//selects dbase
    echo "Cannot connect to database 'test'";
    exit;
 } // if
-$qid=$_REQUEST['qid'];//get realltime question id
 
-$query = "SELECT * FROM notes where qid=$qid";
+$qid=$_REQUEST['qid']; //pulls question id from the url 
+
+  //pulls the colum from the notes table with respect to qid.
+$query = "SELECT * FROM notes where qid=$qid"; 
 $ques = mysql_query($query, $dbconnect);
 $result=mysql_fetch_array($ques);
 ?>
@@ -19,10 +22,9 @@ $result=mysql_fetch_array($ques);
 	<link rel=stylesheet href="style/main.css" type="text/css" />
 	<script type="text/javascript">
 	var marker = window.parent.task.closestMarker;
-	// we know this is the 1st page of the marker, so we just hardcode 1 here
-	// status 2 means the problem is solved
-	var currentPage = <?php echo $result['currentpage'];?>;
-	var reward=<?php echo $result['reward'];?>;
+	
+	var currentPage = <?php echo $result['currentpage'];?>;  	//pulls default page status 
+	var reward=<?php echo $result['reward'];?>;		// reward score
 	
 		function saveBook() {
 			if ( marker.getPageStatus(currentPage) != 2 ) {

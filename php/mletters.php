@@ -2,18 +2,18 @@
 
 <?php 
  //connects to databse and retrives data from table
-include "credentials.php";
-if(!$dbconnect = mysql_connect($host, $user, $pass)) {
+include "credentials.php";	 //dbase credentials
+if(!$dbconnect = mysql_connect($host, $user, $pass)) {	 //connects to dbase host
    echo "Connection failed to the host";
    exit;
 } // if
-if (!mysql_select_db('cyberhawk')) {
+if (!mysql_select_db('cyberhawk')) {	//selects dbase
    echo "Cannot connect to database 'test'";
    exit;
 } // if
-$qid=$_REQUEST['qid'];//get realltime question id
+$qid=$_REQUEST['qid'];//pulls question id from the url 
 
-$query = "SELECT * FROM mletters where qid=$qid";
+$query = "SELECT * FROM mletters where qid=$qid";   // pulls the information from the table 
 $ques = mysql_query($query, $dbconnect);
 $result=mysql_fetch_array($ques);
 ?>

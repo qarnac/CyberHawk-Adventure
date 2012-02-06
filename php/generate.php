@@ -1,17 +1,17 @@
 <?php 
 header ("Content-Type:text/xml");  //php will act as a xml document to the client side
 
-include "credentials.php";
-if(!$dbconnect = mysql_connect($host, $user, $pass)) {
+include "credentials.php";	 //dbase credentials
+if(!$dbconnect = mysql_connect($host, $user, $pass)) {	 //connects to dbase host
    echo "Connection failed to the host";
    exit;
 } // if
-if (!mysql_select_db('cyberhawk')) {
+if (!mysql_select_db('cyberhawk')) {	//selects dbase
    echo "Cannot connect to database 'test'";
    exit;
 } // if
-$what=$_REQUEST['q'];
-//pulls necessar data from database
+$what=$_REQUEST['q'];   //pulls quadrant id from the url
+//pulls necessar data from database as this document will be using information from three tables location,quadrants,questions
 $table_id = 'location';
 $query = "SELECT * FROM $table_id where belong=$what";
 $location = mysql_query($query, $dbconnect);
@@ -21,8 +21,8 @@ $quadrants = mysql_query($query, $dbconnect);
 //---
 
 
-$doc=new DOMDocument('1.0');
-$root=$doc->createElement('task');
+$doc=new DOMDocument('1.0');	//creates a new xml document
+$root=$doc->createElement('task');	
 
 //===== Quadrants =========
 $i = 0;$who=$root;

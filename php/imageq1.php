@@ -1,18 +1,19 @@
 
 <?php 
  //connects to databse and retrives data from table
-include "credentials.php";
-if(!$dbconnect = mysql_connect($host, $user, $pass)) {
+include "credentials.php";	 //dbase credentials
+if(!$dbconnect = mysql_connect($host, $user, $pass)) {	 //connects to dbase host
    echo "Connection failed to the host";
    exit;
 } // if
-if (!mysql_select_db('cyberhawk')) {
+if (!mysql_select_db('cyberhawk')) {	//selects dbase
    echo "Cannot connect to database 'test'";
    exit;
 } // if
-$qid=$_REQUEST['qid'];//get realltime question id
+$qid=$_REQUEST['qid'];//pulls question id from the url 
 
-$query = "SELECT * FROM imageq where qid=$qid";
+// retives a row that matches qid in table image q
+$query = "SELECT * FROM imageq where qid=$qid";  
 $ques = mysql_query($query, $dbconnect);
 $result=mysql_fetch_array($ques);
 ?>
@@ -21,8 +22,8 @@ $result=mysql_fetch_array($ques);
 	<script type="text/javascript">
 	var marker = window.parent.task.closestMarker;
 	// hardcode page 1
-	var currentPage = <?php echo $result['currentpage'];?> ;
-	var reward= <?php echo $result['reward'];?>;
+	var currentPage = <?php echo $result['currentpage'];?> ;//pulls default page status 
+	var reward= <?php echo $result['reward'];?>;// reward score
 	var check=0,cc=0,k=0;
 
 	function verifyAnswer()

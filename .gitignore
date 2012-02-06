@@ -2,3 +2,7 @@
 php/credentials.php
 
 .DS_Store
+
+php/.DS_Store
+
+.DS_Store
