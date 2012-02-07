@@ -1,20 +1,17 @@
 
 <?php 
- //connects to databse and retrives data from table
-include "credentials.php";	 //dbase credentials
-if(!$dbconnect = mysql_connect($host, $user, $pass)) {	 //connects to dbase host
-   echo "Connection failed to the host";
-   exit;
-} // if
-if (!mysql_select_db('cyberhawk')) {	//selects dbase
-   echo "Cannot connect to database 'test'";
-   exit;
-} // if
-$qid=$_REQUEST['qid'];//pulls question id from the url 
+/*About
+This is similar to imageq but instead of image this has a video that related to the activity.
+*/
+
+
+include "credentials.php";	 //dbase credentials + dbase connection
+
+$qid=$_REQUEST['qid'];		//pulls question id from the url 
 $query = "SELECT * FROM videoq where qid='$qid'";
 $ques = mysql_query($query, $dbconnect);
 $result=mysql_fetch_array($ques);
-if($result['type']=="matchf")
+if($result['type']=="matchf")	//has also a activity match the following
 {
 	$qid=$result['eid'];
 	$query="SELECT * FROM ".$result['type'] ." where eid='$qid'";
@@ -27,8 +24,11 @@ if($result['type']=="matchf")
 	<script type="text/javascript">
 	var marker = window.parent.task.closestMarker;
 	// hardcode page 2
-	var currentPage = <?php echo $result['currentpage'];?> ;
-	var reward= <?php echo $result['reward'];?>;
+	var currentPage = <?php echo $result['currentpage'];?> ;	
+	/* currentPage is used to set and verify the status of the current page.
+	 if the value of currrent page = 1 means user havent succedded the activity and its havent been invoked yet,where 2 means activity is already beeen completed 
+	*/
+	var reward= <?php echo $result['reward'];?>;	//reward score
 
 	var solvedThisTime = false;
 	var used = new Array();

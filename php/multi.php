@@ -1,15 +1,10 @@
 
 <?php 
- //connects to databse and retrives data from table
-include "credentials.php";	 //dbase credentials
-if(!$dbconnect = mysql_connect($host, $user, $pass)) {	 //connects to dbase host
-   echo "Connection failed to the host";
-   exit;
-} // if
-if (!mysql_select_db('cyberhawk')) {	//selects dbase
-   echo "Cannot connect to database 'test'";
-   exit;
-} // if
+/*About
+this program generates an activity with mltiple chice question and also it will be having a media like a image or video which is related to the question.
+*/
+include "credentials.php";	 //dbase credentials + dbase connection
+
 $qid=$_REQUEST['qid'];//pulls question id from the url 
 
 $query = "SELECT * FROM multiple where qid=$qid";
@@ -25,20 +20,22 @@ $result=mysql_fetch_array($ques);
 					document.getElementById("content").innerHTML="<iframe src='"+alt+"' height='230' width='450'></iframe>" ;	
 
 	}
-	var rewardScore = <?php echo $result['reward'];?>;//assigns value to reward score from database
-	var correctAnswer = "<?php echo $result['answer'] ?>";//assigns the correct answer 
+	var rewardScore = <?php echo $result['reward'];?>;		//assigns value to reward score from database
+	var correctAnswer = "<?php echo $result['answer'] ?>";	//assigns the correct answer 
 
 	var marker = window.parent.task.closestMarker;
-	// hardcode page 1
-	var currentPage = <?php echo $result['currentpage'];?>;//assigns what is current page . the arrangement of page
-	var alt="<?php echo $result['alt'];?>";
+/* currentPage is used to set and verify the status of the current page.
+	 if the value of currrent page = 1 means user havent succedded the activity and its havent been invoked yet,where 2 means activity is already beeen completed 
+	*/
+	var currentPage = <?php echo $result['currentpage'];?>;	//default currentpage status which is 1 by default 
+	var alt="<?php echo $result['alt'];?>";					//This has one more media location which is shown after finishing the activity sucessfully
 
 	function verifyAnswer()
 	{
 		var radioButtons = document.getElementsByName("select");
 		if ( marker.getPageStatus(currentPage) != 2 ) {
-			for (var i = 0; i < radioButtons.length; i++) {
-				if ( radioButtons[i].checked ) {
+			for (var i = 0; i < radioButtons.length; i++) {			
+				if ( radioButtons[i].checked ) {			
 					//alert(radioButtons[i].value);	
 					if ( radioButtons[i].value == correctAnswer ) {
 						window.parent.appendMessageToInfoBox("Correct! <?php echo $result[$result['answer']]?> . [+ " + rewardScore + " points]", "yes");//retrives the answer and prints it
@@ -50,7 +47,7 @@ $result=mysql_fetch_array($ques);
 					} else {
 						window.parent.appendMessageToInfoBox("You are getting closer. Try again! ", "hint");
 						radioButtons[i].parentNode.innerHTML = "";
-						rewardScore -=<?php echo $result['red'];?>;
+						rewardScore -=<?php echo $result['red'];?>;		//displays answer after minimum trys
 						if(radioButtons.length<2)
 						{
 						marker.setPageStatus(currentPage, 2);

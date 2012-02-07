@@ -1,15 +1,8 @@
 
 <?php 
  //connects to databse and retrives data from table
-include "credentials.php";	 //dbase credentials
-if(!$dbconnect = mysql_connect($host, $user, $pass)) {	 //connects to dbase host
-   echo "Connection failed to the host";
-   exit;
-} // if
-if (!mysql_select_db('cyberhawk')) {	//selects dbase
-   echo "Cannot connect to database 'test'";
-   exit;
-} // if
+include "credentials.php";	 //dbase credentials + dbase connection
+
 $qid=$_REQUEST['qid'];//pulls question id from the url 
 
 $query = "SELECT * FROM views where qid=$qid";

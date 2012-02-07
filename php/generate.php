@@ -1,31 +1,25 @@
 <?php 
 header ("Content-Type:text/xml");  //php will act as a xml document to the client side
+//================Database====================================
+include "credentials.php";	 //dbase credentials + dbase connection
 
-include "credentials.php";	 //dbase credentials
-if(!$dbconnect = mysql_connect($host, $user, $pass)) {	 //connects to dbase host
-   echo "Connection failed to the host";
-   exit;
-} // if
-if (!mysql_select_db('cyberhawk')) {	//selects dbase
-   echo "Cannot connect to database 'test'";
-   exit;
-} // if
 $what=$_REQUEST['q'];   //pulls quadrant id from the url
-//pulls necessar data from database as this document will be using information from three tables location,quadrants,questions
-$table_id = 'location';
+
+$table_id = 'location'; //this table has the information about the locations of each quadrant
 $query = "SELECT * FROM $table_id where belong=$what";
 $location = mysql_query($query, $dbconnect);
-$table_id = 'quadrants';
+$table_id = 'quadrants'; //this table has the information about all the quadrants
 $query = "SELECT * FROM $table_id where id=$what";
 $quadrants = mysql_query($query, $dbconnect);
-//---
 
+//=============================================================
 
-$doc=new DOMDocument('1.0');	//creates a new xml document
+$doc=new DOMDocument('1.0');	
 $root=$doc->createElement('task');	
 
 //===== Quadrants =========
-$i = 0;$who=$root;
+//this part creates the xml elements which does have all the required information about a quadrant
+$i = 0;$who=$root;  ///$i is used to keep track of how many executions happened in while loop and also create new elements at particular value of i.
 $result=mysql_fetch_array($quadrants);
 while ($i < mysql_num_fields($quadrants)-1) {
    

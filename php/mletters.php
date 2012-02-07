@@ -1,16 +1,14 @@
 
 
 <?php 
- //connects to databse and retrives data from table
-include "credentials.php";	 //dbase credentials
-if(!$dbconnect = mysql_connect($host, $user, $pass)) {	 //connects to dbase host
-   echo "Connection failed to the host";
-   exit;
-} // if
-if (!mysql_select_db('cyberhawk')) {	//selects dbase
-   echo "Cannot connect to database 'test'";
-   exit;
-} // if
+/*About
+This program creates the activity called mixed letters in which an image will be displayed and asks the user what is that in the image.
+It provides more clue by displaying the words but where its letters are mixed.
+*/
+
+
+include "credentials.php";	 //dbase credentials + dbase connection
+
 $qid=$_REQUEST['qid'];//pulls question id from the url 
 
 $query = "SELECT * FROM mletters where qid=$qid";   // pulls the information from the table 
@@ -24,14 +22,15 @@ $result=mysql_fetch_array($ques);
 </style>
 <script type="text/javascript">
 	var marker = window.parent.task.closestMarker;
-	//hardcode page 1 in the getPageStatus call because the page does not know its order related to other pages
-	var currPage = <?php echo $result['currentpage'];?>;
-var reward = <?php echo $result['reward'];?>;
-	//Ouyang: Randomize the order of letters. Automatically called every time the page is refreshed.
-	var oriletters= "<?php echo $result['origletters'];?>";
+	/* currentPage is used to set and verify the status of the current page.
+	 if the value of currrent page = 1 means user havent succedded the activity and its havent been invoked yet,where 2 means activity is already beeen completed 
+	*/
+	var currPage = <?php echo $result['currentpage'];?>;	//default currentpage status which is 1 by default 
+var reward = <?php echo $result['reward'];?>;				// reward score
+	var oriletters= "<?php echo $result['origletters'];?>"; //actual answer
 	
 	var letters =oriletters.split('');
-
+//Randomizes the arrangement of letters in the word
 	for (var i = 0; i < letters.length; i++) {
 		var pos1 = parseInt((letters.length)*Math.random());
 		var pos2 = parseInt((letters.length)*Math.random());
@@ -46,10 +45,10 @@ var reward = <?php echo $result['reward'];?>;
 		var answer = document.getElementById("textAnswer").value.toUpperCase();
 		// status 3 means the quesiton has been solved and a new question is set for player		
 		// similar to status 2, but changed a different icon in tab bar
-		if ( marker.getPageStatus(currPage) != 3) {
+		if ( marker.getPageStatus(currPage) != 2) {
 			if ( answer == oriletters ) {
 				window.parent.appendMessageToInfoBox("Nice Work.  <?php echo $result['appreciate'];?>;!", "yes");
-				marker.setPageStatus(currPage, 3);
+				marker.setPageStatus(currPage, 2);
 				marker.addScore(reward);
 				
 				window.parent.task.reward(reward);

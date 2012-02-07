@@ -1,16 +1,13 @@
 
 <?php 
- //connects to databse and retrives data from table
-include "credentials.php";	 //dbase credentials
-if(!$dbconnect = mysql_connect($host, $user, $pass)) {	 //connects to dbase host
-   echo "Connection failed to the host";
-   exit;
-} // if
-if (!mysql_select_db('cyberhawk')) {	//selects dbase
-   echo "Cannot connect to database 'test'";
-   exit;
-} // if
-$qid=$_REQUEST['qid'];//pulls question id from the url 
+/*About
+This provides an activity which shows slideshow of images with options to stop rolling,start rolling,next image,previous image;
+
+*/
+
+include "credentials.php";	 //dbase credentials + dbase connection
+
+$qid=$_REQUEST['qid'];		//pulls question id from the url 
 
 $query = "SELECT * FROM slides where qid='$qid'";
 $ques = mysql_query($query, $dbconnect);
@@ -21,11 +18,11 @@ $result=mysql_fetch_array($ques);
 	<script type="text/javascript">
 	// void when page refresh
 
-	var photoTitles = [<?php echo $result['titles'];?>];
+	var photoTitles = [<?php echo $result['titles'];?>];	//slideshow data like how many slides is identified through number of titles 
 	var photoCount = photoTitles.length;
 	
-	var id = 0;
-	var auto = true;
+	var id = 0;			//used for executinf slideshow
+	var auto = true;	// Bydefalut slideshow is set to start automatically
 	
 	function setNextPhoto()
 	{

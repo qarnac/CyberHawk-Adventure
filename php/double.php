@@ -1,38 +1,37 @@
 
 <?php 
- //connects to databse and retrives data from table
-include "credentials.php";  //dbase credentials
-if(!$dbconnect = mysql_connect($host, $user, $pass)) {  //connects to dbase host
-   echo "Connection failed to the host";
-   exit;
-} // if
-if (!mysql_select_db('cyberhawk')) {//selects dbase
-   echo "Cannot connect to database 'test'";
-   exit;
-} // if
-$qid=$_REQUEST['qid'];//get realltime question id
+ /*About
+ This double.php creates a html page that a image which can be changed by clciking on it,actually it switches between two images. 
+ To its addition it also has title ,subtitle,description which is also pulled from dbase.
+ */
+ 
+include "credentials.php";  //dbase credentials + dbase connection
 
-$query = "SELECT * FROM dualslide where qid=$qid";  // sql query to select the table for this activity
-$ques = mysql_query($query, $dbconnect);	//sends the query to the server
-$result=mysql_fetch_array($ques);	//converts to array of data
+$qid=$_REQUEST['qid'];		//pulls question id from the url 
+
+$query = "SELECT * FROM dualslide where qid=$qid";  
+$ques = mysql_query($query, $dbconnect);			//as question id is distinct it pulls only one row from table.
+$result=mysql_fetch_array($ques);	
 ?><head>
 	<link rel=stylesheet href="style/main.css" type="text/css" />
 	<script type="text/javascript">
-	// void when page refresh
-	
 	
 	var marker = window.parent.task.closestMarker;	
-	var currentPage = <?php echo $result['currentpage'];?>;		//current page status
+	
+	/* currentPage is used to set and verify the status of the current page.
+	 if the value of currrent page = 1 means user havent succedded the activity and its havent been invoked yet,where 2 means activity is already beeen completed 
+	*/
+	var currentPage = <?php echo $result['currentpage'];?>;		//default currentpage status which is 1 by default
 	if ( marker.getPageStatus(currentPage) != 2 ) {
 		marker.setPageStatus(currentPage, 2);
-		window.parent.updatePageBar(currentPage);
+		window.parent.updatePageBar(currentPage);				// when the activity is suceeded this changes status of the activity to completed
 	}
 
-	var id = 0;
+	var id = 0;				 //this variable is used to switch images onclick .
 	function showOutline()
 	{
-				id = !id;
-		var path;
+				id = !id;	// id value is being changed whenever click even occurs on the image
+		var path;			//used to store the path of image
 		if ( id == 0 ) path = "<?php echo $result['img1'];?>";	//loads the img location from dbase
 		if ( id == 1 ) path = "<?php echo $result['img2'];?>";	//loads the img location from dbase
 		document.getElementById("photo").src=path;

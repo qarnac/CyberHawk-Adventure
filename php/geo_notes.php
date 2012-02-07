@@ -1,39 +1,40 @@
 
 <?php 
- //connects to databse and retrives data from table
-include "credentials.php";  //dbase credentials
-if(!$dbconnect = mysql_connect($host, $user, $pass)) {  //connects to dbase host
-   echo "Connection failed to the host";
-   exit;
-} // if
-if (!mysql_select_db('cyberhawk')) {//selects dbase
-   echo "Cannot connect to database 'test'";
-   exit;
-} // if
+/*About
+This file used to retive the notes from dbase and print it out to the user.
+This also has an additional functionality which allows the user to save this notes into their bag.
 
-$qid=$_REQUEST['qid']; //pulls question id from the url 
 
-  //pulls the colum from the notes table with respect to qid.
+*/
+include "credentials.php";  //dbase credentials + dbase connection
+
+$qid=$_REQUEST['qid'];		//pulls question id from the url 
+
+  
 $query = "SELECT * FROM notes where qid=$qid"; 
 $ques = mysql_query($query, $dbconnect);
 $result=mysql_fetch_array($ques);
+
 ?>
 <head>
 	<link rel=stylesheet href="style/main.css" type="text/css" />
 	<script type="text/javascript">
 	var marker = window.parent.task.closestMarker;
-	
-	var currentPage = <?php echo $result['currentpage'];?>;  	//pulls default page status 
+		
+	/* currentPage is used to set and verify the status of the current page.
+	 if the value of currrent page = 1 means user havent succedded the activity and its havent been invoked yet,where 2 means activity is already beeen completed 
+	*/
+	var currentPage = <?php echo $result['currentpage'];?>;  	//default currentpage status which is 1 by default 
 	var reward=<?php echo $result['reward'];?>;		// reward score
 	
 		function saveBook() {
 			if ( marker.getPageStatus(currentPage) != 2 ) {
 				marker.setPageStatus(currentPage, 2);				
-				window.parent.appendMessageToInfoBox("<?php echo $result['appreciate'];?>", "yes");
-				window.parent.task.reward(reward);
+				window.parent.appendMessageToInfoBox("<?php echo $result['appreciate'];?>", "yes"); //adds a comment to the page when the activity is completed
+				window.parent.task.reward(reward);			// provides the reward score to the user
 				marker.addScore(reward);
 				marker.setPageStatus(currentPage, 2);	
-				window.parent.updatePageBar(currentPage);			
+				window.parent.updatePageBar(currentPage);	// when the activity is suceeded this changes status of the activity to completed		
 				var content = document.getElementById("note_content").innerHTML;
 				
 				window.parent.task.saveItemToBag("Geo note", "", content);	
