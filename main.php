@@ -56,8 +56,9 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 		<script type="text/javascript" src="js/ajax.js"></script>
 		
 		<script type="text/javascript">
+			var id=<? echo $_REQUEST['q'];?>;
 
-			google.load("earth", "1.x");
+			google.load("earth", "1");
 			google.load("maps", "2.99");
 	
 			
@@ -69,12 +70,7 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 			var sideMap = null;
 			function tele()
 			{
-				var id=document.getElementById("quadrant").value;
-				if(id=="00")
-				{
-					document.getElementById("quickstop").innerHTML="";
-				}
-				else if(id=="10")
+				if(id=="10")
 				{
 					document.getElementById("quickstop").innerHTML="<option value='0' selected>Visitor Center</option><option value='1'>Mountain Range</option><option value='2'>North Fk Palm Canyon</option><option value='3'>Collins Valley</option><option value='4'>Sheep Canyon</option><option value='5'>Bailey's Cabin</option><option value='6'>Maidenhair Falls</option><option value='7'>Hidden Spring</option>";
 				}
@@ -100,7 +96,7 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 					sideMap = new SideMap(gm);
 				}
 				
-				document.getElementById("map3d").innerHTML=""
+				
 				document.getElementById("tele").focus();
 				tele();
 								google.earth.createInstance("map3d", initCallback, failureCallback);
@@ -114,9 +110,7 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 				//added by Ouyang per Curtis' suggestion
 				ge.getOptions().setMouseNavigationEnabled(false);
 				ge.getOptions().setFlyToSpeed(100);
-				var id=document.getElementById("quadrant").value;
-				if(id!="00")
-				{
+			
 				task = new Task('php/generate.php?q='+id);
 				task.parse();  
 
@@ -127,7 +121,7 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 				truck = new Truck();
 				
 				EnableControlKeys();
-				}// remo();
+		
 			
 				//task = new Task('task/quadrant1.xml');
 			
@@ -187,15 +181,7 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 				This adventure provides a close-up exploration of the geological features, habitats and resources located in the Anza Borrego Desert State Park. 
 				Use the arrow keys to fly the hawk forward, backward, left, and right. Use the SPACE bar to pause the hawk when you see additional tabs show up 
 				next to the "Earth"tab. Click on the additional tabs to view photos, directions, clues and/or questions. 
-				Points are earned during the tour that may be printed as evidence of your visit. Have fun on your tour!<div id="ajax">	Select one : <select name="quadrant" id="quadrant" onChange="init()" >
-										<option value="00" selected>Select Quadrant</option>
-                                        <option value="10">Coyote Canyon</option>
-                                        <option value="20">Borrego Badlands</option>
-										<option value="30">Fish Creek</option>
-										<option value="40">Volcanic Hills</option>
-										
-									</select></div>
-			</div>
+				Points are earned during the tour that may be printed as evidence of your visit. Have fun on your tour!
 		</td>
 	</tr>
 	<!-- a narrow row is added to allow gaps between the first and the second rows -->
