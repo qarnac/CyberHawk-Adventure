@@ -1,7 +1,7 @@
 <?php
-function sendimagetext($text) {
+function sendimagetext($text,$font_size) {
   // Set font size
-  $font_size = 4;
+  
 
   $ts=explode(" ",$text);
   $width=0;
@@ -46,6 +46,6 @@ function sendimagetext($text) {
   imagedestroy($img);
 }
 
-sendimagetext($_REQUEST['text']);
+sendimagetext($_REQUEST['text'],$_REQUEST['size']);
 ?>
 
