@@ -112,10 +112,8 @@ function addMarker()
       bounds: latLngBounds
     };
     rectangle.setOptions(rectOptions);
-	var lat=(quadrants[i][2]+quadrants[i][1])/2;
-	var lng=(quadrants[i][4]+quadrants[i][3])/2
-	malatlng=new google.maps.LatLng(lat,lng);
-attach(rectangle,i,malatlng);
+
+attach(rectangle,i);
 	}
 
 	
@@ -126,7 +124,7 @@ attach(rectangle,i,malatlng);
  var image = 'images/img.php?text='+quadrants[number][0]+'&size=4';
  
   var beachMarker = new google.maps.Marker({
-      position: loc,
+      position: (marker.getBounds()).getCenter(),
       map: map,
       icon: image
   });

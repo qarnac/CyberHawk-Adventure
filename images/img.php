@@ -18,8 +18,11 @@ function sendimagetext($text,$font_size) {
   // Create the image pallette
   $img = imagecreatetruecolor($width,$height);
   // Dark red background
-  $bg = imagecolorallocate($img, 255, 0, 0);
-  imagefilledrectangle($img, 0, 0,$width ,$height , $bg);
+ // $bg = imagecolorallocate($img, 255, 0, 0);
+ // imagefilledrectangle($img, 0, 0,$width ,$height , $bg);
+imagesavealpha($img, true);
+$trans_colour = imagecolorallocatealpha($img, 0, 0, 0, 127);
+imagefill($img, 0, 0, $trans_colour);
   // White font color
   $color = imagecolorallocate($img, 255, 255, 255);
 

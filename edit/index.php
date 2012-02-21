@@ -10,33 +10,53 @@ $quadrants = mysql_query($query, $dbconnect);
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <style type="text/css">
-        html { height: 100% }
-  body { height: 100%; margin: 0; background-color:#222 }
-      #map_canvas { height:420px;width:600px;
-	  margin-top:30px;
-	  padding-left:160px;
-	  padding-right:160px;
-	
+    
+	html { height: 100% }
+  
+  	body { height: 100%; margin: 0; background-color:#222 }
+    
+	#map_canvas { height:420px;width:600px;
+		  margin-top:30px;
+		  padding-left:160px;
+		  padding-right:160px;
 	   }
-	   .text1{
+	.text1{
 		   color:#E9E9E9;
 		   padding:10px;
 		   text-align:left;
 		   }
-	   .text{
+	.text{
 		   color:#1E1E1E;
 		   padding:10px;
 		   text-align:right;
 		   }
-	   #example {
-	width:920px;
-	height:100px;
-	-moz-border-radius: 15px;
-border-radius: 15px;
-	background:url(../images/head.jpg);}
-	   #wrapper { width:920px; margin:0 auto; margin-top:30px;  }
-		.maincontent { float:left; background:#fff; width:920px; }
-.style2 {background-color:#ffcccc;}
+	#example {
+		width:920px;
+		height:100px;
+		-moz-border-radius: 15px;
+		border-radius: 15px;
+		background:url(../images/head.jpg);}
+	
+	#wrapper { width:920px; margin:0 auto; margin-top:30px;  }
+	
+	.maincontent { float:left; background:#fff; width:920px; }
+	
+	.style2 {background-color:#ffcccc;}
+
+
+/* Tool tip */
+
+* {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px; }
+
+a:hover {background:#ffffff; text-decoration:none;} /*BG color is a must for IE6*/
+
+a.tooltip span {display:none; padding:2px 3px; margin-left:8px; width:150px;}
+
+a.tooltip:hover span{display:inline; position:absolute; border:1px solid #cccccc; background:#ffffff; color:#6c6c6c;}
+
+
+
+
     </style>
     <script type="text/javascript"
       src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDSwGeMX946SO8b3_sZqqAbCzM5eloG-os&sensor=false">
@@ -68,7 +88,7 @@ var map;
 rectangle = new google.maps.Rectangle();
       function initialize()
 	   {
-		   var lat=39.542035,lng=-102.052155;
+		   var lat=37.522859,lng=-98.60681;
 		
 		  
       	var myLatlng = new google.maps.LatLng(lat,lng);
@@ -146,13 +166,13 @@ function addMarker()
       fillColor: "#FF0000",
       fillOpacity: 0.35,
       map: map,
+	  clickable:false,
+	  
       bounds: latLngBounds
     };
     rectangle.setOptions(rectOptions);
-	var lat=(quadrants[i][2]+quadrants[i][1])/2;
-	var lng=(quadrants[i][4]+quadrants[i][3])/2
-	malatlng=new google.maps.LatLng(lat,lng);
-attach(rectangle,i,malatlng);
+
+attach(rectangle,i);
 	}
 
 	
@@ -162,10 +182,11 @@ attach(rectangle,i,malatlng);
  
  var image = '../images/img.php?text='+quadrants[number][0]+'&size=2';
  
-  var beachMarker = new google.maps.Marker({
-      position: loc,
+  var Marker = new google.maps.Marker({
+      position: (marker.getBounds()).getCenter(),
       map: map,
       icon: image
+	 
   });
 	
 
@@ -181,9 +202,11 @@ attach(rectangle,i,malatlng);
   <div class="text">
    <h3 >Welcome to CyberHawk</h3>
    <h4>Here you can create new quadrants,add locations and also activities .!</h4>
+   <a href="#"  class="tooltip">Help <span>Right click to create a Quadrant.Right click on the rectangle to delete it.</span></a>
   </div>
  
   </div>
+  
     <div id="map_canvas" class="maincontent" ></div>
    <div class="text1"> <h4>Min range</h4>
     <h4 id="min"></h4>
