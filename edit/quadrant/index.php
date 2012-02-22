@@ -1,5 +1,5 @@
 <?php
-include "../php/credentials.php";
+include "../../php/credentials.php";
 $table_id = 'quadrants'; //this table has the information about all the quadrants
 $query = "SELECT * FROM $table_id ";
 $quadrants = mysql_query($query, $dbconnect);
@@ -35,7 +35,7 @@ $quadrants = mysql_query($query, $dbconnect);
 		height:100px;
 		-moz-border-radius: 15px;
 		border-radius: 15px;
-		background:url(../images/head.jpg);}
+		background:url(../../images/head.jpg);}
 	
 	#wrapper { width:920px; margin:0 auto; margin-top:30px;  }
 	
@@ -135,6 +135,11 @@ rectangle = new google.maps.Rectangle();
 	update();
 	 google.maps.event.addListener(rectangle, 'rightclick', function() {
     rectangle.setMap(null);
+	document.getElementById("minlat1").value="";
+	document.getElementById("minlng1").value="";
+	document.getElementById("maxlat1").value="";
+	document.getElementById("maxlng1").value="";
+	
   });
    google.maps.event.addListener(rectangle, 'bounds_changed', function() {
 	update();
@@ -144,8 +149,10 @@ rectangle = new google.maps.Rectangle();
 		 function update()
 		 {
 	var b=rectangle.getBounds();
-	document.getElementById("min").innerHTML=b.getNorthEast();
-	document.getElementById("max").innerHTML=b.getSouthWest();
+	document.getElementById("minlat1").value=(b.getNorthEast()).lat();
+	document.getElementById("minlng1").value=(b.getNorthEast()).lng();
+	document.getElementById("maxlat1").value=(b.getSouthWest()).lat();
+	document.getElementById("maxlng1").value=(b.getSouthWest()).lng();
 		}
 
 function addMarker()
@@ -180,7 +187,7 @@ attach(rectangle,i);
  }
  function attach(marker, number,loc) {
  
- var image = '../images/img.php?text='+quadrants[number][0]+'&size=2';
+ var image = '../../images/img.php?text='+quadrants[number][0]+'&size=2';
  
   var Marker = new google.maps.Marker({
       position: (marker.getBounds()).getCenter(),
@@ -191,6 +198,29 @@ attach(rectangle,i);
 	
 
   
+}
+//----validation
+function validateform()
+{
+	var x=[document.forms["quadrant"]["minlat"].value,document.forms["quadrant"]["minlng"].value,document.forms["quadrant"]["maxlat"].value,document.forms["quadrant"]["maxlng"].value];
+	
+	for(var i=0;i<x.length;i++)
+	{
+		if(x[i]==null || x[i] =="" || !(x[i]<0 || x[i] >0))
+		{
+			alert("please select a quadrant");
+			return false;
+			
+		}
+	}
+	var y=document.forms["quadrant"]["title"].value;
+	
+	if(y==null || y=="" || y.indexOf("<")>=0 || y.indexOf(">")>=0)
+	{
+		alert("Enter a valid title");
+		return false;
+	}
+	
 }
 
 	
@@ -208,11 +238,22 @@ attach(rectangle,i);
   </div>
   
     <div id="map_canvas" class="maincontent" ></div>
-   <div class="text1"> <h4>Min range</h4>
-    <h4 id="min"></h4>
-    <h4>Max range</h4>
-    <h4 id="max"></h4>
+    <form name="quadrant" action="../insert.php" onSubmit="return validateform()" method="post">
+   <div class="text1"> 
+   <div>
+   Min range Lat&nbsp;<input type="number" id="minlat1" name="minlat" readonly="readonly">Lng<input type="number" id="minlng1" name="minlng" readonly="readonly">
+    
+   </div>
+   <div>
+   Max range Lat<input type="number" id="maxlat1" name="maxlat" readonly="readonly">Lng<input type="number" id="maxlng1" name="maxlng" readonly="readonly">
+   </div>
+   Title <input type="text" name="title">
+   	<div>	
+    <input type="hidden" name="what" value="quadrant">
+   <input type="submit" value="Insert Quadrant"></div>
+    </form>
   </div>
   </div>
+ 
   </body>
 </html>
