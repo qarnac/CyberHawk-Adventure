@@ -95,6 +95,7 @@ rectangle = new google.maps.Rectangle();
 	  	var myOptions = {
   						zoom: 5,
   						center: myLatlng,
+						disableDoubleClickZoom:true,
 						
  						 mapTypeId: google.maps.MapTypeId.TERRAIN
 						};
@@ -150,9 +151,9 @@ rectangle = new google.maps.Rectangle();
 		 {
 	var b=rectangle.getBounds();
 	document.getElementById("minlat1").value=(b.getNorthEast()).lat();
-	document.getElementById("minlng1").value=(b.getNorthEast()).lng();
+	document.getElementById("maxlng1").value=(b.getNorthEast()).lng();
 	document.getElementById("maxlat1").value=(b.getSouthWest()).lat();
-	document.getElementById("maxlng1").value=(b.getSouthWest()).lng();
+	document.getElementById("minlng1").value=(b.getSouthWest()).lng();
 		}
 
 function addMarker()
