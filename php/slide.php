@@ -14,7 +14,7 @@ $ques = mysql_query($query, $dbconnect);
 $result=mysql_fetch_array($ques);
 ?>
 <head>
-	<link rel=stylesheet href="style/main.css" type="text/css" />
+	<link rel=stylesheet href="../style/main.css" type="text/css" />
 	<script type="text/javascript">
 	// void when page refresh
 

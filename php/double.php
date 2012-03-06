@@ -13,7 +13,7 @@ $query = "SELECT * FROM dualslide where qid=$qid";
 $ques = mysql_query($query, $dbconnect);			//as question id is distinct it pulls only one row from table.
 $result=mysql_fetch_array($ques);	
 ?><head>
-	<link rel=stylesheet href="style/main.css" type="text/css" />
+	<link rel=stylesheet href="../style/main.css" type="text/css" />
 	<script type="text/javascript">
 	
 	var marker = window.parent.task.closestMarker;	

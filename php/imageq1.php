@@ -14,7 +14,7 @@ $ques = mysql_query($query, $dbconnect);	//as question id is distinct it pulls o
 $result=mysql_fetch_array($ques);
 ?>
 <head>
-	<link rel=stylesheet href="style/main.css" type="text/css" />
+	<link rel=stylesheet href="../style/main.css" type="text/css" />
 	<script type="text/javascript">
 	var marker = window.parent.task.closestMarker;
 	// hardcode page 1

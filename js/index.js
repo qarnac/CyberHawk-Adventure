@@ -23,11 +23,6 @@ Youwen Ouyang
 It is part of the CyberTEAM project that was funded by the National Science Foundation.
 More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 */
-
-function isDynamicPage(path) {
-	return path.charAt(path.length-1) == '/';
-}
-
 // open the main page (either earth page or question page)
 // Ouyang: how could 3d sketchup model be loaded, probably in Task.js?			
 function openPage(id) {
@@ -53,21 +48,12 @@ function openPage(id) {
 		
 		var pagePath;
 		if ( id == 99) {
-			pagePath = "/task/bag.htm";
+			pagePath = "./task/bag.htm";
 		} else {
 			pagePath = task.closestMarker.getPagePath(id);
 		}		
-		
-		if (isDynamicPage(pagePath)) {
-			pagePath = "/pages/";
-			pagePath += "lat=" + task.closestMarker.lat + "&" + "lon=" + task.closestMarker.lng + "&";
-			pagePath += "page=" + id + "&";
-			pagePath += "activity=1";
-		}
-		
 		// load external question page
 		var defaultIframe='<iframe id="myframe" src="' + pagePath + '" marginwidth="0" marginheight="0" frameborder="0" vspace="0" hspace="0" class="tabcontentiframe" style="width:100%; height:100%; min-height: 100px"></iframe>'
-
 		pcDiv.innerHTML = defaultIframe;
 	}
 }

@@ -16,7 +16,7 @@ $ques = mysql_query($query, $dbconnect);
 $result=mysql_fetch_array($ques);
 ?>
 <head>
-<link rel=stylesheet href="style/main.css" type="text/css" />
+<link rel=stylesheet href="../style/main.css" type="text/css" />
 <style type="text/css">
 	#letter {font-size: 200%}
 </style>

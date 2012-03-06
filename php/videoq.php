@@ -20,7 +20,7 @@ if($result['type']=="matchf")	//has also a activity match the following
 }
 ?>
 <head>
-	<link rel=stylesheet href="style/main.css" type="text/css" />
+	<link rel=stylesheet href="../style/main.css" type="text/css" />
 	<script type="text/javascript">
 	var marker = window.parent.task.closestMarker;
 	// hardcode page 2

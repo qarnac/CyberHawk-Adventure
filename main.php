@@ -39,7 +39,7 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 		<script src="http://maps.google.com/maps?file=api&v=2&key=ABQIAAAAjJS31XbBbTXTCi1L37JcJhTl9s7MnzgLT3d2GCuni2bnWak-_BRvkE3J74xt9UAU79-6Tf9EPZUzQg"></script>
 		-->
 		<script type="text/javascript" src="js/config.js"></script>
-		<script type="text/javascript" src="index.js"></script>
+		<script type="text/javascript" src="js/index.js"></script>
 
 		<!-- fix diffrences in xml readng between IE and Firefox-->
 		<script type="text/javascript" src="js/Xml.js"></script>
@@ -53,7 +53,7 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 		<script type="text/javascript" src="js/SideMap.js"></script>
 		<script type="text/javascript" src="js/AnzaMarker.js"></script>
 		<script type="text/javascript" src="js/Task.js"></script>
-		<script type="text/javascript" src="js/ajax.js"></script>
+		
 		
 		<script type="text/javascript">
 			var id=<? echo $_REQUEST['q'];?>;
