@@ -129,7 +129,7 @@ xmlhttp.onreadystatechange=function ()
 	
     }
   }
-xmlhttp.open("GET","../ajax.php?what="+what+"&id="+id,true);
+xmlhttp.open("GET","../ajax.php?what=location&get="+what+"&id="+id,true);
 xmlhttp.send();
 
 //return location;
