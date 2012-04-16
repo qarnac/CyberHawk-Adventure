@@ -30,25 +30,25 @@ if($from==$construct)
 	else if($_GET['get']=="activity")
 	{
 		$id=mysql_real_escape_string($_GET['id']);
-		$result = mysql_query("SHOW FULL COLUMNS FROM ".$id);
+		$query = "SELECT * FROM meta WHERE tname='$id'";
+		$result = mysql_query($query,$dbconnect);
 		if (!$result) {
     		echo 'Could not run query: ' . mysql_error();
     		exit;
 		}
-		$out="g";
-		$i=0;
+		
 		if (mysql_num_rows($result) > 0) {
     		while ($row = mysql_fetch_array($result)) {
-				if($i==0)
-        		{$out="'".$row[0].",".$row['Comment']."'";
-				$i=1;}
-				else
-				$out=$out.",'".$row[0].",".$row['Comment']."'";
+				echo $row['content'];
     		}
-			echo $out;
+			
 		}
 		
-	}
+			
+			
+		}
+	
+	
 }
 
 

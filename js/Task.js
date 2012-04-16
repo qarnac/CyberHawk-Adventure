@@ -255,6 +255,8 @@ Task.prototype.parse = function()
     try
     {
 		var items = root.selectNodes("//task");
+	
+
 		this.title = GetNodeValue(items[0].selectSingleNode("title"));
 		this.synopsis = GetNodeValue(items[0].selectSingleNode("synopsis"));
 		this.level = GetNodeValue(items[0].selectSingleNode("level"));

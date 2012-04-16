@@ -11,63 +11,17 @@ $tables = mysql_list_tables($dbase,$dbconnect);
 <html>
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <style type="text/css">
+   
+<link rel="stylesheet" type="text/css" media="all" href="style.css" />
     
-	html { height: 100% }
-  
-  	body { height: 100%; margin: 0; background-color:#222 }
-    #activity
-	{
-		margin-top:10px;
-			  border-style:solid;
-border-width:2px;}
-	#map_canvas {width:880px;
-		  margin-top:30px;
-		  padding-top:30px;
-		  padding-left:20px;
-		  padding-right:20px;
-		  border-style:solid;
-border-width:5px;
-	   }
-	.text1{
-		   color:#E9E9E9;
-		   padding:10px;
-		   text-align:left;
-		   }
-	.text{
-		   color:#1E1E1E;
-		   padding:10px;
-		   text-align:right;
-		   }
-	#example {
-		width:920px;
-		height:100px;
-		-moz-border-radius: 15px;
-		border-radius: 15px;
-		background:url(../../images/head.jpg);}
-	
-	#wrapper { width:920px; margin:0 auto; margin-top:30px;  }
-	
-	.maincontent { float:left; background:#fff; width:920px; }
-	
-	.style2 {background-color:#ffcccc;}
-
-
-/* Tool tip */
-
-* {font-family:Verdana, Arial, Helvetica, sans-serif; font-size:11px; }
-
-a:hover {background:#ffffff; text-decoration:none;} /*BG color is a must for IE6*/
-
-a.tooltip span {display:none; padding:2px 3px; margin-left:8px; width:150px;}
-
-a.tooltip:hover span{display:inline; position:absolute; border:1px solid #cccccc; background:#ffffff; color:#6c6c6c;}
-
-
-
-
-    </style>
+      
+    
     <script type="text/javascript">
+	function init()
+	{
+	document.getElementById("process").style.display="none";
+	document.getElementById("darkenBackground").style.display="none";
+	}
 	<?php echo "var quadrants = [";
 $i=0;
  while($row = mysql_fetch_array($quadrants))
@@ -99,122 +53,15 @@ while($row = mysql_fetch_array($tables))
   }
   echo "];";
 
-?>
-//Ajax
-
-function ajax(id,what)
-{
-if(id!="null")
-	{
-if (window.XMLHttpRequest)
-  {// code for IE7+, Firefox, Chrome, Opera, Safari
-  xmlhttp=new XMLHttpRequest();
-  }
-else
-  {// code for IE6, IE5
-  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  }
-xmlhttp.onreadystatechange=function()
-  {
-  if (xmlhttp.readyState==4 && xmlhttp.status==200)
-    {
-		var a=xmlhttp.responseText;
-		
-		
-		
-					if(what=="location")
-		{
-			a = a.split(','); 
-			var result=[];
-
-			while(a[0]) 
-			{
-				result.push(a.splice(0,4));
-			}
-			locload(result);
-		}
-		else if(what=="activity")
-		{
-			a = a.split("','"); 
-			alert(a);
-			actload(a);
-		}
-    }
-  }
-xmlhttp.open("GET","../ajax.php?what=activity&get="+what+"&id="+id,true);
-xmlhttp.send();
-	}
-}
-//----selction
-function locload(quad)
-{
-	var loc=document.getElementById("loc");
-	if(document.getElementById("quadrant").value!="null")
-	loc.disabled=false;
-	else
-	loc.disabled=true;
-	
-	loc.options.length=1;
-	for(var i=0;i<quad.length;i++)
-	loc.options[loc.options.length]= new Option(quad[i][0], quad[i][3], false, false);
-	
-	}
-	function locsel(loc)
-	{
-		var act=document.getElementById("act");
-	if(document.getElementById("loc").value!="null")
-	act.disabled=false;
-	else
-	act.disabled=true;
-		for(var i=0;i<tables.length;i++)
-		act.options[act.options.length]= new Option(tables[i], tables[i], false, false);
-		
-	}
-	function actload(activity)
-	{
-		
-		var content="";
-		var temp;
-		for(var i=0;i<activity.length;i++)
-		{
-			temp=activity[i].split(",");
-			
-		content=content+"<div>"+temp[1]+"</div>";
-		}
-		document.getElementById("activity").innerHTML=content;
-	
-		
-	}
-    
-//----validation
-function validateform()
-{
-	var x=[document.forms["quadrant"]["minlat"].value,document.forms["quadrant"]["minlng"].value,document.forms["quadrant"]["maxlat"].value,document.forms["quadrant"]["maxlng"].value];
-	
-	for(var i=0;i<x.length;i++)
-	{
-		if(x[i]==null || x[i] =="" || !(x[i]<0 || x[i] >0))
-		{
-			alert("please select a quadrant");
-			return false;
-			
-		}
-	}
-	var y=document.forms["quadrant"]["title"].value;
-	
-	if(y==null || y=="" || y.indexOf("<")>=0 || y.indexOf(">")>=0)
-	{
-		alert("Enter a valid title");
-		return false;
-	}
-	
-}
-
-	
-    </script>
+?></script>
   </head>
-  <body onload="initialize()">
-  <div id="wrapper">
+  <body onLoad="init()" >
+
+ <div id="process" >
+   
+ </div>
+  <div id="wrapper" >
+   <div id="darkenBackground" ></div>
   <div id="example">
   <div class="text">
    <h3 >Welcome to CyberHawk</h3>
@@ -245,13 +92,20 @@ function validateform()
     </select>
 
   </div> 
-  <div id="activity">
- 
+  <div id="activity" >
+	<form class="activ" name="multiple" onsubmit="return false;"> 
+      <div  class="split" style="width:200px;"><label>Tab Title <input type="text" name="name"  c_type="text" c_req="true" /></label></div>  
+      <div class="clear"></div>
+      	<div class="cent" ><label>Title<input  type="text" name="title" value=""   c_type="text" c_req="true"/></label></div> 
+        <div class="clear"></div>                       
+         <div class="split" style="width:200px;" ><label  style="width:200px;">Media Type  <select  style="width:200px;" name="type" c_type="select" c_req="true" onChange="s_selmedia(this.value,'fileselect','f2','fileselect')">   <option value="null">Select one</option>   <option value="img">Image</option>   <option value="video">Video</option>    </select> </label>  <input  style="width:200px;" type="text" id="f2" c_type="text" name="img" c_req="false" disabled="true" onBlur="selvid(this.value)"/>   </div>      
+        <fieldset style="width:430px"> <legend>HTML File Upload</legend>  <input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="1000000" />  <div> 	<label for="fileselect">Files to upload:</label> 	<input type="file" id="fileselect" name="fileselect" disabled="true"  onChange="img_validate(this)"  accept="image/jpg,image/gif,image/jpeg,image/png"/> 	<div id="filedrag">or drop files here</div> </div>  </fieldset>   
+   <div class="split"><label>Description<textarea name="description" c_type="textarea" c_req="true" ></textarea></label></div>  <div  class="split"><label>Points Rewarded <input type="number" name="reward"  c_type="number" c_req="true" /></label></div> <div class="clear"></div>   <div class="split"><label>Choice a <input type="text" name="a" c_type="text" c_req="true" />  <input type="radio" name="answer" value="a" c_req="true"/>  </label></div>  <div  class="split"><label>Choice b <input type="text" name="b" c_type="text"  c_req="true" />  <input type="radio" name="answer" value="b" />  </label> </div>  <div  class="split"><label>Choice c <input type="text" c_type="text" name="c"/><input type="radio" name="answer" value="c" /></label>    </div>  <div  class="split"><label>Choice d <input type="text" c_type="text" name="d"/><input type="radio" name="answer" value="d" /></label></div>  <div  class="split"><label>Choice e <input type="text" c_type="text" name="e"/><input type="radio" name="answer" value="e" /></label></div>     <div  class="split"><label>Points to Deduct <input type="number" c_type="text" name="red"/></label></div>    <div  class="split"><label>Hints <input type="text" name="hint" c_type="text"/></label></div><div class="split"><label>Other media<input type="text" name="alt" c_type="text" /></label></div>     <div class="split"><input type="button" onClick="check(this.form)" c_type="text" value="Submit"/> </div></form> 
   </div>
  </div>
     
 </div>
   
- 
+ <script type="text/javascript" src="allscript.js"></script>
   </body>
 </html>

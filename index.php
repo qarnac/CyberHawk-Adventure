@@ -75,13 +75,9 @@ var map;
 		   lat=lat+0.164;
       	var myLatlng = new google.maps.LatLng(lat,lng);
 	  	var myOptions = {
-  						zoom: 9,
+  						zoom:5,
   						center: myLatlng,
-						disableDefaultUI: true,
-						disableDoubleClickZoom:true,
-						scrollwheel:false,
-						panControl: false,
-						draggable: false,
+						
  						 mapTypeId: google.maps.MapTypeId.TERRAIN
 						};
 		map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
@@ -90,6 +86,12 @@ var map;
 	
 
 	  }
+	  /*
+	  disableDefaultUI: true,
+						disableDoubleClickZoom:true,
+						scrollwheel:false,
+						panControl: false,
+						draggable: false,*/
 
 function addMarker()
  {

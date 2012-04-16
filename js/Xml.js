@@ -116,9 +116,23 @@ LoadXML = function(xmlFile)
 	}
 	else if (document.implementation&&document.implementation.createDocument)
 	{
-		xmlDoc = document.implementation.createDocument('', '', null);
+		/*xmlDoc = document.implementation.createDocument('', '', null);
 		xmlDoc.async = false;
-		xmlDoc.load(xmlFile);
+		xmlDoc.load(xmlFile);*/
+	
+  
+  xhttp=new XMLHttpRequest();
+
+  
+xhttp.open("GET",xmlFile,false);
+xhttp.send();
+xmlDoc=xhttp.responseXML;
+		
+		/*var xmlhttp = new window.XMLHttpRequest(); 
+xmlhttp.open("GET", xmlFile, false); 
+xmlhttp.send(null); 
+ xmlDoc = xmlhttp.responseXML.documentElement; */
+
 	}
 	else
 	{
