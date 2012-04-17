@@ -48,7 +48,7 @@ function openPage(id) {
 		
 		var pagePath;
 		if ( id == 99) {
-			pagePath = "./task/bag.htm";
+			pagePath = "./php/bag.htm";
 		} else {
 			pagePath = task.closestMarker.getPagePath(id);
 		}		

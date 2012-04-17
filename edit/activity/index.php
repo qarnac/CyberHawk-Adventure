@@ -93,14 +93,7 @@ while($row = mysql_fetch_array($tables))
 
   </div> 
   <div id="activity" >
-	<form class="activ" name="multiple" onsubmit="return false;"> 
-      <div  class="split" style="width:200px;"><label>Tab Title <input type="text" name="name"  c_type="text" c_req="true" /></label></div>  
-      <div class="clear"></div>
-      	<div class="cent" ><label>Title<input  type="text" name="title" value=""   c_type="text" c_req="true"/></label></div> 
-        <div class="clear"></div>                       
-         <div class="split" style="width:200px;" ><label  style="width:200px;">Media Type  <select  style="width:200px;" name="type" c_type="select" c_req="true" onChange="s_selmedia(this.value,'fileselect','f2','fileselect')">   <option value="null">Select one</option>   <option value="img">Image</option>   <option value="video">Video</option>    </select> </label>  <input  style="width:200px;" type="text" id="f2" c_type="text" name="img" c_req="false" disabled="true" onBlur="selvid(this.value)"/>   </div>      
-        <fieldset style="width:430px"> <legend>HTML File Upload</legend>  <input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="1000000" />  <div> 	<label for="fileselect">Files to upload:</label> 	<input type="file" id="fileselect" name="fileselect" disabled="true"  onChange="img_validate(this)"  accept="image/jpg,image/gif,image/jpeg,image/png"/> 	<div id="filedrag">or drop files here</div> </div>  </fieldset>   
-   <div class="split"><label>Description<textarea name="description" c_type="textarea" c_req="true" ></textarea></label></div>  <div  class="split"><label>Points Rewarded <input type="number" name="reward"  c_type="number" c_req="true" /></label></div> <div class="clear"></div>   <div class="split"><label>Choice a <input type="text" name="a" c_type="text" c_req="true" />  <input type="radio" name="answer" value="a" c_req="true"/>  </label></div>  <div  class="split"><label>Choice b <input type="text" name="b" c_type="text"  c_req="true" />  <input type="radio" name="answer" value="b" />  </label> </div>  <div  class="split"><label>Choice c <input type="text" c_type="text" name="c"/><input type="radio" name="answer" value="c" /></label>    </div>  <div  class="split"><label>Choice d <input type="text" c_type="text" name="d"/><input type="radio" name="answer" value="d" /></label></div>  <div  class="split"><label>Choice e <input type="text" c_type="text" name="e"/><input type="radio" name="answer" value="e" /></label></div>     <div  class="split"><label>Points to Deduct <input type="number" c_type="text" name="red"/></label></div>    <div  class="split"><label>Hints <input type="text" name="hint" c_type="text"/></label></div><div class="split"><label>Other media<input type="text" name="alt" c_type="text" /></label></div>     <div class="split"><input type="button" onClick="check(this.form)" c_type="text" value="Submit"/> </div></form> 
+
   </div>
  </div>
     

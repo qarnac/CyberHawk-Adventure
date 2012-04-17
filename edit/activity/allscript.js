@@ -374,7 +374,7 @@ function cleardrag()
 
 	// file selection
 	function FileSelectHandler(e) {
-		alert(this.id);
+		
 		if($id("fileselect").disabled==false)
 		{
 		cleardrag();
@@ -410,6 +410,7 @@ function cleardrag()
 		}
 		else
 		{alert("please select a media type as image to drop image");}
+		return false;
 	}
 
 

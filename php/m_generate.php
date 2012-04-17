@@ -34,7 +34,7 @@ $x_locations=$doc->createElement('Locations');
 	{
 		if($location['belong']==$quadrant['id'])
 		{
-			$x_location=$doc->createElement('location');
+			$x_location=$doc->createElement('Location');
 			$x_location->appendChild($doc->createElement('Name',$location['title']));
 			$x_location->appendChild($doc->createElement('Latitude',$location['latitude']));
 			$x_location->appendChild($doc->createElement('Longitude',$location['longitude']));

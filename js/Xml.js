@@ -91,7 +91,7 @@ if(document.implementation && document.implementation.createDocument)
 	   }
 	}
 }
-
+/* Need to be deleted
 function getText(oNode) {
     var sText = "";
     for (var i = 0; i < oNode.childNodes.length; i++) {
@@ -102,8 +102,7 @@ function getText(oNode) {
        }
     }
     return sText;
-}
-
+}*/
 // load XML file and return XML object
 LoadXML = function(xmlFile)
 {
