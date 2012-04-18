@@ -166,7 +166,7 @@ legend
 	color: #333;
 }
 
-#filedrag
+div.filedrag 
 {
 	
 			
@@ -175,7 +175,7 @@ legend
 			width: 420px;
 			height: 280px;
 			
-	display: none;
+	
 	font-weight: bold;
 	text-align: center;
 	padding: 1em 0;
@@ -186,7 +186,7 @@ legend
 	cursor: default;
 }
 
-#filedrag.hover
+.filedrag.hover
 {
 	color: #f00;
 	border-color: #f00;
@@ -194,7 +194,7 @@ legend
 	box-shadow: inset 0 3px 4px #888;
 }
 
-#filedrag img
+.filedrag img
 {
 	width: 420px;
 			height: 280px;
