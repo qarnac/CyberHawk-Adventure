@@ -47,8 +47,16 @@ answer=" "+answer;
 			if(cc==i)
 			check=1;
 			<? } else { ?>
+			var ans=new Array(<?php echo $result['c1'];?>);
+			var i;
+			check=1;
+			for(i in ans)
+			{
+				ans[i]=ans[i].toUpperCase();
+				if(answer.indexOf(ans[i])==-1)
+				check=0;
+			}
 			
-			if ( answer.indexOf("<?php echo $result['c1'];?>") != -1 && answer.indexOf("<?php echo $result['c2'];?>") != -1 ) {check=1;}
 <? } ?>
 			// hardcode page number 2, we know this is the page 2 of the marker
 			// status 2 means question has been solved

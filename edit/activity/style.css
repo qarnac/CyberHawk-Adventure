@@ -7,6 +7,7 @@
   
   	body { height: 100%; margin: 0; background-color:#222 }
 	.split { float:left; width:46%;margin-right:20px; padding:5px; height:60px; }
+	.split1 { float:left; width:46%;margin-right:20px; padding:5px; }
     #activity
 	{
 		margin-top:10px;
@@ -80,6 +81,14 @@ border:solid 1px #aacfe4;
 width:200px;
 margin:2px 0 5px 5px;
 }
+#activity input[type="url"]{
+float:left;
+font-size:12px;
+padding:4px 2px;
+border:solid 1px #aacfe4;
+width:200px;
+margin:2px 0 5px 5px;
+}
 #activity input[type="number"]{
 float:left;
 font-size:12px;
@@ -90,7 +99,7 @@ margin:2px 0 5px 5px;
 }
 #activity input[type="button"]{
 clear:both;
-margin-left:150px;
+float:right;
 margin-bottom:50px;
 width:125px;
 height:31px;
@@ -100,6 +109,7 @@ line-height:31px;
 color:#FFFFFF;
 font-size:11px;
 font-weight:bold;
+margin-bottom:50px;
 }
 #activity textarea {
    
@@ -173,11 +183,11 @@ div.filedrag
 			
 			
 			width: 420px;
-			height: 280px;
 			
-	
+			height:280px;
 	font-weight: bold;
-	text-align: center;
+	text-align: 
+	er;
 	padding: 1em 0;
 	margin: 1em 0;
 	color: #555;
@@ -263,5 +273,14 @@ left: 0px;
 	position:fixed;
 	background-color:#CCC;
 top: 120px;
+
 	
 }
+.thumbnail
+{
+	width:100px;
+	height:80px;}
+	.minithum
+	{
+		width:80px;
+		height:60px;}

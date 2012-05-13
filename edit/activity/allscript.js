@@ -130,7 +130,7 @@ function check(c,m_exis)
 	}
 	else if(!m_exis)
 	{
-		alert("you are missing some mdeia files");
+		alert("you are missing some media files");
 	}
 }
 
@@ -143,7 +143,11 @@ function filter(obj,c)
 		for (x in s)
 			if(s[x].checked)
 			{
+				
+				if(filter(c[s[x].value],c))
 				return true;			
+				else 
+				return false;
 			}
 			return false;
 	}
@@ -173,49 +177,58 @@ function img_validate(obj)
   		}
  	} 
 }
+media=new Object();
+media.type="";
+media.count=0;
+media.inherit="";
+media.img=function(types,inher,size,img,video){this.type=types;this.inherit=inher;this.count=size;img.disabled=false;img.focus();video.disabled=true;video.setAttribute('c_req','false');};
 
+media.video=function(inher,size,img,video){this.type="video";this.inherit=inher;this.count=size;img.disabled=true;video.disabled=false;video.setAttribute('c_req','true');img.setAttribute('c_req','false');};
 
-function s_selmedia(val,img,vide,off1,off2,dest)
+media.clear=function(img,video){this.type="";this.count=0;this.inherit="";img.disabled=true;video.disabled=true;video.setAttribute('c_req','false');img.setAttribute('c_req','false');};
+function s_selmedia(val,img,video,dest)
 {
 	dest=$id(dest);
-	var img1=document.getElementById(img);
-	var video1=document.getElementById(vide);
-	video1.value="";
-	img1.file=""
-	img1.value="";
-	m_remove(dest);
-	img1.removeAttribute('c_req');
-	video1.removeAttribute('c_req');
-	if(val=="img")
+	thumb=$id("thumb");
+	 img=document.getElementById(img);
+	 video=document.getElementById(video);
+	video.value="";
+	img.file=""
+	img.value="";
+	dest.innerHTML="";
+	m_removeall();
+	img.removeAttribute('c_req');
+	video.removeAttribute('c_req');
+	if(val=="image")
 	{	
-		img1.disabled=false;
-		img1.focus();
-		video1.disabled=true;
-		img1.setAttribute('c_req','true');
-		video1.setAttribute('c_req','false');
+		media.img("image","image",1,img,video);
+		
+		thumb.style.display="none";
 	}
 	else if(val=="video")
 	{	
-		img1.disabled=true;
-		video1.disabled=false;
-		//video1.focus();
-		video1.setAttribute('c_req','true');
-		img1.setAttribute('c_req','false');
+		media.video("video",1,img,video);
+	
+		thumb.style.display="none";
+	}
+	else if(val=="slide")
+	{
+		media.img("slide","slide",40,img,video);
+		
+		thumb.style.display="block";
+	}
+	else if(val=="dbimg")
+	{
+		media.img("dbimg","slide",2,img,video);
+	
+		thumb.style.display="block";
 	}
 	else
 	{
-		img1.disabled=true;
-		video1.disabled=true;
-		video1.setAttribute('c_req','false');
-		img1.setAttribute('c_req','false');
+	media.clear(img,video);
+		
 	}
-	if(c_h5)
-	{
-		if(off1)
-			document.getElementById(off1).removeAttribute('c_req');
-		if(off2)
-			document.getElementById(off2).removeAttribute('c_req');
-	}
+
 }
 function selvid(obj,dest)
 {
@@ -239,34 +252,62 @@ function selvid(obj,dest)
 	}
 }
 
-
+function darkbg(v_bool)
+{
+	var dark=$id("darkenBackground");
+	if(v_bool)
+	{
+	dark.style.display='';
+	}
+	else
+	{
+		dark.style.display='none';
+	}
+}
+function secondlayer(v_bool,content)
+{
+	var disp=$id("process");	
+	if(v_bool)
+	{
+		darkbg(true);
+	disp.style.display='';
+	if(content!=null)
+	disp.innerHTML=disp.innerHTML+content;
+	}
+	else
+	{
+		darkbg(false);
+		disp.style.display='none';
+		
+	}
+}
 
 
 
 function up_db(c)
 {
-
-	var disp=$id("process");
-	var dark=$id("darkenBackground");
-	disp.style.display='';
-	dark.style.display='';
+	
+	secondlayer(true);
+	
 	
 	var locid=$id("loc").value;
 	keypress(false);
-	var temp="";
+	var temp="a_type="+c.name+"&";
 	var find_radio=[];
+	var form_var="";
 	
 		for(var i=0;i<c.length;i++)
 		{
 			if(c[i].name!="" && !c[i].disabled && (c[i].getAttribute("c_req")=="true" || c[i].getAttribute("c_req")=="false") )
 			{
+				form_var=form_var+"'"+c[i].name+"',";
 				if(c[i].type=="radio")
 				{
 					if(find_radio.indexOf(c[i].name)<0)
 					find_radio.push(c[i].name);
 				}
 				else
-					temp=temp+c[i].name+" "+c[i].value+"<br>";
+					temp=temp+c[i].name+"="+c[i].value+"&";
 			}
 		}
 		
@@ -280,24 +321,59 @@ function up_db(c)
 			}
 		}
 		
-		temp=temp+"<br>Location id"+locid;
-		disp.innerHTML=disp.innerHTML+temp;
 		
+		
+		temp=temp+"locid="+locid+"&";
+		
+		secondlayer(true,"Uploading Data Please Wait <br>");
 		for(var i=0;i<c_alldata.length;i++)
 		{
 			if(c_alldata[i].c_type=="file")
 				{
-					disp.innerHTML=disp.innerHTML+'<div id="progress"></div> ';
+					
+					
 					UploadFile(c_alldata[i]);
-					temp=temp+"<br>"+c_alldata[i].c_disp.id+"="+c_alldata[i].c_name;
+					temp=temp+c_alldata[i].c_disp.id+"="+c_alldata[i].c_name+"&";
+					form_var=form_var+"'"+c_alldata[i].c_disp.id+"',";
+					
 				}
 				else
 				{
-					temp=temp+"<br>"+c_alldata[i].c_disp.id+"="+c_alldata[i].c_type;
+					temp=temp+c_alldata[i].c_disp.id+"="+c_alldata[i].c_type+"&";
+					form_var=form_var+"'"+c_alldata[i].c_disp.id+"',";
 				}
 		}
+		form_var=form_var.substr(0,form_var.length-1);
+		temp=temp+"f_contents="+form_var;
+		ajax_post("dataupload.php",temp);
 	
-	
+}
+track=new Object();
+track.act=0;
+track.cur=0;
+track.finish=function(){if(this.act==this.cur){secondlayer(false);alert ("Data Uploaded");}};
+
+function ajax_post(where,content)
+{
+	var xmlhttp;
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+		secondlayer(true,"Form content Uploaded ");
+	}
+  }
+xmlhttp.open("POST",where,true);
+xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+xmlhttp.send(content);
 }
 
 //drag and drop
@@ -315,6 +391,8 @@ var c_disp=new Array();
 */
 var c_alldata=new Array();
 var c_h5=false;
+
+
 function m_at(m_id)
 {
 	if(m_location(m_id)!=-1)
@@ -323,8 +401,32 @@ function m_at(m_id)
 	}
 	
 }
-function m_add(m_data,m_url,m_type,m_disp)
+function ref_thumb()
 {
+	thum=$id("thumb");
+	
+	var t_img="";
+	var t_loc=0;
+	for(var i=0;i<c_alldata.length;i++)
+	{
+		t_loc=m_locbyd(c_alldata[i].c_url);
+		t_img=t_img+"<img src='"+c_alldata[i].c_url+"' class='thumbnail'/> <img src='img/delete-icon.png' class='minithum' onclick='m_remove("+t_loc+")'/>";
+		
+	}
+	Output(t_img,thum);
+}
+function m_add(m_data,m_url,m_type,m_disp,dis)
+{
+	if(media.inherit=="slide")
+	{
+		
+		c_alldata.push(m_objconst(m_data,m_url,m_type,m_disp));
+	if(dis)
+		ref_thumb();
+		
+	}
+	else 
+	{
 	if(m_location(m_disp)==-1)
 	{	
 		c_alldata.push(m_objconst(m_data,m_url,m_type,m_disp));
@@ -334,6 +436,8 @@ function m_add(m_data,m_url,m_type,m_disp)
 		var m_temp=m_location(m_disp);
 		c_alldata.splice(m_temp,1,m_objconst(m_data,m_url,m_type,m_disp));
 	}
+	}
+	
 }
 function m_objconst(m_data,m_url,m_type,m_disp)
 {
@@ -355,6 +459,7 @@ var i_ext=new Array("jpg","gif","jpeg","png");
 return i_ext[i_types.indexOf(i_type)];
 
 }
+
 //var c_data="null";
 //var c_url="null";
 
@@ -366,15 +471,19 @@ function m_removeall()
 		c_alldata[c_alldata.length-1].c_disp.innerHTML="";
 		c_alldata.pop();
 	}
+	 ref_thumb();
 }
 
-function m_remove(m_disp)
+function m_remove(m_id)
 {
-	if(m_location(m_disp)!=-1)
+	
+	if(m_id!=-1)
 	{
-		var m_id=m_location(m_disp);
+		
 		c_alldata[m_id].c_disp.innerHTML="";
 		c_alldata.splice(m_id,1);
+		 ref_thumb();
+
 	}
 	
 }
@@ -396,11 +505,21 @@ function m_location(m_id)
 	return i;
 	return -1;
 }
+function m_locbyd(m_Dat)
+{
+	for(var i=0;i<c_alldata.length;i++)
+	if(c_alldata[i].c_url==m_Dat)
+	return i;
+	return -1;
+}
 //end of media
 
 
 	
-
+function o_append(msg,dest)
+{
+	dest.innerHTML=dest.innerHTML+msg;
+}
 
 // output information
 function Output(msg,dest) 
@@ -422,9 +541,19 @@ function FileSelectHandler(e,file_dest,file_sel)
 		file_dest=$id(file_dest);
 		FileDragHover(e);	
 		var files = e.target.files || e.dataTransfer.files ;
-		if(files.length==1)
+		if(files.length==1 || (media.inherit=="slide" && files.length>=1))
 		{
-			ParseFile(files[0],file_dest);	
+			pars_glob=0;
+			 pars_sizeE=0;
+			var temp=media.count-c_alldata.length;
+			if(files.length<=temp)
+			temp=files.length;
+			else
+			alert("Media content is Full delete some to add new ");
+			for(var i=0;i<temp;i++)
+			ParseFile(files[i],file_dest,temp-1);	
+		
+			
 		}
 		else  
 		{			
@@ -444,15 +573,44 @@ function FileSelectHandler(e,file_dest,file_sel)
 	}
 	
 }
+function equals(x,f)
+{
+	if(x==f)
+	return true;
+	else
+	return false;
+}
 // output file information
-function ParseFile(file,dest) 
+var pars_glob=0;
+var pars_sizeE=0;
+function ParseFile(file,dest,dis) 
 {
 	// display an image
 	if (file.type.indexOf("image") == 0)
 	{
 		var reader = new FileReader();
-		reader.onload = function(e) {	Output('<img src="' + e.target.result + '" />',dest);
-										m_add(file,e.target.result,"file",dest);
+		reader.onload = function(e) {
+			if(dis==0 || pars_glob==dis)
+			{
+				
+				
+				if(file.size <= $id("MAX_FILE_SIZE").value)
+				{
+				m_add(file,e.target.result,"file",dest,true);Output('<img src="' + e.target.result + '" />',dest);}
+				else
+				{
+				pars_sizeE++;
+				ref_thumb();
+				}
+				if(pars_sizeE>0)
+				alert(pars_sizeE+" files has not been accepted because of the file size is greater than 2 mb");
+			
+			}
+			else if(file.size <= $id("MAX_FILE_SIZE").value)
+				m_add(file,e.target.result,"file",dest,false);
+			else
+			pars_sizeE++;						
+										pars_glob++;
 									 }
 		reader.readAsDataURL(file);
 	}
@@ -464,31 +622,24 @@ function ParseFile(file,dest)
 // upload JPEG files
 function UploadFile(m_obj)
 {
+	
 	var file=m_obj.c_data;	
 	var xhr = new XMLHttpRequest();
-	if (xhr.upload && (file.type == "image/jpeg" || file.type == "image/png") && file.size <= $id("MAX_FILE_SIZE").value)
-	 {
+	if (xhr.upload && (file.type == "image/jpeg" || file.type == "image/png") )
+	 {track.act++;
 		// create progress bar
-		var o = $id("progress");		
-		o.innerHTML="";
-		var progress = o.appendChild(document.createElement("p"));
-		progress.appendChild(document.createTextNode("upload " + file.name));
-		// progress bar
-		xhr.upload.addEventListener("progress", function(e) {
-				var pc = parseInt(100 - (e.loaded / e.total * 100));
-				progress.style.backgroundPosition = pc + "% 0";
-			}, false);
-		// file received/failed
+		
 		xhr.onreadystatechange = function(e) {
 					if (xhr.readyState == 4) {
 					if(xhr.status==200)
-					{
-					progress.className =  "success";
-					
+					{		
+					track.cur++;
+					track.finish();
 					
 					}
 					else
-					progress.className =  "failure";
+					{}
+					
 				}
 			};
 		// start upload
@@ -525,6 +676,7 @@ function UploadFile(m_obj)
 			filedrag.addEventListener("drop", FileSelectHandler, false);
 			filedrag.style.display = "block";
 */
+			m_removeall();
 			
 			c_h5=true;
 		}
