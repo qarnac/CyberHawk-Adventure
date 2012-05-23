@@ -37,6 +37,7 @@ if($from==$construct)
   			{
   				die('Error: ' . mysql_error());
   			}
+			header("Location: $from");
    			echo "sucess";
 		}
 		mysql_close($dbconnect);

@@ -1,16 +1,13 @@
-
+//uniq value to this user to avoid overlapping data with different user
+var uniq=Math.floor((Math.random()*100)+1);
 //keypress control
 	var k_press=true;
+	
 	function keypress(k_what)
 	{
 		k_press=k_what;
 	}
-	window.onkeydown = keyreact;
-	function keyreact()
-	{
-		if(!k_press)
-		return false;
-	}
+	window.onkeydown = function (){if(!k_press)return false;};
 //end of key press control
 
 // custom way to get id of a element
@@ -20,7 +17,7 @@
 	}
 //	
 
-//Ajax
+//Ajax 
 	function ajax(id,what)
 	{
 		 var a_loc=document.getElementById("loc");
@@ -39,7 +36,7 @@
   				if (xmlhttp.readyState==4 && xmlhttp.status==200)
     			{
 					var a=xmlhttp.responseText;
-					if(what=="location")
+					if(what=="location") //Pull all the location from the particular quadrant from db and populates in dropdown box
 					{	
 						a = a.split(','); 
 						var result=[];
@@ -49,7 +46,7 @@
 						}
 						locload(result);
 					}
-					else if(what=="activity")
+					else if(what=="activity")// loads the page that is used to create activity from db.
 					{
 						actload(a);
 					}
@@ -59,7 +56,7 @@
 			xmlhttp.open("GET","../ajax.php?what=activity&get="+what+"&id="+id+"&loc="+a_loc.value,true);
 			xmlhttp.send();
 		}
-		else if(what=="location")
+		else if(what=="location")//clears the activity content in the page
 		{
 			a_loc.disabled=true
 			document.getElementById("act").disabled=true;
@@ -70,8 +67,8 @@
 	}
 // End of ajax	
 	
-//----selction
-	function locload(quad)
+//----handles the selecting and loading the quadrants,locations and activity content
+	function locload(quad) 
 	{
 		var loc=document.getElementById("loc");
 		if(document.getElementById("quadrant").value!="null")
@@ -177,6 +174,7 @@ function img_validate(obj)
   		}
  	} 
 }
+//handles media selection
 media=new Object();
 media.type="";
 media.count=0;
@@ -251,6 +249,7 @@ function selvid(obj,dest)
 		alert("1.please copy video watch url directly dont copy embed url \n 2.Please paste the url below media type");
 	}
 }
+///darkens background
 
 function darkbg(v_bool)
 {
@@ -282,7 +281,7 @@ function secondlayer(v_bool,content)
 	}
 }
 
-
+//makes the content ready so that it can be sent to the server
 
 function up_db(c)
 {
@@ -292,22 +291,24 @@ function up_db(c)
 	
 	var locid=$id("loc").value;
 	keypress(false);
-	var temp="a_type="+c.name+"&";
+	var t2={};
+	t2['a_type']=c.name;
+	
 	var find_radio=[];
-	var form_var="";
+
 	
 		for(var i=0;i<c.length;i++)
 		{
 			if(c[i].name!="" && !c[i].disabled && (c[i].getAttribute("c_req")=="true" || c[i].getAttribute("c_req")=="false") )
 			{
-				form_var=form_var+"'"+c[i].name+"',";
+				
 				if(c[i].type=="radio")
 				{
 					if(find_radio.indexOf(c[i].name)<0)
 					find_radio.push(c[i].name);
 				}
 				else
-					temp=temp+c[i].name+"="+c[i].value+"&";
+					{t2[c[i].name]=c[i].value;}
 			}
 		}
 		
@@ -317,15 +318,19 @@ function up_db(c)
 			for (x in s)
 			if(s[x].checked)
 			{
-				temp=temp+find_radio[i]+"="+s[x].value+"&";		
+				
+				t2[find_radio[i]]=s[x].value;		
 			}
 		}
 		
 		
 		
-		temp=temp+"locid="+locid+"&";
 		
+		t2['locid']=locid;
 		secondlayer(true,"Uploading Data Please Wait <br>");
+		t2['file']=new Array();
+		
+		
 		for(var i=0;i<c_alldata.length;i++)
 		{
 			if(c_alldata[i].c_type=="file")
@@ -333,28 +338,36 @@ function up_db(c)
 					
 					
 					UploadFile(c_alldata[i]);
-					temp=temp+c_alldata[i].c_disp.id+"="+c_alldata[i].c_name+"&";
-					form_var=form_var+"'"+c_alldata[i].c_disp.id+"',";
 					
+					
+					var ttx=new Object();
+					
+					ttx.name=c_alldata[i].c_name;
+					ttx.title=c_alldata[i].c_title;
+					t2['file'].push(ttx);
 				}
 				else
 				{
-					temp=temp+c_alldata[i].c_disp.id+"="+c_alldata[i].c_type+"&";
-					form_var=form_var+"'"+c_alldata[i].c_disp.id+"',";
+			
+					
+					t2[c_alldata[i].c_disp.id]=c_alldata[i].c_type;
 				}
 		}
-		form_var=form_var.substr(0,form_var.length-1);
-		temp=temp+"f_contents="+form_var;
-		ajax_post("dataupload.php",temp);
+	
+		
+		
+		ajax_post("dataupload.php","formdata",JSON.stringify(t2));
 	
 }
 track=new Object();
 track.act=0;
 track.cur=0;
-track.finish=function(){if(this.act==this.cur){secondlayer(false);alert ("Data Uploaded");}};
-
-function ajax_post(where,content)
+track.finish=function(){if(this.act==this.cur){secondlayer(false);alert ("Data Uploaded");window.location.reload();
+}};
+//form content is sent using this function to the server
+function ajax_post(where,caption,content)
 {
+	alert();
 	var xmlhttp;
 if (window.XMLHttpRequest)
   {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -373,7 +386,7 @@ xmlhttp.onreadystatechange=function()
   }
 xmlhttp.open("POST",where,true);
 xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-xmlhttp.send(content);
+xmlhttp.send(caption+"="+content);
 }
 
 //drag and drop
@@ -389,6 +402,8 @@ var c_url=new Array();
 var c_type=new Array();
 var c_disp=new Array();
 */
+
+//handles media after being dropped or selected
 var c_alldata=new Array();
 var c_h5=false;
 
@@ -410,11 +425,12 @@ function ref_thumb()
 	for(var i=0;i<c_alldata.length;i++)
 	{
 		t_loc=m_locbyd(c_alldata[i].c_url);
-		t_img=t_img+"<img src='"+c_alldata[i].c_url+"' class='thumbnail'/> <img src='img/delete-icon.png' class='minithum' onclick='m_remove("+t_loc+")'/>";
+		t_img=t_img+"<img src='"+c_alldata[i].c_url+"' style='float:left' class='thumbnail'/><input type='text' style='width:100px;float:left;margin:0 0 0 0;' onchange='c_alldata["+i+"].c_title=this.value;' placeholder='Tag'/> <a href='JavaScript:void(0);' onclick='m_remove("+t_loc+")'>delete</a><div class='clear'></div>";
 		
 	}
 	Output(t_img,thum);
 }
+
 function m_add(m_data,m_url,m_type,m_disp,dis)
 {
 	if(media.inherit=="slide")
@@ -446,10 +462,12 @@ function m_objconst(m_data,m_url,m_type,m_disp)
 		obj.c_url=m_url;
 		obj.c_type=m_type;
 		obj.c_disp=m_disp;
+		obj.c_title="image";
+		var num=Date.now()+c_alldata.length+uniq;
 		if(m_data!=null)
-		obj.c_name=m_disp.id+"_"+m_type+"_"+Date.now()+"."+m_f_type(m_data.type);
+		obj.c_name=m_disp.id+"_"+m_type+"_"+num+"."+m_f_type(m_data.type);
 		else
-		obj.c_name=m_disp.id+"_"+m_type+"_"+Date.now();
+		obj.c_name=m_disp.id+"_"+m_type+"_"+num;
 		return obj;
 }
 function m_f_type(i_type)
@@ -533,7 +551,7 @@ function FileDragHover(e)
 	e.preventDefault();
 	e.target.className = (e.type == "dragover" ? "filedrag hover" : "filedrag");
 }
-// file selection
+// file selection handler 
 function FileSelectHandler(e,file_dest,file_sel) 
 {	
 	if($id(file_sel).disabled==false && c_h5)
@@ -583,6 +601,8 @@ function equals(x,f)
 // output file information
 var pars_glob=0;
 var pars_sizeE=0;
+
+//displays the dropped file 
 function ParseFile(file,dest,dis) 
 {
 	// display an image
@@ -659,26 +679,13 @@ function UploadFile(m_obj)
 	// initialize
 	function Init() {
 
-	/*	var fileselect = $id("fileselect"),
-			filedrag = $id("filedrag");
-			//submitbutton = $id("submitbutton");
 
-		// file select
-		fileselect.addEventListener("change", FileSelectHandler, false);
-*/
-		// is XHR2 available?
 		var xhr = new XMLHttpRequest();
 		if (xhr.upload) {
 
-			// file drop
-	/*		filedrag.addEventListener("dragover", FileDragHover, false);
-			filedrag.addEventListener("dragleave", FileDragHover, false);
-			filedrag.addEventListener("drop", FileSelectHandler, false);
-			filedrag.style.display = "block";
-*/
-			m_removeall();
+			m_removeall();//clears any existing content
 			
-			c_h5=true;
+			c_h5=true; //html5 supported
 		}
 		else
 		alert("please update your browser");

@@ -276,10 +276,16 @@ top: 120px;
 
 	
 }
+#thumb
+{
+	width: 230px; height: 250px; float: left; overflow: auto; display: block; 
+}
 .thumbnail
 {
 	width:100px;
-	height:80px;}
+	height:80px;
+	margin-right:5px;
+	margin-bottom:10px;}
 	.minithum
 	{
 		width:80px;
