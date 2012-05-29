@@ -329,7 +329,7 @@ function up_db(c)
 		t2['locid']=locid;
 		secondlayer(true,"Uploading Data Please Wait <br>");
 		t2['file']=new Array();
-		
+		t2['url']=new Array();
 		
 		for(var i=0;i<c_alldata.length;i++)
 		{
@@ -344,30 +344,43 @@ function up_db(c)
 					
 					ttx.name=c_alldata[i].c_name;
 					ttx.title=c_alldata[i].c_title;
+					ttx.type=c_alldata[i].ext;
 					t2['file'].push(ttx);
 				}
 				else
 				{
 			
 					
+					var ttx=new Object();
+					
+					ttx.name=c_alldata[i].c_url;
+					ttx.title=c_alldata[i].c_title;
+					ttx.type=c_alldata[i].ext;
+					t2['url'].push(ttx);
+					
 					t2[c_alldata[i].c_disp.id]=c_alldata[i].c_type;
+					
 				}
 		}
 	
 		
 		
-		ajax_post("dataupload.php","formdata",JSON.stringify(t2));
+		
+		track.send=JSON.stringify(t2);
+		if(c_alldata.length==0||t2['type']=="video"||t2['img']=='imageurl')
+		track.finish();
 	
 }
+//tracks the status of uploading the file.
 track=new Object();
 track.act=0;
 track.cur=0;
-track.finish=function(){if(this.act==this.cur){secondlayer(false);alert ("Data Uploaded");window.location.reload();
+track.finish=function(){if(this.act==this.cur){ajax_post("dataupload.php","formdata",track.send);secondlayer(false);alert ("Data Uploaded");window.location.reload();
 }};
 //form content is sent using this function to the server
 function ajax_post(where,caption,content)
 {
-	alert();
+	
 	var xmlhttp;
 if (window.XMLHttpRequest)
   {// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -382,6 +395,7 @@ xmlhttp.onreadystatechange=function()
   if (xmlhttp.readyState==4 && xmlhttp.status==200)
     {
 		secondlayer(true,"Form content Uploaded ");
+		//alert(xmlhttp.response);
 	}
   }
 xmlhttp.open("POST",where,true);
@@ -446,11 +460,13 @@ function m_add(m_data,m_url,m_type,m_disp,dis)
 	if(m_location(m_disp)==-1)
 	{	
 		c_alldata.push(m_objconst(m_data,m_url,m_type,m_disp));
+		ref_thumb();
 	}
 	else
 	{
 		var m_temp=m_location(m_disp);
 		c_alldata.splice(m_temp,1,m_objconst(m_data,m_url,m_type,m_disp));
+		ref_thumb();
 	}
 	}
 	
@@ -463,11 +479,13 @@ function m_objconst(m_data,m_url,m_type,m_disp)
 		obj.c_type=m_type;
 		obj.c_disp=m_disp;
 		obj.c_title="image";
+		
 		var num=Date.now()+c_alldata.length+uniq;
 		if(m_data!=null)
-		obj.c_name=m_disp.id+"_"+m_type+"_"+num+"."+m_f_type(m_data.type);
+		{obj.ext=m_f_type(m_data.type);
+			obj.c_name=m_disp.id+"_"+m_type+"_"+num+"."+obj.ext;}
 		else
-		obj.c_name=m_disp.id+"_"+m_type+"_"+num;
+		{obj.c_name=m_disp.id+"_"+m_type+"_"+num;obj.ext="url";}
 		return obj;
 }
 function m_f_type(i_type)
@@ -577,8 +595,14 @@ function FileSelectHandler(e,file_dest,file_sel)
 		{			
 			if(validimg(e.dataTransfer.getData("text/uri-list")))
 			{
+				if(c_alldata.length<media.count)
+				{
 				Output('<img src="' + e.dataTransfer.getData("text/uri-list") + '" /></p>',file_dest);	
-				m_add(null,e.dataTransfer.getData("text/uri-list"),"imageurl",file_dest);		
+				m_add(null,e.dataTransfer.getData("text/uri-list"),"imageurl",file_dest,true);		
+				
+				}else
+				alert("Media content is Full delete some to add new ");
+				
 			}
 			else
 			{
@@ -623,7 +647,7 @@ function ParseFile(file,dest,dis)
 				ref_thumb();
 				}
 				if(pars_sizeE>0)
-				alert(pars_sizeE+" files has not been accepted because of the file size is greater than 2 mb");
+				alert(pars_sizeE+" files has not been accepted because of the file size is greater than 1 mb");
 			
 			}
 			else if(file.size <= $id("MAX_FILE_SIZE").value)
