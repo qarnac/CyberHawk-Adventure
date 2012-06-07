@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+   
+<link rel="stylesheet" type="text/css" media="all" href="../css/style.css" />
+<title>Sign up</title>
+<script>
+function $(c){return document.getElementById(c);}
+function init()
+{
+	secondlayer(false);}
+function darkbg(v_bool)
+{
+	var dark=$("darkenBackground");
+	if(v_bool)
+	{
+	dark.style.display='';
+	}
+	else
+	{
+		dark.style.display='none';
+	}
+}
+function secondlayer(v_bool,content)
+{
+	var disp=$("process");	
+	if(v_bool)
+	{
+		darkbg(true);
+	disp.style.display='';
+	if(content!=null)
+	disp.innerHTML=disp.innerHTML+content;
+	}
+	else
+	{
+		darkbg(false);
+		disp.style.display='none';
+		
+	}
+}
+</script>
+</head>
+
+<body onLoad="init()">
+<div id="process" >
+   
+ </div>
+  <div id="wrapper" >
+   <div id="darkenBackground" ></div>
+  <div id="example">
+   <div class="text">
+   <h3 >Welcome to CyberQuest</h3>
+   <h4>New user sign up</h4>
+   <a href="#"  class="tooltip">Help <span>xx</span></a>
+  </div>
+  
+  </div>
+  
+<div class="maincontent" id="map_canvas" >
+ <div id="activity">  <!---- activity will be loaded at this place--->
+  
+ 
+  </div>
+  </div>
+  </div>
+  
+</body>
+</html>
