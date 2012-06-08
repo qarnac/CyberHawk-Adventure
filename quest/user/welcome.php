@@ -8,7 +8,10 @@ else {
 function logged()
 {
 	include '../php/credentials.php';
-	
+	$metah=query("SELECT * FROM meta");
+	$metaar=array();
+	while($x=mysql_fetch_assoc($metah))
+	array_push($metaar,$x);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,9 +42,9 @@ function logged()
 				<h1>Cyber Scavenger</h1>
 			</header>
 		<div id="main" role="main">
-				<h4>Welcome <? echo $_SESSION['firstname']; ?> </h4>
-				<span>
-					<select>
+				<div style="float: left;width: 200px;font-weight:bold">Welcome <? echo $_SESSION['firstname']; ?> <a href="logout.php">Log out</a></div>
+				<div style="float: left;width: 200px;">
+					<select onchange="huntsel(this.value)">
   					<option value="null">Select</option>
   					<?
   					$result=query("SELECT * FROM hunt WHERE tid='".$_SESSION['tid']."'");
@@ -55,9 +58,13 @@ function logged()
   					?>
   					
 					</select>
-				</span>
+				</div>
+				<div class="clear"></div>
+				<div id="activity"></div>
 			</div>
 			</div>
+			<script src="js/wscript.js"></script>
+			<script>var multiple='<? echo $metaar[0]['content'];?>'</script>
 			</body>
 			</html>
 <?

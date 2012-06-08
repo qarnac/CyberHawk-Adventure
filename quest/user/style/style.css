@@ -1,5 +1,3 @@
-
-
 html, body
 {
     height: 100%;
@@ -11,7 +9,7 @@ html, body
 	-moz-border-radius: 15px;
 		border-radius: 15px;
 	background-color: white;
-	height:600px;
+	
 	 margin:0 auto;  
 	 margin-bottom: 40px;
 }
@@ -141,8 +139,11 @@ fieldset
     border: 0;
     padding: 0;
     margin: 0;
+   
 }
-
+#activity fieldset
+{ float:left;
+    width:46%;}
 /*--------------------*/
 
 #inputs input
@@ -262,4 +263,164 @@ fieldset
     top: 60px;
     color: #999;
 }
+/*------------------*/
+ textarea {
+   
+    float:left;
+font-size:12px;
+padding:4px 2px;
+border:solid 1px #aacfe4;
+width:300px;
+margin:2px 0 5px 5px;
+   
+}
+select {
+   
+    float:left;
+font-size:12px;
+padding:4px 2px;
+border:solid 1px #aacfe4;
+width:200px;
+margin:2px 0 5px 5px;
+   
+}
+/*--------*/
 
+/*Dropbox*/
+	#dropbox
+		{
+			background-color:Gray;
+			color:White;
+			border:5px solid black;
+			text-align:center;
+			width: 420px;
+			height: 280px;
+			display:block;
+					}
+		.cent{
+			display: block;  margin: 0px auto;
+			width:30%;
+			
+			}
+		img.large {
+	width: 420px;
+	height: 280px;
+}
+ .clear {clear:both; }
+
+ /*
+drop
+*/
+
+
+
+legend
+{
+	font-weight: bold;
+	color: #333;
+}
+
+div.filedrag 
+{
+	
+			
+			
+			
+			width: 420px;
+			
+			height:280px;
+	font-weight: bold;
+	text-align: center;
+	padding: 1em 0;
+	margin: 1em 0;
+	color: #555;
+	border: 2px dashed #555;
+	
+	cursor: default;
+}
+
+.filedrag.hover
+{
+	color: #f00;
+	border-color: #f00;
+	border-style: solid;
+	box-shadow: inset 0 3px 4px #888;
+}
+
+.filedrag img
+{
+	width: 420px;
+			height: 280px;
+			
+}
+  #activity
+	{
+		margin:10px;
+		height:auto;
+			}
+.split { float:left; width:46%;margin-right:20px; padding:5px; height:auto; }
+	.split1 { float:left; width:46%;margin-right:20px; padding:5px; }
+	
+
+ p{
+font-size:11px;
+color:#666666;
+margin-bottom:20px;
+border-bottom:solid 1px #b7ddf2;
+padding-bottom:10px;
+}
+ label{
+display:block;
+font-weight:bold;
+text-align:left;
+width:300px;
+float:left;
+padding:5px;
+margin:10px;
+}
+ .small{
+color:#666666;
+display:block;
+font-size:11px;
+font-weight:normal;
+text-align:right;
+width:140px;
+}
+ input[type="text"]{
+float:left;
+font-size:12px;
+padding:4px 2px;
+border:solid 1px #aacfe4;
+width:200px;
+margin:2px 0 5px 5px;
+}
+input[type="url"]{
+float:left;
+font-size:12px;
+padding:4px 2px;
+border:solid 1px #aacfe4;
+width:200px;
+margin:2px 0 5px 5px;
+}
+input[type="number"]{
+float:left;
+font-size:12px;
+padding:4px 2px;
+border:solid 1px #aacfe4;
+width:200px;
+margin:2px 0 5px 5px;
+}
+ input[type="button"]{
+
+float:right;
+margin:2px 0 5px 5px;
+padding:4px 2px;
+width:125px;
+height:31px;
+background:#666666 ;
+text-align:center;
+line-height:31px;
+color:#FFFFFF;
+font-size:11px;
+font-weight:bold;
+}
