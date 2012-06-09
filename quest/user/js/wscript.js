@@ -27,3 +27,57 @@ function huntsel(x)
 {
 	$('activity').innerHTML=multiple;
 }
+
+function compress(file)
+{
+
+var img = document.createElement("img");
+var reader = new FileReader();  reader.readAsDataURL(file);
+reader.onload = function(e){
+	img.src = e.target.result;
+	
+img.onload=function(){
+var canvas=$("canvas");
+var ctx = canvas.getContext("2d");
+ctx.drawImage(img, 0, 0);
+
+var MAX_WIDTH = 450;
+var MAX_HEIGHT = 280;
+var width = img.width;
+var height = img.height;
+
+if (width > height) {
+  if (width > MAX_WIDTH) {
+    height *= MAX_WIDTH / width;
+    width = MAX_WIDTH;
+  }
+} else {
+  if (height > MAX_HEIGHT) {
+    width *= MAX_HEIGHT / height;
+    height = MAX_HEIGHT;
+  }
+}
+canvas.width = width;
+canvas.height = height;
+var ctx = canvas.getContext("2d");
+ctx.drawImage(img, 0, 0, width, height);
+
+var dataurl = canvas.toDataURL("image/jpeg",0.8);
+dataurl=dataurl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
+var fname=file.name;
+dataurl="fname="+fname+"&url="+dataurl;
+return dataurl;
+}
+
+
+function gpsverify(files) {
+    var binary_reader = new FileReader();  
+    binary_reader.file = files[0]; //Selects the first file thats been droped or selected
+    
+    binary_reader.onloadend = function() {
+	var jpeg = new JpegMeta.JpegFile(this.result, this.file.name);
+	if(jpeg.gps && jpeg.gps.longitude)
+	{}
+	else
+	alert("No location information is found on the Image");
+	}
