@@ -22,6 +22,7 @@ function starter()
 	if (window.File && window.FileReader && window.FileList && window.Blob) {
   // Great success! All the File APIs are supported.
   Init();
+  s_selmedia("image","img_fselect",'video','img')
 	} else {
   	alert('The File APIs are not fully supported in this browser.');
 	}
@@ -77,7 +78,7 @@ function UploadFile(m_obj)
 		}
 
 	}
-	/displays the dropped file 
+	//displays the dropped file 
 function ParseFile(file,dest,dis) 
 {
 	// display an image
@@ -89,7 +90,7 @@ function ParseFile(file,dest,dis)
 			{
 				
 				
-				if(file.size <= $id("MAX_FILE_SIZE").value)
+				if(file.size <= $("MAX_FILE_SIZE").value)
 				{
 				m_add(file,e.target.result,"file",dest,true);Output('<img src="' + e.target.result + '" />',dest);}
 				else
@@ -101,7 +102,7 @@ function ParseFile(file,dest,dis)
 				alert(pars_sizeE+" files has not been accepted because of the file size is greater than 1 mb");
 			
 			}
-			else if(file.size <= $id("MAX_FILE_SIZE").value)
+			else if(file.size <= $("MAX_FILE_SIZE").value)
 				m_add(file,e.target.result,"file",dest,false);
 			else
 			pars_sizeE++;						
@@ -130,9 +131,9 @@ function FileDragHover(e)
 // file selection handler 
 function FileSelectHandler(e,file_dest,file_sel) 
 {	
-	if($id(file_sel).disabled==false && c_h5)
+	if($(file_sel).disabled==false && c_h5)
 	{
-		file_dest=$id(file_dest);
+		file_dest=$(file_dest);
 		FileDragHover(e);	
 		var files = e.target.files || e.dataTransfer.files ;
 		if(files.length==1 || (media.inherit=="slide" && files.length>=1))
@@ -173,3 +174,5 @@ function FileSelectHandler(e,file_dest,file_sel)
 	}
 	
 }
+function m_removeall()
+{}

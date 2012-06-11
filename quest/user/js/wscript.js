@@ -1,4 +1,4 @@
-
+var uniq=Math.floor((Math.random()*100)+1);
 function $(x)
 {return document.getElementById(x);}
 function ajax(data,url,callback)
@@ -26,6 +26,7 @@ xmlhttp.send(data);
 function huntsel(x)
 {
 	$('activity').innerHTML=multiple;
+	starter();
 }
 
 function compress(file)
@@ -68,7 +69,13 @@ var fname=file.name;
 dataurl="fname="+fname+"&url="+dataurl;
 return dataurl;
 }
-
+}
+}
+//geo requirements
+function latlng(lat,lng)
+{this.lat=lat;this.lng=lng;}
+function georect(dim1,dim2)
+{this.topleft=dim1;this.topright=dim2;}
 
 function gpsverify(files) {
     var binary_reader = new FileReader();  
@@ -81,3 +88,4 @@ function gpsverify(files) {
 	else
 	alert("No location information is found on the Image");
 	}
+}

@@ -60,10 +60,12 @@ function logged()
 					</select>
 				</div>
 				<div class="clear"></div>
-				<div id="activity"></div>
+				<div id="activity"></div><div id='thumb'></div><div id='video'></div>
 			</div>
 			</div>
 			<script src="js/wscript.js"></script>
+			<script src="js/dragdrop.js"></script>
+			<script src="js/media.js"></script>
 			<script>var multiple='<? echo $metaar[0]['content'];?>'</script>
 			</body>
 			</html>
