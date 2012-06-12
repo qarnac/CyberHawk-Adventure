@@ -1,6 +1,6 @@
 <?php
-$user="ouyang";		//dbase username
-$pass="youwen";		//dbase pwd
+$user="subra001";		//dbase username
+$pass="100subra";		//dbase pwd
 $host="localhost";	// dbse host
 $dbase="cyberscavenger";
 if(!$dbconnect = mysql_connect($host, $user, $pass)) {  //connects to dbase host

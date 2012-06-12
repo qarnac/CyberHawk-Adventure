@@ -45,7 +45,7 @@ function m_add(m_data,m_url,m_type,m_disp,dis)
 	if(media.inherit=="slide")
 	{
 		
-		c_alldata.push(m_objconst(m_data,m_url,m_type,m_disp));
+		c_alldata.push(m_objconst(m_url,m_type,m_disp));
 	if(dis)
 	{
 	//	ref_thumb();
@@ -67,13 +67,11 @@ function m_add(m_data,m_url,m_type,m_disp,dis)
 	}
 	
 }
-function m_objconst(m_data,m_url,m_type,m_disp)
+function m_objconst(m_url,m_type,m_disp)
 {
 		obj=new Object();
-		obj.c_data=m_data;
 		obj.c_url=m_url;
 		obj.c_type=m_type;
-		obj.c_disp=m_disp;
 		obj.c_title="image";
 		
 		var num=Date.now()+c_alldata.length+uniq;
