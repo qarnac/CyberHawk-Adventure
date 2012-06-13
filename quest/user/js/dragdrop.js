@@ -61,9 +61,11 @@ function FileSelectHandler(e)
 		var files = e.target.files || e.dataTransfer.files ;
 		if(files.length>=1)
 		{
-		var obj=new geocompress(files[0],"file");	
+		var obj=new geocompress(files[0],"file");
+	
+	
 		
-			
+	
 		}
 		else  
 		{			

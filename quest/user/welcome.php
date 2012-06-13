@@ -8,11 +8,21 @@ else {
 function logged()
 {
 	include '../php/credentials.php';
-	$metah=query("SELECT * FROM meta");
-	$metaar=array();
-	while($x=mysql_fetch_assoc($metah))
-	array_push($metaar,$x);
-?>
+	$metah=query("SELECT * FROM meta" );
+		$metaar=array();
+		while($x=mysql_fetch_assoc($metah))
+		array_push($metaar,$x);
+		$hunts=array();
+		$result=query("SELECT * FROM hunt WHERE tid='".$_SESSION['tid']."' AND status='open'" );
+			if(mysql_num_rows($result)>0)
+			{
+				while($x=mysql_fetch_assoc($result))
+				{
+				array_push($hunts,$x);
+				}
+			}
+			$hunts=json_encode($hunts);
+	?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -36,6 +46,8 @@ function logged()
 	</head>
 
 	<body>
+		<div id="map_canvas"></div>
+		<div id="contents">
 		<div>
 			<header>
 			
@@ -44,18 +56,9 @@ function logged()
 		<div id="main" role="main">
 				<div style="float: left;width: 200px;font-weight:bold">Welcome <? echo $_SESSION['firstname']; ?> <a href="logout.php">Log out</a></div>
 				<div style="float: left;width: 200px;">
-					<select onchange="huntsel(this.value)">
+					<select onchange="huntsel(this.value)" id="selecthunt">
   					<option value="null">Select</option>
-  					<?
-  					$result=query("SELECT * FROM hunt WHERE tid='".$_SESSION['tid']."'");
-  					if(mysql_num_rows($result)>0)
-					{
-						while($x=mysql_fetch_assoc($result))
-						{
-							echo '<option value="'.$x['id'].'">'.$x["title"].'</option>';
-						}
-					}
-  					?>
+  				
   					
 					</select>
 				</div>
@@ -63,11 +66,21 @@ function logged()
 				<div id="activity"></div><div id='thumb'></div><div id='video'></div>
 			</div>
 			</div>
+			</div>
 			<script src="js/wscript.js"></script>
 			<script src="js/dragdrop.js"></script>
 			<script src="js/media.js"></script>
 			<script src="js/jpegmeta.js"></script>
-			<script>var multiple='<? echo $metaar[0]['content'];?>'</script>
+			<script src="js/geocompress.js"></script>
+			<script src="js/json2.js"></script>
+			<script>var multiple='<? echo $metaar[0]['content'];?>';
+					var hunts=JSON.parse('<? echo $hunts; ?>');
+					for(x in hunts)
+					$('selecthunt').options[$('selecthunt').options.length]=new Option(hunts[x]['title'],x);
+				</script>
+				 <script type="text/javascript"
+      src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDSwGeMX946SO8b3_sZqqAbCzM5eloG-os&sensor=false">
+    </script>
 			</body>
 			</html>
 <?
