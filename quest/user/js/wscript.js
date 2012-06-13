@@ -28,17 +28,16 @@ function huntsel(x)
 	$('activity').innerHTML=multiple;
 	starter();
 }
-
-function compress(file)
+function geocompress(file,type)
 {
-
-var img = document.createElement("img");
-var reader = new FileReader();  reader.readAsDataURL(file);
-reader.onload = function(e){
+var img=new Image();
+var reader = new FileReader();
+reader.readAsDataURL(file);	
+reader.onload=function(e){
 	img.src = e.target.result;
 	
 img.onload=function(){
-var canvas=$("canvas");
+var canvas= document.createElement('canvas');
 var ctx = canvas.getContext("2d");
 ctx.drawImage(img, 0, 0);
 
@@ -62,30 +61,31 @@ canvas.width = width;
 canvas.height = height;
 var ctx = canvas.getContext("2d");
 ctx.drawImage(img, 0, 0, width, height);
+this.dataurl = canvas.toDataURL("image/jpeg",0.8);
+gpsverify(file);
 
-var dataurl = canvas.toDataURL("image/jpeg",0.8);
-dataurl=dataurl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
-var fname=file.name;
-dataurl="fname="+fname+"&url="+dataurl;
-return dataurl;
+//dataurl=dataurl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
 }
 }
 }
-//geo requirements
+
 function latlng(lat,lng)
 {this.lat=lat;this.lng=lng;}
 function georect(dim1,dim2)
 {this.topleft=dim1;this.topright=dim2;}
 
-function gpsverify(files) {
+function gpsverify(file) {
     var binary_reader = new FileReader();  
-    binary_reader.file = files[0]; //Selects the first file thats been droped or selected
+    binary_reader.readAsBinaryString(file); 
     
-    binary_reader.onloadend = function() {
-	var jpeg = new JpegMeta.JpegFile(this.result, this.file.name);
+    binary_reader.onloadend = function(e) {
+	var jpeg = new JpegMeta.JpegFile(e.target.result, file.name);
 	if(jpeg.gps && jpeg.gps.longitude)
-	{}
+	{
+		this.loc=new latlng(jpeg.gps.latitude,jpeg.gps.longitude);
+	}
 	else
-	alert("No location information is found on the Image");
+	{	alert("No location information is found on the Image Please select Image location from the map");
+}
 	}
 }

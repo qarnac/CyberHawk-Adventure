@@ -66,6 +66,7 @@ function logged()
 			<script src="js/wscript.js"></script>
 			<script src="js/dragdrop.js"></script>
 			<script src="js/media.js"></script>
+			<script src="js/jpegmeta.js"></script>
 			<script>var multiple='<? echo $metaar[0]['content'];?>'</script>
 			</body>
 			</html>
