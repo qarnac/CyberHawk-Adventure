@@ -75,8 +75,8 @@ function gpsverify(file) {
 	}
 	else
 	{	
-		alert("No location information is found on the Image Please select Image location from the map");
-		map(true);
+		alert("Image is not geo tagged.\n Please click on location where you have taken picture. \n Once you selected please click again on the marker ");
+		mapdisp(true);
 		gmaps();
 }
 	}
@@ -88,17 +88,66 @@ function rectcenter(x)
 	return new latlng((x.topleft.lat+x.bottomright.lat)/2,(x.topleft.lng+x.bottomright.lng)/2);
 	
 }
-   function gmaps() {
-   	var center=rectcenter(huntboundary);
-        var myOptions = {
-          center: new google.maps.LatLng(center.lat, center.lng),
-          zoom: 8,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map($("map_canvas"),
-            myOptions);
-      }
-      function map(x)
+   
+
+function gmaps() {
+	//map
+	var x=new Object();
+	var center = rectcenter(huntboundary);
+	var myOptions = {
+		center : new google.maps.LatLng(center.lat, center.lng),
+		zoom : 11,
+		mapTypeId : google.maps.MapTypeId.TERRAIN
+	};
+	var map = new google.maps.Map($("map_canvas"), myOptions);
+	//boundary
+	var rectangle = new google.maps.Rectangle();
+	var bound = new google.maps.LatLngBounds(new google.maps.LatLng(huntboundary.topleft.lat, huntboundary.topleft.lng), new google.maps.LatLng(huntboundary.bottomright.lat, huntboundary.bottomright.lng));
+	var rectOptions = {
+		strokeColor : "#FF0000",
+		strokeOpacity : 0.7,
+		strokeWeight : 2,
+		fillColor : "#FF0000",
+		fillOpacity : 0.35,
+		map : map,
+		bounds : bound
+	};
+	rectangle.setOptions(rectOptions);
+	//click event for selecting a location
+	google.maps.event.addListener(rectangle, 'click', function(e) {
+		placeMarker(e.latLng);
+	});
+		google.maps.event.addListener(map, 'click', function(e) {
+		alert("you can select location only within the hunt area \n Once selected Click again on the marker")
+	});
+	var marker;
+
+	function placeMarker(location) {
+		if (marker) {
+			marker.setPosition(location);
+			marker.setTitle(location.lat() + "," + location.lng());
+		} else {
+			marker = new google.maps.Marker({
+				position : location,
+				map : map,
+				title : location.lat() + "," + location.lng()
+			});
+			google.maps.event.addListener(marker, 'click', function(e) {
+				alert("Thanks for choosing a location ");
+				x.from="chosen";
+				x.latlng=new latlng(marker.getPosition().lat(),marker.getPosition().lng());
+				morc.loc=x;
+				mapdisp(false);
+				drawimg(morc);
+			});
+
+		}
+	}
+
+}
+
+
+      function mapdisp(x)
       {if(x)
       	{	
       		$('map_canvas').style.display='block';
@@ -106,5 +155,6 @@ function rectcenter(x)
       	}
       	else
       	{$('map_canvas').style.display='none';
-      		$('contents').style.display='block';}
+      		$('contents').style.display='block';
+      		}
       }

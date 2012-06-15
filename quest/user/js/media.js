@@ -17,3 +17,7 @@ function ref_thumb()
 	}
 	Output(t_img,thum);
 }
+function drawimg(x)
+{
+	$('img').innerHTML="<img src='"+x.file.dataurl+"'></img>";
+}

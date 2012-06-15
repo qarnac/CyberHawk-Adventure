@@ -4,8 +4,8 @@
 		<legend>Image Uploader</legend>  
 		<input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="1000000" />  
 		<div> 	<label for="fileselect">Files to upload:</label> 
-				<input type="file" id="img_fselect" name="fileselect"  onChange="img_validate(this);FileSelectHandler(event,\'img\',this.id);"  accept="image/jpg,image/gif,image/jpeg,image/png"/> 	   
-				   <div id="img" class="filedrag" ondragover="FileDragHover(event)" ondragleave="FileDragHover(event)" ondrop="FileSelectHandler(event,this.id,\'img_fselect\')" >or drop files here</div> 
+				<input type="file" id="img_fselect" name="fileselect"  onChange="FileSelectHandler(event);"  accept="image/jpg,image/gif,image/jpeg,image/png"/> 	   
+				   <div id="img" class="filedrag" ondragover="FileDragHover(event)" ondragleave="FileDragHover(event)" ondrop="FileSelectHandler(event)" >or drop files here</div> 
 		</div> 
 	</fieldset>                
 	

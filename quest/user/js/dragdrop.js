@@ -54,6 +54,7 @@ function FileDragHover(e)
 	e.target.className = (e.type == "dragover" ? "filedrag hover" : "filedrag");
 }
 // file selection handler 
+var morc;
 function FileSelectHandler(e) 
 {	
 		
@@ -62,7 +63,7 @@ function FileSelectHandler(e)
 		if(files.length>=1)
 		{
 		var obj=new geocompress(files[0],"file");
-	
+		morc=obj;
 	
 		
 	
