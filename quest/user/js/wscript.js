@@ -1,3 +1,10 @@
+/*
+ * Common scripts needed
+ * handles ajax
+ * handles selection of a hunt activity
+ * verifies all the form data
+ * submits the form data and image data to server
+ */
 var uniq=Math.floor((Math.random()*100)+1);
 function $(x)
 {return document.getElementById(x);}

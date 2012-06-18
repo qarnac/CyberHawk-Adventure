@@ -1,5 +1,10 @@
 ///image valid
-
+/*
+ * This file handles all the drag and drop functionality.
+ * Creates a global varialble morc which stores the image information such as dataurl,geolocation
+ 
+ 
+  */
 function validimg(url) {
 
 	if (!checkURL(url)) {
@@ -52,7 +57,7 @@ function FileDragHover(e) {
 }
 
 // file selection handler
-var morc;
+var morc; // image object with compressed image with geo location
 function FileSelectHandler(e) {
 
 	FileDragHover(e);

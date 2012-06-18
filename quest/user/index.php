@@ -1,3 +1,7 @@
+<!----
+	Login Page 
+	Checks for a valid session if exist redirects to welcome.php else ask user to login.
+	---->
 <!DOCTYPE html>
 <html lang="en">
 	<head>

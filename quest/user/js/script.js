@@ -1,5 +1,6 @@
 /**
  * @author sabareesh kkanan subramani
+ * This script is used by index.php this helps in login the user
  */
 function verify()
 {

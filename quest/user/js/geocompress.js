@@ -1,5 +1,9 @@
 /**
  * @author sabareesh kkanan subramani
+ * Instantiates the object morc from drag and drop
+ * compresses the image
+ * finds geo location of image
+ * If geo location is not found displays map whilch allows user to select a location from it.
  */
 function geocompress(file, type) {
 	this.file = compress(file, type);

@@ -1,5 +1,7 @@
 /**
  * @author sabareesh kkanan subramani
+ * File unused but it will be useful while handling multiple images
+ * this will help displaying thumbnails. 
  */
 
 function ref_thumb() {
