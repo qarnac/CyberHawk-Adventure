@@ -31,3 +31,40 @@ function huntsel(x)
 	starter();
 }
 var huntboundary;
+function check(form,exe)
+{
+	if(exe)
+	{
+		
+		var contents={};	
+		var x=document.getElementsByName('answer');
+		for(var i=0;i<x.length;i++)
+		{
+			if(x[i].checked)
+			contents['answer']=x[i].value;
+			break;
+		}
+		var y=new Array("textarea","text","number");
+		for(var i=0;i<form.length;i++)
+		{
+		if(y.has(form[i].type))
+			contents[form[i].name]=form[i].value;	
+		}
+		if(morc && morc.verify())
+		{contents['media']=morc;
+		contents=JSON.stringify(contents);
+		contents="content="+contents;
+		ajax(contents,"upload.php",function(x){alert(x)});
+	}
+	else
+	alert("please Select a Image");
+	}
+	return false;
+}
+
+Array.prototype.has=function(v){
+for (i=0; i<this.length; i++){
+if (this[i]==v) return true;
+}
+return false;
+}

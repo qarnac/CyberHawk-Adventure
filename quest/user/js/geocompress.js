@@ -1,22 +1,22 @@
 /**
  * @author sabareesh kkanan subramani
  */
-function geocompress(file,type)
-{
-	this.file=compress(file,type);
-	this.loc=gpsverify(file);
-	}
-function compress(file,type)
-{
-	
-var x=new Object();
-var img=new Image();
-var reader = new FileReader();
-reader.readAsDataURL(file);	
-reader.onload=function(e){
-			img.src = e.target.result;
-		img.onload=function(){
-		
+function geocompress(file, type) {
+	this.file = compress(file, type);
+	this.loc = gpsverify(file);
+	this.verify=function(){if(this.file.dataurl && this.loc.latlng){this.file.dataurl=this.file.dataurl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");return true;}else return false;} 
+}
+
+function compress(file, type) {
+
+	var x = new Object();
+	var img = new Image();
+	var reader = new FileReader();
+	reader.readAsDataURL(file);
+	reader.onload = function(e) {
+		img.src = e.target.result;
+		img.onload = function() {
+
 			var canvas = document.createElement('canvas');
 			var ctx = canvas.getContext("2d");
 			ctx.drawImage(img, 0, 0);
@@ -43,56 +43,59 @@ reader.onload=function(e){
 			ctx.drawImage(img, 0, 0, width, height);
 			x.dataurl = canvas.toDataURL("image/jpeg", 0.8);
 			//dataurl=dataurl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
+		}
+	}
+	return x;
+}
+
+function latlng(lat, lng) {
+	this.lat = parseFloat(lat);
+	this.lng = parseFloat(lng);
+}
+
+function georect(dim1, dim2) {
+	this.topleft = dim1;
+	this.bottomright = dim2;
+}
+
+function checkloc(rect, loc) {
+	return rect.topleft.lat < loc.lat && rect.bottomright.lat > loc.lat && rect.topleft.lng < loc.lng && rect.bottomright.lng > loc.lng;
+}
+
+function gpsverify(file) {
+	var loc = new Object();
+	var binary_reader = new FileReader();
+	binary_reader.readAsBinaryString(file);
+
+	binary_reader.onloadend = function(e) {
+		var jpeg = new JpegMeta.JpegFile(e.target.result, file.name);
+		if (jpeg.gps && jpeg.gps.longitude) {
+			var x = new latlng(jpeg.gps.latitude.value, jpeg.gps.longitude.value);
+			if (checkloc(huntboundary, x)) {
+				loc.latlng = new latlng(jpeg.gps.latitude.value, jpeg.gps.longitude.value);
+				loc.from = "Native";
+			} else {
+				alert("not inside the boundary");
 			}
 
+		} else {
+			alert("Image is not geo tagged.\n Please click on location where you have taken picture. \n Once you selected please click again on the marker ");
+			mapdisp(true);
+			gmaps();
 		}
-return x;
-}
-
-function latlng(lat,lng)
-{this.lat=parseFloat(lat);this.lng=parseFloat(lng);}
-function georect(dim1,dim2)
-{this.topleft=dim1;this.bottomright=dim2;}
-function checkloc(rect,loc)
-{
-	return rect.topleft.lat<loc.lat && rect.bottomright.lat>loc.lat && rect.topleft.lng<loc.lng && rect.bottomright.lng>loc.lng;
-}
-function gpsverify(file) {
-	var loc=new Object();
-    var binary_reader = new FileReader();  
-    binary_reader.readAsBinaryString(file); 
-    
-    binary_reader.onloadend = function(e) {
-	var jpeg = new JpegMeta.JpegFile(e.target.result, file.name);
-	if(jpeg.gps && jpeg.gps.longitude)
-	{
-		var x=new latlng(jpeg.gps.latitude.value,jpeg.gps.longitude.value);
-		if(checkloc(huntboundary,x))
-		{	loc.latlng=new latlng(jpeg.gps.latitude.value,jpeg.gps.longitude.value);
-		loc.from="Native";}else
-		{alert("not inside the boundary");}
-	
-	}
-	else
-	{	
-		alert("Image is not geo tagged.\n Please click on location where you have taken picture. \n Once you selected please click again on the marker ");
-		mapdisp(true);
-		gmaps();
-}
 	}
 	return loc;
 }
-function rectcenter(x)
-{
-	
-	return new latlng((x.topleft.lat+x.bottomright.lat)/2,(x.topleft.lng+x.bottomright.lng)/2);
-	
+
+function rectcenter(x) {
+
+	return new latlng((x.topleft.lat + x.bottomright.lat) / 2, (x.topleft.lng + x.bottomright.lng) / 2);
+
 }
-   
 
 function gmaps() {
 	//map
-	var x=new Object();
+	var x = new Object();
 	var center = rectcenter(huntboundary);
 	var myOptions = {
 		center : new google.maps.LatLng(center.lat, center.lng),
@@ -117,7 +120,7 @@ function gmaps() {
 	google.maps.event.addListener(rectangle, 'click', function(e) {
 		placeMarker(e.latLng);
 	});
-		google.maps.event.addListener(map, 'click', function(e) {
+	google.maps.event.addListener(map, 'click', function(e) {
 		alert("you can select location only within the hunt area \n Once selected Click again on the marker")
 	});
 	var marker;
@@ -134,9 +137,9 @@ function gmaps() {
 			});
 			google.maps.event.addListener(marker, 'click', function(e) {
 				alert("Thanks for choosing a location ");
-				x.from="chosen";
-				x.latlng=new latlng(marker.getPosition().lat(),marker.getPosition().lng());
-				morc.loc=x;
+				x.from = "chosen";
+				x.latlng = new latlng(marker.getPosition().lat(), marker.getPosition().lng());
+				morc.loc = x;
 				mapdisp(false);
 				drawimg(morc);
 			});
@@ -146,15 +149,12 @@ function gmaps() {
 
 }
 
-
-      function mapdisp(x)
-      {if(x)
-      	{	
-      		$('map_canvas').style.display='block';
-      		$('contents').style.display='none';
-      	}
-      	else
-      	{$('map_canvas').style.display='none';
-      		$('contents').style.display='block';
-      		}
-      }
+function mapdisp(x) {
+	if (x) {
+		$('map_canvas').style.display = 'block';
+		$('contents').style.display = 'none';
+	} else {
+		$('map_canvas').style.display = 'none';
+		$('contents').style.display = 'block';
+	}
+}

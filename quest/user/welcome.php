@@ -75,7 +75,7 @@ function logged()
 			<script src="js/json2.js"></script>
 			<script>var multiple='<? echo $metaar[0]['content'];?>';
 					var hunts=JSON.parse('<? echo $hunts; ?>');
-					for(x in hunts)
+					for(x=0;x<hunts.length;x++)
 					$('selecthunt').options[$('selecthunt').options.length]=new Option(hunts[x]['title'],x);
 				</script>
 				 <script type="text/javascript"
