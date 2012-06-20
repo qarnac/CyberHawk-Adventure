@@ -59,9 +59,18 @@ function check(form,exe)
 		}
 		if(morc && morc.verify())
 		{contents['media']=morc;
+		contents['huntid']=hunts[0]['id'];
 		contents=JSON.stringify(contents);
 		contents="content="+contents;
-		ajax(contents,"upload.php",function(x){alert(x)});
+	
+			ajax(contents, "upload.php", function(x) {
+				if (x == "true")
+					alert("sucess");
+				else
+					alert(x);
+					
+			}); 
+
 	}
 	else
 	alert("please Select a Image");

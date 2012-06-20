@@ -172,7 +172,7 @@ function multiple($data,$qid,$type,$sno)
 	array_push($choic['choices'],array('choice'=>'e','content'=>$data->e,'ans'=> btos($data->answer=='e')));
 	$choic=json_encode($choic);
 	$query1="INSERT INTO multiple_choice (qid,reward,currentpage,title,description,choices,media,mid,alt,hint)VALUES ('$qid','$data->reward','1','$data->title','$data->description','$choic','$type','$sno','$data->alt','$data->hint')";
-	echo $query1;
+	mysql_query($query1);
 	
 	
 	}
