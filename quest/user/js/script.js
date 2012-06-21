@@ -2,6 +2,7 @@
  * @author sabareesh kkanan subramani
  * This script is used by index.php this helps in login the user
  */
+//passes user info to server to check credentials
 function verify()
 {
 	var user=$('username').value;
@@ -11,6 +12,7 @@ function verify()
 }
 function $(x)
 {return document.getElementById(x);}
+//ajax implementation POST
 function ajax(data,url,callback)
 {	
 var xmlhttp;
@@ -33,6 +35,7 @@ xmlhttp.open("POST",url,true);
 xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 xmlhttp.send(data);
 }
+//reacts according to the verification of credentials. if correct just refresh the page that will redirect to different page which has user functionalities
 function check(x)
 {
 	if(x=="true")

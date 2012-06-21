@@ -6,8 +6,10 @@
  * submits the form data and image data to server
  */
 var uniq=Math.floor((Math.random()*100)+1);
+//shortcut to get object with their id
 function $(x)
 {return document.getElementById(x);}
+//ajax POST request
 function ajax(data,url,callback)
 {	
 var xmlhttp;
@@ -30,6 +32,7 @@ xmlhttp.open("POST",url,true);
 xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 xmlhttp.send(data);
 }
+//this function invoked when student selects a hunt
 function huntsel(x)
 { 
 	var hunt=hunts[x];
@@ -37,7 +40,9 @@ function huntsel(x)
 	$('activity').innerHTML=multiple;
 	starter();
 }
+//has the boundary information of selected hunt
 var huntboundary;
+//invoked when student submits the form .checks for validity of data and submits the information through ajax
 function check(form,exe)
 {
 	if(exe)
@@ -77,7 +82,7 @@ function check(form,exe)
 	}
 	return false;
 }
-
+// a custom prototype thats been added to array object to find existence of particular value
 Array.prototype.has=function(v){
 for (i=0; i<this.length; i++){
 if (this[i]==v) return true;

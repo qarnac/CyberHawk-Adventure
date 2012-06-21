@@ -1,6 +1,8 @@
 //Json encoder and decoder Edited by Sabareesh .
 //While converting an array to a json string create array like 
 //	var x={}; but not var x=new Array(); else it wont work.
+//sample usage JSON.parse('json');
+//JSON.stringify('array or object');
 
 var JSON;
 if (!JSON) {

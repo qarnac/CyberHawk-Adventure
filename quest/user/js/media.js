@@ -3,7 +3,7 @@
  * File unused but it will be useful while handling multiple images
  * this will help displaying thumbnails. 
  */
-
+//displays thumbnails 
 function ref_thumb() {
 	thum = $("thumb");
 
@@ -16,7 +16,7 @@ function ref_thumb() {
 	}
 	Output(t_img, thum);
 }
-
+//just draws image on a div "img"
 function drawimg(x) {
 	$('img').innerHTML = "<img src='" + x.file.dataurl + "'></img>";
 }

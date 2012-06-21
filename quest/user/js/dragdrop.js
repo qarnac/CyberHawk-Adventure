@@ -5,6 +5,7 @@
  
  
   */
+ //checks validity of image
 function validimg(url) {
 
 	if (!checkURL(url)) {
@@ -15,10 +16,11 @@ function validimg(url) {
 
 	// can't submit the form yet, it will get sumbitted in the callback
 }
+//supported formats
 function checkURL(url) {
 	return (url.match(/\.(jpeg|jpg|gif|png)$/) != null);
 }
-
+//initialises the file api
 function starter() {
 	// call initialization file
 	if (window.File && window.FileReader && window.FileList && window.Blob) {

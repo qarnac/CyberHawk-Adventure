@@ -5,12 +5,13 @@
  * finds geo location of image
  * If geo location is not found displays map whilch allows user to select a location from it.
  */
+//creates the media object thta has compressed image data url and geo co-ordinates
 function geocompress(file, type) {
 	this.file = compress(file, type);
 	this.loc = gpsverify(file);
 	this.verify=function(){if(this.file.dataurl && this.loc.latlng){this.file.dataurl=this.file.dataurl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");return true;}else return false;} 
 }
-
+//Compresses the image by first by resizing the image to smaller size and converting the resized image to jpeg dta url with quality of 0.8
 function compress(file, type) {
 
 	var x = new Object();
@@ -51,21 +52,21 @@ function compress(file, type) {
 	}
 	return x;
 }
-
+//constructor for latlng object
 function latlng(lat, lng) {
 	this.lat = parseFloat(lat);
 	this.lng = parseFloat(lng);
 }
-
+//constructor for a rectangle object
 function georect(dim1, dim2) {
 	this.topleft = dim1;
 	this.bottomright = dim2;
 }
-
+//checks whether a latlng point is inside a rectangle
 function checkloc(rect, loc) {
 	return rect.topleft.lat < loc.lat && rect.bottomright.lat > loc.lat && rect.topleft.lng < loc.lng && rect.bottomright.lng > loc.lng;
 }
-
+//gets meta data like the geo tag in the image. if doesnt exist gets it with help of google maps and user
 function gpsverify(file) {
 	var loc = new Object();
 	var binary_reader = new FileReader();
@@ -90,13 +91,13 @@ function gpsverify(file) {
 	}
 	return loc;
 }
-
+//finds the center of a rectangle
 function rectcenter(x) {
 
 	return new latlng((x.topleft.lat + x.bottomright.lat) / 2, (x.topleft.lng + x.bottomright.lng) / 2);
 
 }
-
+//google maps used to get the geo cordinates of picture inside a hunt area
 function gmaps() {
 	//map
 	var x = new Object();
@@ -152,7 +153,7 @@ function gmaps() {
 	}
 
 }
-
+//switches between displaying map and the form
 function mapdisp(x) {
 	if (x) {
 		$('map_canvas').style.display = 'block';
