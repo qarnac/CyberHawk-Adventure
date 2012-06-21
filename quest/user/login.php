@@ -13,6 +13,7 @@ if(isset($_POST['user']))
 		$result=mysql_fetch_assoc($result);
 		$_SESSION=$result;
 		$_SESSION['login']=true;
+		$_SESSION['who']='student';
 		echo "true";
 	}
 	else {
