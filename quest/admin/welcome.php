@@ -78,11 +78,11 @@ function logged()
 			</div>
 			</div>
 			<script src="js/wscript.js"></script>
-			<script src="../js/dragdrop.js"></script>
-			<script src="../js/media.js"></script>
-			<script src="../js/jpegmeta.js"></script>
-			<script src="../js/geocompress.js"></script>
-			<script src="../js/json2.js"></script>
+			<script src="js/dragdrop.js"></script>
+			<script src="js/media.js"></script>
+			<script src="js/jpegmeta.js"></script>
+			<script src="js/geocompress.js"></script>
+			<script src="js/json2.js"></script>
 			<script>var multiple='<? echo $metaar[0]['content'];?>';
 					var hunts=JSON.parse('<? echo $hunts; ?>');
 					for(x=0;x<hunts.length;x++)
