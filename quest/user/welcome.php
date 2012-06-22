@@ -64,7 +64,7 @@ function logged()
 				<h1>Cyber Scavenger</h1>
 			</header>
 		<div id="main" role="main">
-				<div style="float: left;width: 200px;font-weight:bold">Welcome <? echo $_SESSION['firstname']; ?> <a href="logout.php">Log out</a></div>
+				<div style="float: left;width: 200px;font-weight:bold">Welcome <? echo $_SESSION['firstname']; ?> <a href="../php/logout.php">Log out</a></div>
 				<div style="float: left;width: 200px;">
 					<select onchange="huntsel(this.value)" id="selecthunt">
   					<option value="null">Select</option>

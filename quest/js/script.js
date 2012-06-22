@@ -7,8 +7,10 @@ function verify()
 {
 	var user=$('username').value;
 	var pwd=$('password').value;
-	var data="user="+user+"&pwd="+pwd;
-	ajax(data,"login.php",check);
+	var who=$('who').value;
+	var data="user="+user+"&pwd="+pwd+"&who="+who;
+	ajax(data,"php/login.php",check);
+	return false;
 }
 function $(x)
 {return document.getElementById(x);}
@@ -40,6 +42,6 @@ function check(x)
 {
 	if(x=="true")
 	window.location.reload();
-	else
-	alert(x);
+	else if(x=="false")
+	alert("Username or Password is not correct");
 	}

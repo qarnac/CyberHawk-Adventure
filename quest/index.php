@@ -33,22 +33,29 @@
 <?php
 
 session_start();
-if(isset($_SESSION['login'])==true)
+if(isset($_SESSION['login'])==true )
 {
-	header("Location: welcome.php");
+	if($_SESSION['who']=='student')
+	header("Location: user/welcome.php");
+	else if($_SESSION['who']=='teacher')
+	header("Location: admin/welcome.php");
 }
 else {
 form();
 }
 function form()
-{$form='<form id="login" onsubmit="return false;">
+{$form='<form id="login" onsubmit="return verify();">
     <h1>Log In</h1>
     <fieldset id="inputs">
         <input id="username" type="text" placeholder="Username" autofocus required>
         <input id="password" type="password" placeholder="Password" required>
+        <select id="who">
+         <option value="students">Student</option>
+  <option value="teacher">Admin</option>
+</select>
     </fieldset>
     <fieldset id="actions">
-        <input type="submit" id="submit" value="Log in" onclick="verify()">
+        <input type="submit" id="submit" value="Log in">
         <a href="">Forgot your password?</a>
     </fieldset>
 </form>';
