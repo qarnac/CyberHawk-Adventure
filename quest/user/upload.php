@@ -12,15 +12,16 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 	$content=$_POST['content'];
 	$content=json_decode($content);
 	//decides media id
-	$m=mysql_fetch_assoc(query("SELECT id FROM image ORDER BY id DESC"));
-	$m=$m['id'];
-	$m++;
+	query("INSERT INTO image (images) VALUES ('temp')");
+	$m= mysql_insert_id();
 	//
 	$path="uploads/".$m.".jpg";
 	//creates image file
 	decodeimage($content->media->file->dataurl, $path);
-	query("INSERT INTO image (id,images) VALUES ($m,'".$path."')");
+	query("UPDATE image SET images='".$path."' WHERE id=$m");
+
 	query("INSERT INTO stud_activity (student_id,hunt_id,media,media_id,created,status,lat,lng,aboutmedia,whythis,howhelpfull,yourdoubt,mquestion,choices) VALUES ($studentid,".esc($content->huntid).",'image.php',".$m.",'".date('Y-m-d H:i:s')."','new','".esc($content->media->loc->latlng->lat)."','".esc($content->media->loc->latlng->lng)."','".esc($content->aboutmedia)."','".esc($content->whythis)."','".esc($content->howhelpful)."','".esc($content->yourdoubt)."','".esc($content->mquestion)."','".choic($content)."')");
+	
 	echo "true";
 }
 //converts the choices into json format

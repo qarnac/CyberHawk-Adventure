@@ -6,14 +6,14 @@
  * submits the data to the server
  */
 session_start();
-if(isset($_SESSION['login'])==true&&$_SESSION['who']=='student')
+if(isset($_SESSION['login'])==true&&$_SESSION['who']=='teacher')
 logged();
-else if($_SESSION['who']=='teacher')
+else if($_SESSION['who']=='student')
 {
-header("Location: ../admin");	
+header("Location: ../user");	
 }
 else {
-		header("Location: ../user");
+		header("Location: ../admin");
 }
 function logged()
 {
