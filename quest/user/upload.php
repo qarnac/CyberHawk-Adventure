@@ -15,7 +15,7 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 	query("INSERT INTO image (images) VALUES ('temp')");
 	$m= mysql_insert_id();
 	//
-	$path="uploads/".$m.".jpg";
+	$path="uploads/".$m.".jpeg";
 	//creates image file
 	decodeimage($content->media->file->dataurl, $path);
 	query("UPDATE image SET images='".$path."' WHERE id=$m");

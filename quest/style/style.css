@@ -379,3 +379,11 @@ input[type="submit"] {
 	z-index: 1;
 	display: block;
 }
+.elem {
+	
+}
+.elem img{
+	height: 280px;
+	width:450px;
+	float: right;
+}

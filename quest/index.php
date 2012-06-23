@@ -35,7 +35,7 @@
 session_start();
 if(isset($_SESSION['login'])==true )
 {
-	if($_SESSION['who']=='student')
+	if($_SESSION['who']=='students')
 	header("Location: user/welcome.php");
 	else if($_SESSION['who']=='teacher')
 	header("Location: admin/welcome.php");

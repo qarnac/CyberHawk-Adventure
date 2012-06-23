@@ -8,12 +8,12 @@
 session_start();
 if(isset($_SESSION['login'])==true&&$_SESSION['who']=='teacher')
 logged();
-else if($_SESSION['who']=='student')
+else if($_SESSION['who']=='students')
 {
 header("Location: ../user");	
 }
 else {
-		header("Location: ../admin");
+		header("Location: ../");
 }
 function logged()
 {
@@ -23,7 +23,7 @@ function logged()
 		while($x=mysql_fetch_assoc($metah))
 		array_push($metaar,$x);
 		$hunts=array();
-		$result=query("SELECT * FROM hunt WHERE tid='".$_SESSION['tid']."' AND status='open'" );
+		$result=query("SELECT * FROM hunt WHERE tid='".$_SESSION['id']."' AND status='open'" );
 			if(mysql_num_rows($result)>0)
 			{
 				while($x=mysql_fetch_assoc($result))
@@ -64,7 +64,7 @@ function logged()
 				<h1>Cyber Scavenger</h1>
 			</header>
 		<div id="main" role="main">
-				<div style="float: left;width: 200px;font-weight:bold">Welcome <? echo $_SESSION['firstname']; ?> <a href="logout.php">Log out</a></div>
+				<div style="float: left;width: 200px;font-weight:bold">Welcome <? echo $_SESSION['firstname']; ?> <a href="../php/logout.php">Log out</a></div>
 				<div style="float: left;width: 200px;">
 					<select onchange="huntsel(this.value)" id="selecthunt">
   					<option value="null">Select</option>
@@ -78,11 +78,11 @@ function logged()
 			</div>
 			</div>
 			<script src="js/wscript.js"></script>
-			<script src="js/dragdrop.js"></script>
-			<script src="js/media.js"></script>
-			<script src="js/jpegmeta.js"></script>
-			<script src="js/geocompress.js"></script>
-			<script src="js/json2.js"></script>
+			<script src="../js/dragdrop.js"></script>
+			<script src="../js/media.js"></script>
+			<script src="../js/jpegmeta.js"></script>
+			<script src="../js/geocompress.js"></script>
+			<script src="../js/json2.js"></script>
 			<script>var multiple='<? echo $metaar[0]['content'];?>';
 					var hunts=JSON.parse('<? echo $hunts; ?>');
 					for(x=0;x<hunts.length;x++)
