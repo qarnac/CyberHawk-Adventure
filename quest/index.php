@@ -51,7 +51,7 @@ function form()
         <input id="password" type="password" placeholder="Password" required>
         <select id="who">
          <option value="students">Student</option>
-  <option value="teacher">Admin</option>
+  <option value="teacher">Teacher</option>
 </select>
     </fieldset>
     <fieldset id="actions">

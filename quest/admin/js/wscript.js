@@ -98,31 +98,59 @@ function dispactivity(x)
 }
 function actdisp(x)
 {
-	var div=ce('div');
-	div.class='elem';
-	var img=ce('img');
+	var div=document.createElement('div');
+	div.className='elem';
+	
+	var img=document.createElement('img');
 	img.src="../php/image.php?id="+x['media_id'];
 	div.appendChild(img);
-	var ans=JSON.parse(x['choices']); 
-	div.appendChild(ce('label').appendChild(document.createTextNode(x['LAT : ']+x['lat'])));
-	div.appendChild(ce('label').appendChild(document.createTextNode(x['LNG : ']+x['lng'])));
-	div.appendChild(ce('label').appendChild(document.createTextNode(x['LAT : ']+x['aboutmedia'])));
-	div.appendChild(ce('label').appendChild(document.createTextNode(x['LAT : ']+x['whythis'])));
-	div.appendChild(ce('label').appendChild(document.createTextNode(x['LAT : ']+x['howhelpfull'])));
-	div.appendChild(ce('label').appendChild(document.createTextNode(x['LAT : ']+x['yourdoubt'])));
-	div.appendChild(ce('label').appendChild(document.createTextNode(x['LAT : ']+x['mquestion'])));
+	var ans=JSON.parse(x['choices']);
+ 
+	div.appendChild(ce('label','Multiple Chocie Question : '+x['mquestion']));
+	for(y=0;y<ans.choices.length;y++)
+	if(ans.choices[y].ans=="true")
+	{
+		var temp=ce('label',ans.choices[y].choice+" . "+ans.choices[y].content);
+		temp.style.color="green";
+		div.appendChild(temp);
+	}
+	else
+	div.appendChild(ce('label',ans.choices[y].choice+" . "+ans.choices[y].content));
+	 temp=ce('div','');
+	temp.className='clear';
+	div.appendChild(temp);
+	
+	div.appendChild(ce('label','LAT : '+x['lat']));
+	div.appendChild(ce('label','LNG : '+x['lng']));
+	div.appendChild(ce('label','About Picture : '+x['aboutmedia']));
+	div.appendChild(ce('label','Reason to choose this picture : '+x['whythis']));
+	div.appendChild(ce('label','How does this picture show what you have learned about in your science class ?  : '+x['howhelpfull']));
+	div.appendChild(ce('label','What is a question you have about this picture ? : '+x['yourdoubt']));
+	 temp=ce('div','');
+	temp.className='clear';
+	div.appendChild(temp);
+	temp=ce('label','Comments');
+	temp.style.width='50px';
+	temp.appendChild(document.createElement('textarea'));
+	div.appendChild(temp);
+	temp=document.createElement('select');
+	temp.options[temp.options.length]=new Option("ACCEPT","true");
+	temp.options[temp.options.length]=new Option("DECLINE","false");
+	div.appendChild(temp);
+		 temp=ce('div','');
+	temp.className='clear';
+	div.appendChild(temp);
+	div.appendChild(document.createElement('hr'));
 	$('activity').appendChild(div);
-	ans.correct=function(){
-		for(x in this.choices)
-		if(this.choices[x].ans=="true")
-		return this.choices[x];
-	};
-	var correctAnswer = ans.correct(); 
+
+	
 }
 //
-function ce(x)
+function ce(x,y)
 {
-	return document.createElement(x);
+	x= document.createElement(x);
+	x.innerHTML=y;
+	return x;
 }
 // a custom prototype thats been added to array object to find existence of particular value
 Array.prototype.has=function(v){

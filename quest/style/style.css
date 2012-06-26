@@ -9,6 +9,7 @@ html, body {
 	background-color: white;
 	margin: 0 auto;
 	margin-bottom: 40px;
+	
 }
 body {
 	font: 12px 'Lucida Sans Unicode', 'Trebuchet MS', Arial, Helvetica;
@@ -290,7 +291,7 @@ div.filedrag {
 
 #activity {
 	margin: 10px;
-	height: auto;
+	height: 100%;
 }
 .split {
 	float: left;
@@ -321,6 +322,7 @@ label {
 	float: left;
 	padding: 5px;
 	margin: 10px;
+	height: auto;
 }
 .small {
 	color: #666666;
@@ -380,10 +382,28 @@ input[type="submit"] {
 	display: block;
 }
 .elem {
+	display: block;
+	min-height: 520px;
 	
 }
 .elem img{
 	height: 280px;
 	width:450px;
 	float: right;
+}
+.elem label{
+	width:440px;
+	height: auto;
+}
+.elem select{
+	float:left;
+}
+.elem textarea{
+	float:left;
+	width:440px;
+}
+.elem hr{
+	height:4px;
+	width: 85%;
+	background-color: black;
 }
