@@ -96,6 +96,18 @@ function dispactivity(x)
 	}
 	
 }
+var feed={};
+function addfeed(x,y,z)
+{
+	if(feed.z)
+	feed.z.x=y;
+	else
+	{
+		feed.z=new Object();
+		feed.z.x=y;
+	}
+	
+}
 function actdisp(x)
 {
 	var div=document.createElement('div');
@@ -104,6 +116,7 @@ function actdisp(x)
 	var img=document.createElement('img');
 	img.src="../php/image.php?id="+x['media_id'];
 	div.appendChild(img);
+	div.appendChild(ce('label',x['firstname']+" "+x['lastname']))
 	var ans=JSON.parse(x['choices']);
  
 	div.appendChild(ce('label','Multiple Chocie Question : '+x['mquestion']));
@@ -116,10 +129,6 @@ function actdisp(x)
 	}
 	else
 	div.appendChild(ce('label',ans.choices[y].choice+" . "+ans.choices[y].content));
-	 temp=ce('div','');
-	temp.className='clear';
-	div.appendChild(temp);
-	
 	div.appendChild(ce('label','LAT : '+x['lat']));
 	div.appendChild(ce('label','LNG : '+x['lng']));
 	div.appendChild(ce('label','About Picture : '+x['aboutmedia']));
@@ -130,12 +139,15 @@ function actdisp(x)
 	temp.className='clear';
 	div.appendChild(temp);
 	temp=ce('label','Comments');
-	temp.style.width='50px';
-	temp.appendChild(document.createElement('textarea'));
+	temp.style.width='80px';
+	var temp1=document.createElement('textarea');
+	temp1.addEventListener('change',function(e){addfeed('comment',e,x['id']); },true);
+	temp.appendChild(temp1);
 	div.appendChild(temp);
 	temp=document.createElement('select');
 	temp.options[temp.options.length]=new Option("ACCEPT","true");
 	temp.options[temp.options.length]=new Option("DECLINE","false");
+	temp.addEventListener('change',function(e){addfeed('status',e,x['id']);},true);
 	div.appendChild(temp);
 		 temp=ce('div','');
 	temp.className='clear';
