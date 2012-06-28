@@ -84,6 +84,7 @@ function check(form,exe)
 	return false;
 }
 //displays acticity created by students
+var activities=new Array();
 function dispactivity(x)
 {
 	if(x=="false")
@@ -91,23 +92,48 @@ function dispactivity(x)
 	else
 	{
 		x=JSON.parse(x);
+		
+			var temp=document.createElement('select');
+			temp.id='slist';
+			temp.size=10;
+			temp.multiple=multiple;
 		for(m=0;m<x.length;m++)
-		actdisp(x[m]);
+		{
+			if(activities.hassid(x[m]['student_id'])=='false')
+			{
+				var z=new Object();
+				z.sid=x[m]['student_id'];
+				z.contents=new Array();
+				z.contents.push(x[m]);
+					activities.push(z);
+		temp.options[temp.options.length]=new Option(x[m]['firstname']+" "+x[m]['lastname'],x[m]['student_id']);
+	
+				temp.onchange = function() {
+					$('activity').innerHTML="";
+					var x=activities.hassid(this.value);
+					if ( x!= "false")
+					{
+						for(i=0;i<activities[x].contents.length;i++)
+						actdisp(activities[x].contents[i])
+					}
+					else
+					alert("something went wrong")
+				}; 
+
+	
+			}
+			else
+			{
+				var z=activities.hassid(x[m]['student_id']);
+				activities[z].contents.push(x[m]);
+			}
+			}
+		$('students').appendChild(temp);
+		//actdisp(x[m]);
 	}
 	
 }
-var feed={};
-function addfeed(x,y,z)
-{
-	if(feed.z)
-	feed.z.x=y;
-	else
-	{
-		feed.z=new Object();
-		feed.z.x=y;
-	}
-	
-}
+
 function actdisp(x)
 {
 	var div=document.createElement('div');
@@ -115,7 +141,15 @@ function actdisp(x)
 	
 	var img=document.createElement('img');
 	img.src="../php/image.php?id="+x['media_id'];
+	img.onmouseover=function(){
+		this.style.height='281px';this.style.width='450px';}
+	img.onmouseout=function(){
+		this.style.height='80px';this.style.width='100px';}
+		
 	div.appendChild(img);
+	var dummy=document.createElement('div');
+	dummy.className='dummyimg';
+	div.appendChild(dummy);
 	div.appendChild(ce('label',x['firstname']+" "+x['lastname']))
 	var ans=JSON.parse(x['choices']);
  
@@ -129,25 +163,32 @@ function actdisp(x)
 	}
 	else
 	div.appendChild(ce('label',ans.choices[y].choice+" . "+ans.choices[y].content));
-	div.appendChild(ce('label','LAT : '+x['lat']));
-	div.appendChild(ce('label','LNG : '+x['lng']));
-	div.appendChild(ce('label','About Picture : '+x['aboutmedia']));
-	div.appendChild(ce('label','Reason to choose this picture : '+x['whythis']));
-	div.appendChild(ce('label','How does this picture show what you have learned about in your science class ?  : '+x['howhelpfull']));
-	div.appendChild(ce('label','What is a question you have about this picture ? : '+x['yourdoubt']));
-	 temp=ce('div','');
+		 temp=ce('div','');
 	temp.className='clear';
 	div.appendChild(temp);
-	temp=ce('label','Comments');
-	temp.style.width='80px';
+	div.appendChild(ce('label','LAT      : '+x['lat']));
+	div.appendChild(ce('label','LNG      : '+x['lng']));
+	div.appendChild(ce('label','About    : '+x['aboutmedia']));
+	div.appendChild(ce('label','Reason   : '+x['whythis']));
+	div.appendChild(ce('label','Evidence : '+x['howhelpfull']));
+	div.appendChild(ce('label','Question : '+x['yourdoubt']));
+	
+	var comments=ce('label','Comments');
+	comments.style.width='80px';
 	var temp1=document.createElement('textarea');
-	temp1.addEventListener('change',function(e){addfeed('comment',e,x['id']); },true);
-	temp.appendChild(temp1);
-	div.appendChild(temp);
+	comments.appendChild(temp1);
+	
 	temp=document.createElement('select');
 	temp.options[temp.options.length]=new Option("ACCEPT","true");
 	temp.options[temp.options.length]=new Option("DECLINE","false");
-	temp.addEventListener('change',function(e){addfeed('status',e,x['id']);},true);
+
+	temp.onchange = function() {
+		if (this.value == "false")
+			this.parentNode.insertBefore(comments, this.nextSibling);
+			else
+			this.parentNode.removeChild(comments);
+	}; 
+	
 	div.appendChild(temp);
 		 temp=ce('div','');
 	temp.className='clear';
@@ -170,4 +211,10 @@ for (i=0; i<this.length; i++){
 if (this[i]==v) return true;
 }
 return false;
+}
+Array.prototype.hassid=function(v){
+for (i=0; i<this.length; i++){
+if (this[i].sid==v) return i;
+}
+return "false";
 }

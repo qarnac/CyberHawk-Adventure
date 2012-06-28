@@ -73,7 +73,8 @@ function logged()
 					</select>
 				</div>
 				<div class="clear"></div>
-				<div id="activity"></div><div id='thumb'></div><div id='video'></div>
+				<div id="students"></div>
+				<div id="activity"></div>
 			</div>
 			</div>
 			</div>

@@ -383,16 +383,20 @@ input[type="submit"] {
 }
 .elem {
 	display: block;
-	min-height: 520px;
+	min-height:100%;
+	width:700px;
 	
 }
 .elem img{
-	height: 280px;
-	width:450px;
-	float: right;
+	height: 80px;
+	width:100px;
+	margin-left:580px;
+	margin-right:40px;
+	position: absolute;
+	
 }
 .elem label{
-	width:440px;
+	width:300px;
 	height: auto;
 	margin:3px;
 	padding:2px;
@@ -402,10 +406,22 @@ input[type="submit"] {
 }
 .elem textarea{
 	float:left;
-	width:440px;
+	width:300px;
 }
 .elem hr{
 	height:4px;
 	width: 85%;
 	background-color: black;
+}
+.dummyimg{
+	height: 80px;
+	width:100px;
+	
+	margin-right:40px;
+	float:right;
+	
+}
+#students {
+	margin-left:700px;
+	position: fixed;
 }
