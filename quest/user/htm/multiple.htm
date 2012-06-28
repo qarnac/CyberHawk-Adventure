@@ -7,20 +7,20 @@
 		</div> 
 	</fieldset>                
 <form class="activ" name="multiple" onsubmit="return check(this,true);">
-	<div  class="split"><label>What is the picture about ? *<textarea name="aboutmedia" required="required" ></textarea></label></div> 
-	<div  class="split"><label>Why did you choose this picture ? *<textarea name="whythis"  required="required" ></textarea></label></div>  
-	<div  class="split"><label>How does this picture show what you have learned about in your science class ? *<textarea name="howhelpful" required="required" ></textarea></label></div> 	            
-	<div  class="split"><label> What is a question you have about this picture ? *<textarea name="yourdoubt"  required="required" ></textarea></label></div>           
+	<div  class="split"><label>What is the picture about ? *<textarea name="aboutmedia" maxlength="100" required="required" ></textarea></label></div> 
+	<div  class="split"><label>Why did you choose this picture ? *<textarea name="whythis" maxlength="100" required="required" ></textarea></label></div>  
+	<div  class="split"><label>How does this picture show what you have learned about in your science class ? *<textarea name="howhelpful" maxlength="100" required="required" ></textarea></label></div> 	            
+	<div  class="split"><label> What is a question you have about this picture ? *<textarea name="yourdoubt" maxlength="100" required="required" ></textarea></label></div>           
 	
 	<div class="clear"></div>  
 <div><label style="width: 600px"> Create a multiple choice question about this picture for your classmates to answer</label> </div>	      
 	<div class="clear"></div> 
-	<div  class="split" style="width: 600px"><label>Multiple choice question text: *<textarea  style="width: 600px" name="mquestion" c_type="textarea" c_req="true"  required="required" ></textarea></label></div>  
-	<div class="split"><label>Choice a* <input required="required"  type="text" name="a" placeholder="Enter Answer a"  required="required" />  <input checked type="radio" name="answer" value="a" c_req="true"/>  </label></div>        
-	<div  class="split"><label>Choice b* <input required="required"  type="text"  placeholder="Enter Answer b" name="b"   required="required" />  <input type="radio" name="answer" value="b" />  </label> </div>          
-	<div  class="split"><label>Choice c <input type="text"  placeholder="Enter Answer c" name="c"/><input type="radio" name="answer" value="c" /></label>    </div>            
-	<div  class="split"><label>Choice d <input type="text"  placeholder="Enter Answer d"  name="d" /><input type="radio" name="answer" value="d" /></label></div>           
-	 <div  class="split"><label>Choice e <input type="text"  placeholder="Enter Answer e" name="e" /><input type="radio" name="answer" value="e" /></label></div> 
+	<div  class="split" style="width: 600px"><label>Multiple choice question text: *<textarea  style="width: 600px" name="mquestion"   required="required" maxlength="100" ></textarea></label></div>  
+	<div class="split"><label>Choice a* <input required="required" maxlength="100" type="text" name="a" placeholder="Enter Answer a"  required="required" />  <input checked type="radio" name="answer" value="a" />  </label></div>        
+	<div  class="split"><label>Choice b* <input required="required" maxlength="100" type="text"  placeholder="Enter Answer b" name="b"   required="required" />  <input type="radio" name="answer" value="b" />  </label> </div>          
+	<div  class="split"><label>Choice c <input type="text" maxlength="100" placeholder="Enter Answer c" name="c"/><input  type="radio" name="answer" value="c" /></label>    </div>            
+	<div  class="split"><label>Choice d <input type="text" maxlength="100" placeholder="Enter Answer d"  name="d" /><input type="radio" name="answer" value="d" /></label></div>           
+	 <div  class="split"><label>Choice e <input type="text" maxlength="100" placeholder="Enter Answer e" name="e" /><input type="radio" name="answer" value="e" /></label></div> 
 	 <div class="clear"></div>
 	  <div class="split"><input type="submit" value="Submit"/> </div> <div class="clear"></div>
 </form>

@@ -87,6 +87,7 @@ function check(form,exe)
 }
 //displays acticity created by students
 var activities=new Array();
+var feed={};
 function dispactivity(x)
 {
 	if(x=="false")
@@ -99,37 +100,38 @@ function dispactivity(x)
 			temp.id='slist';
 			temp.size=10;
 			temp.multiple=multiple;
-		for(m=0;m<x.length;m++)
-		{
-			if(activities.hassid(x[m]['student_id'])=='false')
-			{
-				var z=new Object();
-				z.sid=x[m]['student_id'];
-				z.contents=new Array();
-				z.contents.push(x[m]);
-					activities.push(z);
-		temp.options[temp.options.length]=new Option(x[m]['firstname']+" "+x[m]['lastname'],x[m]['student_id']);
 	
-				temp.onchange = function() {
-					$('activity').innerHTML="";
-					var x=activities.hassid(this.value);
-					if ( x!= "false")
-					{
-						for(i=0;i<activities[x].contents.length;i++)
-						actdisp(activities[x].contents[i])
-					}
-					else
-					alert("something went wrong")
-				}; 
+		for ( m = 0; m < x.length; m++) {
 
-	
-			}
-			else
-			{
-				var z=activities.hassid(x[m]['student_id']);
+			if (activities.hassid(x[m]['student_id']) == 'false') {
+				var z = new Object();
+				z.sid = x[m]['student_id'];
+				z.contents = new Array();
+				z.contents.push(x[m]);
+				activities.push(z);
+				temp.options[temp.options.length] = new Option(x[m]['firstname'] + " " + x[m]['lastname'], x[m]['student_id']);
+
+				temp.onchange = function() {
+					$('activity').innerHTML = "";
+					var x = activities.hassid(this.value);
+					if (x != "false") {
+						for ( i = 0; i < activities[x].contents.length; i++)
+							actdisp(activities[x].contents[i])
+					} else
+						alert("something went wrong")
+				};
+
+			} else {
+				var z = activities.hassid(x[m]['student_id']);
 				activities[z].contents.push(x[m]);
 			}
-			}
+			var z=new Object();
+			z.grant="true";
+			z.comment='';
+			feed[x[m]['id']]=z;
+
+		}
+
 		$('students').appendChild(temp);
 		//actdisp(x[m]);
 	}
@@ -154,8 +156,12 @@ function actdisp(x)
 	div.appendChild(dummy);
 	div.appendChild(ce('label',x['firstname']+" "+x['lastname']))
 	var ans=JSON.parse(x['choices']);
- 
-	div.appendChild(ce('label','Multiple Chocie Question : '+x['mquestion']));
+ 	temp=ce('label','Multiple Chocie Question : '+x['mquestion']);
+ 	temp.style.width='550px';
+	div.appendChild(temp);
+	 temp=ce('div','');
+	temp.className='clear';
+	div.appendChild(temp);
 	for(y=0;y<ans.choices.length;y++)
 	if(ans.choices[y].ans=="true")
 	{
@@ -172,28 +178,48 @@ function actdisp(x)
 	div.appendChild(ce('label','Reason   : '+x['whythis']));
 	div.appendChild(ce('label','Evidence : '+x['howhelpfull']));
 	div.appendChild(ce('label','Question : '+x['yourdoubt']));
-	
+		 temp=ce('div','');
+	temp.className='clear';
+	div.appendChild(temp);
 	var comments=ce('label','Comments');
 	comments.style.width='80px';
 	var temp1=document.createElement('textarea');
+
+	temp1.onchange = function() {
+		feed[x['id']].comment = this.value;
+	}
 	comments.appendChild(temp1);
 	
 	temp=document.createElement('select');
 	temp.options[temp.options.length]=new Option("ACCEPT","true");
 	temp.options[temp.options.length]=new Option("DECLINE","false");
-
+	
 	temp.onchange = function() {
 		if (this.value == "false")
+		{
 			this.parentNode.insertBefore(comments, this.nextSibling);
+			feed[x['id']].grant="false";
+		}
 			else
-			this.parentNode.removeChild(comments);
+			{
+				this.parentNode.removeChild(comments);
+				feed[x['id']].grant='true';
+				feed[x['id']].comment='';
+			}
+			
 	}; 
+	temp.value=feed[x['id']].grant;
+
+	div.appendChild(temp);
+	if(temp.value=="false")
+	{
+		comments.childNodes[1].value=feed[x['id']].comment;
+		temp.parentNode.insertBefore(comments, temp.nextSibling);
+	}
 	
-	div.appendChild(temp);
-		 temp=ce('div','');
-	temp.className='clear';
-	div.appendChild(temp);
+	
 	div.appendChild(document.createElement('hr'));
+		
 	$('activity').appendChild(div);
 
 	
