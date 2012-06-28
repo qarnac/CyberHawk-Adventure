@@ -168,8 +168,6 @@ function actdisp(x)
 		 temp=ce('div','');
 	temp.className='clear';
 	div.appendChild(temp);
-	div.appendChild(ce('label','LAT      : '+x['lat']));
-	div.appendChild(ce('label','LNG      : '+x['lng']));
 	div.appendChild(ce('label','About    : '+x['aboutmedia']));
 	div.appendChild(ce('label','Reason   : '+x['whythis']));
 	div.appendChild(ce('label','Evidence : '+x['howhelpfull']));
