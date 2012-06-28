@@ -35,11 +35,13 @@ xmlhttp.send(data);
 //this function invoked when student selects a hunt
 function huntsel(x)
 { 
-	var hunt=hunts[x];
+	if(x!='null')
+	{	var hunt=hunts[x];
 	//huntboundary=new georect(new latlng(hunt['minlat'],hunt['minlng']),new latlng(hunt['maxlat'],hunt['maxlng']));
 	ajax("id="+hunt['id'],'retrive.php',dispactivity);
 	//$('activity').innerHTML=multiple;
-	starter();
+	starter();}
+
 }
 //has the boundary information of selected hunt
 var huntboundary;
