@@ -43,48 +43,7 @@ function huntsel(x)
 	starter();}
 
 }
-//has the boundary information of selected hunt
-var huntboundary;
-//invoked when student submits the form .checks for validity of data and submits the information through ajax
-function check(form,exe)
-{
-	if(exe)
-	{
-		
-		var contents={};	
-		var x=document.getElementsByName('answer');
-		for(var i=0;i<x.length;i++)
-		{
-			if(x[i].checked)
-			contents['answer']=x[i].value;
-			break;
-		}
-		var y=new Array("textarea","text","number");
-		for(var i=0;i<form.length;i++)
-		{
-		if(y.has(form[i].type))
-			contents[form[i].name]=form[i].value;	
-		}
-		if(morc && morc.verify())
-		{contents['media']=morc;
-		contents['huntid']=hunts[0]['id'];
-		contents=JSON.stringify(contents);
-		contents="content="+contents;
-	
-			ajax(contents, "upload.php", function(x) {
-				if (x == "true")
-					alert("sucess");
-				else
-					alert(x);
-					
-			}); 
 
-	}
-	else
-	alert("please Select a Image");
-	}
-	return false;
-}
 //displays acticity created by students
 var activities=new Array();
 var feed={};
@@ -132,6 +91,11 @@ function dispactivity(x)
 
 		}
 
+		$('students').appendChild(temp);
+		temp=document.createElement('input');
+		temp.type='button';
+		temp.value="Update DB";
+		temp.onclick=function(){ajax('content='+JSON.stringify(feed),'upload.php',function(x){alert(x)})};
 		$('students').appendChild(temp);
 		//actdisp(x[m]);
 	}
