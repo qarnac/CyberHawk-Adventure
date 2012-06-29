@@ -76,7 +76,7 @@ function create_activity_obj(x)
 					var x = activities.hassid(this.value);
 					if (x != "false") {
 						for ( i = 0; i < activities[x].contents.length; i++)
-							actdisp(activities[x].contents[i])
+							displayactivity(activities[x].contents[i])
 					} else
 						alert("something went wrong")
 				};
