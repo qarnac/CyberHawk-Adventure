@@ -1,9 +1,9 @@
 <?php
 /*
- * This automatically gets appropriate hunt which is active to particular student depending on the teacher of the student.
- * It displays forms and allows user to fill the required information
- * allows image to be dropped or selected from a directory and also compresses the image and also tags the image with geo location if found in the meta tag else it asks user to tag the location of the image with a google map.
- * submits the data to the server
+ * Checks for the Session
+ * If there is no valid session redirects to the Login page
+ * Displays hunts created by the Teacher who logged in.
+ * Displays the activity created by students by showing a list of students who created activity and teacher can select a student to view the activity
  */
 session_start();
 if(isset($_SESSION['login'])==true&&$_SESSION['who']=='teacher')

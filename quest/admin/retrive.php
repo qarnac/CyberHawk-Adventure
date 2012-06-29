@@ -1,4 +1,7 @@
-<?
+<?php
+//Retrives the students name and also all the column from the table stud_activity with respect to id of the hunt.
+//Used by Ajax request from wscript.js .
+//Returns Json string to the Client
 if(isset($_POST['id']))
 {
 	include "../php/credentials.php";

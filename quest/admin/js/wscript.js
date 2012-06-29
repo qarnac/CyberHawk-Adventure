@@ -2,8 +2,8 @@
  * Common scripts needed
  * handles ajax
  * handles selection of a hunt activity
- * verifies all the form data
- * submits the form data and image data to server
+ * Creates activitiy array 
+ * USED by welcome.php
  */
 var uniq=Math.floor((Math.random()*100)+1);
 //shortcut to get object with their id
@@ -38,16 +38,17 @@ function huntsel(x)
 	if(x!='null')
 	{	var hunt=hunts[x];
 	//huntboundary=new georect(new latlng(hunt['minlat'],hunt['minlng']),new latlng(hunt['maxlat'],hunt['maxlng']));
-	ajax("id="+hunt['id'],'retrive.php',dispactivity);
+	ajax("id="+hunt['id'],'retrive.php',create_activity_obj);
 	//$('activity').innerHTML=multiple;
 	starter();}
 
 }
 
-//displays acticity created by students
-var activities=new Array();
-var feed={};
-function dispactivity(x)
+
+var activities=new Array();// Holds all the activities of a particular hunt organised by student id
+var feed={};// Has the status of each activity like its id,comment and status.
+//Instantiates the array activities with student activitivities
+function create_activity_obj(x)
 {
 	if(x=="false")
 	alert("No one has created acticity yet");
@@ -102,94 +103,93 @@ function dispactivity(x)
 	
 }
 
-function actdisp(x)
+function displayactivity(x)
 {
 	var div=document.createElement('div');
 	div.className='elem';
-	
+	//Image Element
 	var img=document.createElement('img');
 	img.src="../php/image.php?id="+x['media_id'];
 	img.onmouseover=function(){
 		this.style.height='281px';this.style.width='450px';}
 	img.onmouseout=function(){
-		this.style.height='80px';this.style.width='100px';}
-		
+		this.style.height='80px';this.style.width='100px';}	
 	div.appendChild(img);
+	//Dummy place holder for image as because image is used with absolute positioning
 	var dummy=document.createElement('div');
 	dummy.className='dummyimg';
 	div.appendChild(dummy);
-	div.appendChild(ce('label',x['firstname']+" "+x['lastname']))
+	//USER Name elements ,Multiple choice question Elements
+	div.appendChild(createElement('label',x['firstname']+" "+x['lastname']))
 	var ans=JSON.parse(x['choices']);
- 	temp=ce('label','Multiple Chocie Question : '+x['mquestion']);
+ 	temp=createElement('label','Multiple Chocie Question : '+x['mquestion']);
  	temp.style.width='550px';
 	div.appendChild(temp);
-	 temp=ce('div','');
+	 temp=createElement('div','');
 	temp.className='clear';
 	div.appendChild(temp);
 	for(y=0;y<ans.choices.length;y++)
 	if(ans.choices[y].ans=="true")
 	{
-		var temp=ce('label',ans.choices[y].choice+" . "+ans.choices[y].content);
+		var temp=createElement('label',ans.choices[y].choice+" . "+ans.choices[y].content);
 		temp.style.color="green";
 		div.appendChild(temp);
 	}
 	else
-	div.appendChild(ce('label',ans.choices[y].choice+" . "+ans.choices[y].content));
-		 temp=ce('div','');
+	div.appendChild(createElement('label',ans.choices[y].choice+" . "+ans.choices[y].content));
+	//Clears the Div 
+		 temp=createElement('div','');
 	temp.className='clear';
 	div.appendChild(temp);
-	div.appendChild(ce('label','About    : '+x['aboutmedia']));
-	div.appendChild(ce('label','Reason   : '+x['whythis']));
-	div.appendChild(ce('label','Evidence : '+x['howhelpfull']));
-	div.appendChild(ce('label','Question : '+x['yourdoubt']));
-		 temp=ce('div','');
-	temp.className='clear';
+	//Other Question Elements
+	div.appendChild(createElement('label','About    : '+x['aboutmedia']));
+	div.appendChild(createElement('label','Reason   : '+x['whythis']));
+	div.appendChild(createElement('label','Evidence : '+x['howhelpfull']));
+	div.appendChild(createElement('label','Question : '+x['yourdoubt']));
+	//Clears the Div
+	
+	temp = createElement('div', '');
+	temp.className = 'clear';
 	div.appendChild(temp);
-	var comments=ce('label','Comments');
-	comments.style.width='80px';
-	var temp1=document.createElement('textarea');
-
+	//Comments and status Elements ad their Eventhandling on onchange to update the variable feed
+	var comments = createElement('label', 'Comments');
+	comments.style.width = '80px';
+	var temp1 = document.createElement('textarea');
 	temp1.onchange = function() {
 		feed[x['id']].comment = this.value;
 	}
 	comments.appendChild(temp1);
-	
-	temp=document.createElement('select');
-	temp.options[temp.options.length]=new Option("ACCEPT","true");
-	temp.options[temp.options.length]=new Option("DECLINE","false");
-	
-	temp.onchange = function() {
-		if (this.value == "false")
-		{
-			this.parentNode.insertBefore(comments, this.nextSibling);
-			feed[x['id']].grant="false";
-		}
-			else
-			{
-				this.parentNode.removeChild(comments);
-				feed[x['id']].grant='true';
-				feed[x['id']].comment='';
-			}
-			
-	}; 
-	temp.value=feed[x['id']].grant;
 
+	temp = document.createElement('select');
+	temp.options[temp.options.length] = new Option("ACCEPT", "true");
+	temp.options[temp.options.length] = new Option("DECLINE", "false");
+
+	temp.onchange = function() {
+		if (this.value == "false") {
+			this.parentNode.insertBefore(comments, this.nextSibling);
+			feed[x['id']].grant = "false";
+		} else {
+			this.parentNode.removeChild(comments);
+			feed[x['id']].grant = 'true';
+			feed[x['id']].comment = '';
+		}
+
+	};
+	temp.value = feed[x['id']].grant;
 	div.appendChild(temp);
-	if(temp.value=="false")
-	{
-		comments.childNodes[1].value=feed[x['id']].comment;
+	if (temp.value == "false") {
+		comments.childNodes[1].value = feed[x['id']].comment;
 		temp.parentNode.insertBefore(comments, temp.nextSibling);
 	}
-	
-	
-	div.appendChild(document.createElement('hr'));
-		
-	$('activity').appendChild(div);
 
 	
+	//Horijontal Ruler
+	div.appendChild(document.createElement('hr'));
+	//Append the div element to the div 'activity'	
+	$('activity').appendChild(div);
 }
-//
-function ce(x,y)
+//creates a dom element
+function createElement(x,y)
 {
 	x= document.createElement(x);
 	x.innerHTML=y;
@@ -202,6 +202,7 @@ if (this[i]==v) return true;
 }
 return false;
 }
+//A custom prototype verifies whether paticular id exist inside the array
 Array.prototype.hassid=function(v){
 for (i=0; i<this.length; i++){
 if (this[i].sid==v) return i;

@@ -1,7 +1,8 @@
 
 <?php
 /*
- * gets data from javascript and updates datbase and images
+ * Updates the Status of the activity.
+ * Used by Ajax request from wscript.js
  */
 include '../php/credentials.php';
 session_start();
