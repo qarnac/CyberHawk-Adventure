@@ -48,9 +48,7 @@ function logged()
 
 		<meta name="viewport" content="initial-scale=1.0" />
 
-		<!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
-		<link rel="shortcut icon" href="/favicon.ico" />
-		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
 		<link rel="stylesheet" type="text/css" href="../style/style.css" />
 
 	</head>
