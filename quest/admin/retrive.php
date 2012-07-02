@@ -1,33 +1,32 @@
 <?php
-//Retrives the students name and also all the column from the table stud_activity with respect to id of the hunt.
-//Used by Ajax request from wscript.js .
-//Returns Json string to the Client
+/*
+ * Retrives the students name and also all the column from the table stud_activity with respect to id of the hunt.
+ * Checks for the user session and also returns the hunts created by teacher if that is requested.
+ *Used by Ajax request from wscript.js .
+ *Returns Json string to the Client
+ */
 session_start();
 if (isset($_SESSION['login']) == true && $_SESSION['who'] == 'teacher') {
 	include '../php/credentials.php';
-	if (isset($_POST['what'])=='activities' && isset($_POST['id'])) {
-		$x = query("SELECT stud_activity.*,students.firstname,students.lastname FROM stud_activity,students WHERE stud_activity.hunt_id='" . mysql_escape_string($_POST['id']) . "' AND students.id=stud_activity.student_id");
-		if (mysql_num_rows($x) == 0) {echo "false";
+	//$_POST['what'] says what is the data actually needed. if what = activities then it returns the activities created by students with respect to the requested hunt id else id what=hunts then it returns the username of current user along with the hunts created by the particular teacher
+	if (isset($_POST['what']) == 'activities' && isset($_POST['id'])) {
+		$studentactivities = query("SELECT stud_activity.*,students.firstname,students.lastname FROM stud_activity,students WHERE stud_activity.hunt_id='" . mysql_escape_string($_POST['id']) . "' AND students.id=stud_activity.student_id");
+		if (mysql_num_rows($studentactivities) == 0) {echo "false";
 		} else {
 			$z = array();
-			while ($m = mysql_fetch_assoc($x))
+			// Temporary variable used to convert mysql resource to array
+			while ($m = mysql_fetch_assoc($studentactivities))
 				array_push($z, $m);
-			$z = json_encode($z);
-			echo $z;
+			echo json_encode($z);
 		}
-	}
-	else if(isset($_POST['what'])=='hunts')
-	{
+	} else if (isset($_POST['what']) == 'hunts') {
 		logged();
 	}
-}
-else {
+} else {
 	echo "sessionfail";
 }
-
+//IF Session is valid this returns the username along with the hunts created by the teacher where the status of them is open
 function logged() {
-	
-
 	$hunts = array();
 	$result = query("SELECT * FROM hunt WHERE tid='" . $_SESSION['id'] . "' AND status='open'");
 	if (mysql_num_rows($result) > 0) {
@@ -35,13 +34,14 @@ function logged() {
 			array_push($hunts, $x);
 		}
 	}
-	
-	$temp[0] =$_SESSION['firstname'];
-	$temp[1]=$hunts;
-	$temp=json_encode($temp);
+
+	$temp[0] = $_SESSION['firstname'];
+	$temp[1] = $hunts;
+	$temp = json_encode($temp);
 	echo $temp;
 }
 
+// Executes the mysql query
 function query($x) {
 	$result = mysql_query($x) or die(mysql_error());
 	return $result;
