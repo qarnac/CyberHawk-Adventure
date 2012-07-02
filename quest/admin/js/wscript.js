@@ -4,8 +4,12 @@
  * handles selection of a hunt activity
  * Creates activitiy array
  * USED by welcome.php
+ * Wherever you see variable x it is a temporary varibale used for multiple operations
  */
-var hunts;
+
+var hunts;// All the hunts from the teacher will be stored in this variable
+
+//invoked by ajax function but loaded when the page is finished loading. THis receives the hunts from the server and it transfers it to javascript variable hunts
 function init(x) {
 	hunts = JSON.parse(x);
 	$('username').innerHTML=hunts[0];
@@ -13,7 +17,7 @@ function init(x) {
 	for ( x = 0; x < hunts.length; x++)
 		$('selecthunt').options[$('selecthunt').options.length] = new Option(hunts[x]['title'], x);
 }
-
+//Creates some random number
 var uniq = Math.floor((Math.random() * 100) + 1);
 //shortcut to get object with their id
 function $(x) {
@@ -40,30 +44,32 @@ function ajax(data, url, callback) {
 	xmlhttp.send(data);
 }
 
-//this function invoked when student selects a hunt
-function huntsel(x) {
-	if (x != 'null') {
-		var hunt = hunts[x];
-		//huntboundary=new georect(new latlng(hunt['minlat'],hunt['minlng']),new latlng(hunt['maxlat'],hunt['maxlng']));
-		ajax("what=activities&id=" + hunt['id'], 'retrive.php', create_activity_obj);
-		//$('activity').innerHTML=multiple;
+
+	//this function invoked when student selects a hunt
+	function huntsel(x) {
+		if (x != 'null') {
+			var hunt = hunts[x];
+			ajax("what=activities&id=" + hunt['id'], 'retrive.php', create_activity_obj);
+
+		} else {
+			$('activity').innerHTML = '';
+			$('students').innerHTML = '';
+			feed = {};
+			activities = [];
+		}
+
 	}
-	else
-	{$('activity').innerHTML='';
-	$('students').innerHTML='';
-	feed={};
-	activities=[];
-}
-	
-}
 
 var activities = new Array();
 // Holds all the activities of a particular hunt organised by student id
 var feed = {};
 // Has the status of each activity like its id,comment and status.
 //Instantiates the array activities with student activitivities
+//This function is invoked by ajax function but this happens when the teacher selects a hunt.
+//It creates the list of all students and display them in the list box along with a update button.
+//It also creates the array activities .
 function create_activity_obj(x) {
-	if (x == "false")
+	if (x == "false")//server returns false if it cannot find any activities
 		alert("No one has created acticity yet");
 	else {
 		x = JSON.parse(x);
@@ -108,6 +114,7 @@ function create_activity_obj(x) {
 		temp = document.createElement('input');
 		temp.type = 'button';
 		temp.value = "Update DB";
+		//When this button is clicked the feed array is sent to the server
 		temp.onclick = function() {
 			ajax('content=' + JSON.stringify(feed), 'upload.php', function(x) {
 				alert(x)
@@ -118,7 +125,7 @@ function create_activity_obj(x) {
 	}
 
 }
-
+//displays the activity
 function displayactivity(x) {
 	var div = document.createElement('div');
 	div.className = 'elem';
