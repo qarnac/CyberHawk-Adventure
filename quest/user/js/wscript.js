@@ -5,6 +5,23 @@
  * verifies all the form data
  * submits the form data and image data to server
  */
+/*
+var multiple='<? echo $metaar[0]['content'];?>';
+var hunts=JSON.parse('<? echo $hunts; ?>');
+for(x=0;x<hunts.length;x++)
+$('selecthunt').options[$('selecthunt').options.length]=new Option(hunts[x]['title'],x);
+*/
+var hunts;
+var multiple;
+function init(x) {
+	hunts = JSON.parse(x);
+	$('username').innerHTML=hunts[0];
+	multiple=hunts[2];
+	hunts=hunts[1];
+	for ( x = 0; x < hunts.length; x++)
+		$('selecthunt').options[$('selecthunt').options.length] = new Option(hunts[x]['title'], x);
+		
+}					
 var uniq=Math.floor((Math.random()*100)+1);
 //shortcut to get object with their id
 function $(x)
@@ -25,6 +42,8 @@ xmlhttp.onreadystatechange=function()
   {
   if (xmlhttp.readyState==4 && xmlhttp.status==200)
     {
+    	if (xmlhttp.responseText == 'sessionfail')
+				window.location = '../';
     callback(xmlhttp.responseText);
     }
   }
