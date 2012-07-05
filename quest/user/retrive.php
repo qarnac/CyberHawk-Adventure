@@ -6,7 +6,7 @@ session_start();
  * allows image to be dropped or selected from a directory and also compresses the image and also tags the image with geo location if found in the meta tag else it asks user to tag the location of the image with a google map.
  * submits the data to the server
  */
-
+mb_internal_encoding("UTF-8"); 
 if(isset($_SESSION['login'])==true&&$_SESSION['who']=='students')
 {if($_POST['what']='hunts')
 logged();}
