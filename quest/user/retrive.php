@@ -8,9 +8,10 @@ session_start();
  */
 
 if(isset($_SESSION['login'])==true&&$_SESSION['who']=='students')
-if($_POST['what']='hunts')
-logged();
-else if($_SESSION['who']=='teacher')
+{if($_POST['what']='hunts')
+logged();}
+
+else 
 {
 		echo "sessionfail";
 }
