@@ -26,7 +26,7 @@ function process($x) {
 
 //dbase query executer
 function query($x) {
-	$result = mysql_query($x) or die("fail");
+	$result = mysql_query($x) or die("mysqlfailed");
 	return $result;
 }
 
