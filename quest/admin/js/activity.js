@@ -59,9 +59,7 @@ function create_activity_obj(x) {
 		temp.value = "Update DB";
 		//When this button is clicked the feed array is sent to the server
 		temp.onclick = function() {
-			ajax('content=' + JSON.stringify(feed), 'upload.php', function(x) {
-				alert(x)
-			})
+			ajax('content=' + JSON.stringify(feed), 'upload.php', handleupload);
 		};
 		$('students').appendChild(temp);
 		//actdisp(x[m]);
@@ -153,4 +151,14 @@ function displayactivity(x) {
 	div.appendChild(document.createElement('hr'));
 	//Append the div element to the div 'activity'
 	$('activity').appendChild(div);
+}
+//
+function handleupload(x)
+{
+	if(x=="unexpectedrequest")
+		alert("Something went wrong while uploading Data");
+	else if(x=="fail")
+		alert("Mysql Failed with Error");
+	else if(x=="sucess")
+		alert("Data sucessfully Updated");
 }
