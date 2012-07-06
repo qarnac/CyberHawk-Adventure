@@ -10,23 +10,29 @@ if (isset($_SESSION['login']) == true && $_SESSION['who'] == 'teacher') {
 	include '../php/credentials.php';
 	//$_POST['what'] says what is the data actually needed. if what = activities then it returns the activities created by students with respect to the requested hunt id else id what=hunts then it returns the username of current user along with the hunts created by the particular teacher
 	if (isset($_POST['what']) == 'activities' && isset($_POST['id'])) {
-		$studentactivities = query("SELECT stud_activity.*,students.firstname,students.lastname FROM stud_activity,students WHERE stud_activity.hunt_id='" . mysql_escape_string($_POST['id']) . "' AND students.id=stud_activity.student_id");
-		if (mysql_num_rows($studentactivities) == 0) {echo "false";
-		} else {
-			$z = array();
-			// Temporary variable used to convert mysql resource to array
-			while ($m = mysql_fetch_assoc($studentactivities))
-				array_push($z, $m);
-			echo json_encode($z);
-		}
+		activities($_POST['id']);
 	} else if (isset($_POST['what']) == 'hunts') {
-		logged();
+		hunts();
 	}
 } else {
 	echo "sessionfail";
 }
+
+function activities($x) {
+	$studentactivities = query("SELECT stud_activity.*,students.firstname,students.lastname FROM stud_activity,students WHERE stud_activity.hunt_id='" . mysql_escape_string($x) . "' AND students.id=stud_activity.student_id");
+	if (mysql_num_rows($studentactivities) == 0) { //checks atleast for one student activity 
+		echo "none";
+	} else {
+		$z = array();
+		// Temporary variable used to convert mysql resource to array
+		while ($m = mysql_fetch_assoc($studentactivities))
+			array_push($z, $m);
+		echo json_encode($z);
+	}
+}
+
 //IF Session is valid this returns the username along with the hunts created by the teacher where the status of them is open
-function logged() {
+function hunts() {
 	$hunts = array();
 	$result = query("SELECT * FROM hunt WHERE tid='" . $_SESSION['id'] . "' AND status='open'");
 	if (mysql_num_rows($result) > 0) {
@@ -34,7 +40,6 @@ function logged() {
 			array_push($hunts, $x);
 		}
 	}
-
 	$temp[0] = $_SESSION['firstname'];
 	$temp[1] = $hunts;
 	$temp = json_encode($temp);
@@ -43,7 +48,7 @@ function logged() {
 
 // Executes the mysql query
 function query($x) {
-	$result = mysql_query($x) or die(mysql_error());
+	$result = mysql_query($x) or die("mysqlfailed");
 	return $result;
 }
 ?>
