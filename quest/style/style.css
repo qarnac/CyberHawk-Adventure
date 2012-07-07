@@ -115,6 +115,7 @@ fieldset {
 #activity fieldset {
 	float: left;
 	width: 450px;
+	
 }
 /*--------------------*/
 
@@ -292,6 +293,7 @@ div.filedrag {
 #activity {
 	margin: 10px;
 	height: 100%;
+	min-height: 800px;
 }
 .split {
 	float: left;
@@ -365,7 +367,21 @@ input[type="submit"] {
 	height: 31px;
 	background: #666666;
 	text-align: center;
-	line-height: 31px;
+	line-height: 3px;
+	color: #FFFFFF;
+	font-size: 11px;
+	font-weight: bold;
+}
+input[type="button"] {
+
+	float: right;
+	margin: 2px 0 5px 5px;
+	padding: 4px 2px;
+	width: 125px;
+	height: 31px;
+	background: #666666;
+	text-align: center;
+	line-height: 3px;
 	color: #FFFFFF;
 	font-size: 11px;
 	font-weight: bold;
