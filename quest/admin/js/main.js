@@ -1,21 +1,21 @@
 /*
- * Common scripts needed
- * handles ajax
- * handles selection of a hunt activity
- * Creates activitiy array
- * USED by welcome.php
- * Wherever you see variable x it is a temporary varibale used for multiple operations
- */
-
+* Common scripts needed
+* handles ajax
+* handles selection of a hunt activity
+* Creates activitiy array
+* USED by welcome.php
+* Wherever you see variable x it is a temporary varibale used for multiple operations
+*/
 
 //invoked by ajax function but loaded when the page is finished loading. THis receives the hunts from the server and it transfers it to javascript variable hunts
 function init(x) {
 	hunts = JSON.parse(x);
-	$('username').innerHTML=hunts[0];
-	hunts=hunts[1];
+	$('username').innerHTML = hunts[0];
+	hunts = hunts[1];
 	for ( x = 0; x < hunts.length; x++)
 		$('selecthunt').options[$('selecthunt').options.length] = new Option(hunts[x]['title'], x);
 }
+
 //Creates some random number
 var uniq = Math.floor((Math.random() * 100) + 1);
 //shortcut to get object with their id
@@ -43,22 +43,19 @@ function ajax(data, url, callback) {
 	xmlhttp.send(data);
 }
 
+//this function invoked when student selects a hunt
+function huntsel(x) {
+	if (x != 'null') {
+		var hunt = hunts[x];
+		ajax("what=activities&id=" + hunt['id'], 'retrive.php', create_activity_obj);
 
-	//this function invoked when student selects a hunt
-	function huntsel(x) {
-		if (x != 'null') {
-			var hunt = hunts[x];
-			ajax("what=activities&id=" + hunt['id'], 'retrive.php', create_activity_obj);
-
-		} else {
-			$('activity').innerHTML = '';
-			$('students').innerHTML = '';
-			feed = {};
-			activities = [];
-		}
-
+	} else {
+		$('activity').innerHTML = '';
+		$('students').innerHTML = '';
+		feed = {};
+		activities = [];
 	}
-
+}
 
 //creates a dom element
 function createElement(x, y) {
