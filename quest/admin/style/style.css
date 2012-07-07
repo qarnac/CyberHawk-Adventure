@@ -2,6 +2,7 @@
 	display: block;
 	min-height:100%;
 	width:700px;
+	position: relative;
 	
 }
 .elem img{
