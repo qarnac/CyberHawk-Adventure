@@ -20,7 +20,7 @@
 
 	</head>
 
-	<body onload="ajax('what=hunts','retrive.php',init)">
+	<body onload="ajax('what=hunts','retrive.php',init);">
 		<div id="map_canvas"></div>
 		<div id="contents">
 		<div>
@@ -33,10 +33,10 @@
 				<div style="float: left;width: 200px;">
 					<select onchange="huntsel(this.value)" id="selecthunt">
   					<option value="null">Select</option>
-  				
-  					
 					</select>
 				</div>
+				<input type="text" onchange="searchlocation('thai')" />
+				<input type="button" value="New Hunt" id='newhunt' onclick="createhunt()"/>
 				<div class="clear"></div>
 				<div id="students"></div>
 				<div id="activity"></div>
@@ -45,9 +45,10 @@
 			</div>
 			<script src="js/main.js"></script>
 			<script src="js/activity.js"></script>
+			<script src="js/hunt.js"></script>
 			<script src="../js/json2.js"></script>
 				 <script type="text/javascript"
-      src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDSwGeMX946SO8b3_sZqqAbCzM5eloG-os&sensor=false">
+      src="http://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDSwGeMX946SO8b3_sZqqAbCzM5eloG-os&sensor=true">
     </script>
 			</body>
 			</html>

@@ -23,6 +23,7 @@ function $(x) {
 	return document.getElementById(x);
 }
 
+
 //ajax POST request
 function ajax(data, url, callback) {
 	var xmlhttp;
@@ -38,20 +39,29 @@ function ajax(data, url, callback) {
 			callback(xmlhttp.responseText);
 		}
 	}
-	xmlhttp.open("POST", url, true);
+	if(data=="GET")
+	{
+		xmlhttp.open("GET",url,true);
+		xmlhttp.send();
+	}
+	else{
+		xmlhttp.open("POST", url, true);
 	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xmlhttp.send(data);
+	}
+	
 }
 
 //this function invoked when student selects a hunt
 function huntsel(x) {
+	$('activity').innerHTML = '';
+		$('students').innerHTML = '';
 	if (x != 'null') {
 		var hunt = hunts[x];
 		ajax("what=activities&id=" + hunt['id'], 'retrive.php', create_activity_obj);
 
 	} else {
-		$('activity').innerHTML = '';
-		$('students').innerHTML = '';
+		
 		feed = {};
 		activities = [];
 	}
