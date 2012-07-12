@@ -1,7 +1,11 @@
 
-php/credentials.php
+credentials.php
 
 *.DS_Store
+
+.project
+
+.settings/
 
 _notes/dwsync.xml
 
