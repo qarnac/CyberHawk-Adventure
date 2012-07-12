@@ -101,3 +101,4 @@ function query($x)
 	return $result;
 }
 ?>
+
