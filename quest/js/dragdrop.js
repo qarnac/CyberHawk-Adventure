@@ -59,7 +59,13 @@ function FileDragHover(e) {
 }
 
 // file selection handler
+// FileSelectHandler is called from "/quest/user/htm/multiple.htm" on a drag and drop event, or the onchange event of the image input on that page
+
+// note: morc is a global variable
+// 'morc' is eventually set as contents['media'] in user/js/wscript.js
+// which is then sent in a POST to upload.php as 'media' after being JSON.stringify'd
 var morc; // image object with compressed image with geo location
+
 function FileSelectHandler(e) {
 
 	FileDragHover(e);
@@ -68,15 +74,18 @@ function FileSelectHandler(e) {
 		var obj = new geocompress(files[0], "file");
 		morc = obj;
 
-	} else {
+	}
+	else {
 		if (validimg(e.dataTransfer.getData("text/uri-list"))) {
 			if (c_alldata.length < media.count) {
 				geocompress(e.dataTransfer.getData("text/uri-list"), "iurl");
-
-			} else
+			}
+			else {
 				alert("Media content is Full delete some to add new ");
-
-		} else {
+			}
+		}
+		else {
+			// what happens here?
 		}
 	}
 

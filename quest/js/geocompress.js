@@ -7,14 +7,26 @@
  * If geo location is not found displays map which allows user to select a location from it.
  */
 //creates the media object that has compressed image data url and geo co-ordinates
+// This is eventually POST'd in upload.php
 function geocompress(file, type) {
 	this.file = compress(file, type);
 	this.loc = gpsverify(file);
-	this.verify=function(){if(this.file.dataurl && this.loc.latlng){this.file.dataurl=this.file.dataurl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");return true;}else return false;} 
+	this.verify = function() {
+		if (this.file.dataurl && this.loc.latlng) {
+			this.file.dataurl = this.file.dataurl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
+			return true;
+		}
+		else {
+			return false;
+		} 
+	}
 }
 
 // TODO: What type of object is 'x'?  What type of object is morc?
-//Compresses the image by first by resizing the image to smaller size and converting the resized image to jpeg dta url with quality of 0.8
+// Note: morc is first instantiated and described in dragdrop.js as:
+//// var morc; // image object with compressed image with geo location
+// Compresses the image by first by resizing the image to smaller size
+// and converting the resized image to jpeg dta url with quality of 0.8
 function compress(file, type) {
 	var x = new Object();
 	var img = new Image();
@@ -38,7 +50,8 @@ function compress(file, type) {
 					height *= MAX_WIDTH / width;
 					width = MAX_WIDTH;
 				}
-			} else {
+			}
+			else {
 				if (height > MAX_HEIGHT) {
 					width *= MAX_HEIGHT / height;
 					height = MAX_HEIGHT;
@@ -68,10 +81,15 @@ function georect(dim1, dim2) {
 	this.bottomright = dim2;
 }
 
+// uses a latlng object
+// this function can be replaced with calls to google.maps.LatLngBounds.contains(LatLng)
 //checks whether a latlng point is inside a rectangle
+// Only called within this file
 function checkloc(rect, loc) {
 	return rect.topleft.lat < loc.lat && rect.bottomright.lat > loc.lat && rect.topleft.lng < loc.lng && rect.bottomright.lng > loc.lng;
 }
+
+
 
 //gets meta data like the geo tag in the image. if doesnt exist gets it with help of google maps and user
 function gpsverify(file) {
@@ -86,39 +104,49 @@ function gpsverify(file) {
 			if (checkloc(huntboundary, x)) {
 				loc.latlng = new latlng(jpeg.gps.latitude.value, jpeg.gps.longitude.value);
 				loc.from = "Native";
-			} else {
+			}
+			else {
 				alert("not inside the boundary");
 			}
 
-		} else {
+		}
+		else {
 			alert("The image you've selected is not geo tagged.\nPlease click on the location where you have taken the picture.\nOnce you have selected the right spot, please click 'Submit'");
-			mapdisp(true);
+			displayMap(true);
 			gmaps();
 		}
 	}
+
 	return loc;
 }
 
+// can be replaced with a call to google.maps.LatLngBounds.getCenter()
 //finds the center of a rectangle
-function rectcenter(x) {
+// function rectcenter(x) {
+// 
+// 	return new latlng((x.topleft.lat + x.bottomright.lat) / 2, (x.topleft.lng + x.bottomright.lng) / 2);
+// 
+// }
 
-	return new latlng((x.topleft.lat + x.bottomright.lat) / 2, (x.topleft.lng + x.bottomright.lng) / 2);
-
-}
 //google maps used to get the geo cordinates of picture inside a hunt area
 function gmaps() {
 	//map
+
 	var x = new Object();
-	var center = rectcenter(huntboundary);
-	var myOptions = {
-		center : new google.maps.LatLng(center.lat, center.lng),
+
+	//boundary
+	var bounds = new google.maps.LatLngBounds(new google.maps.LatLng(huntboundary.topleft.lat, huntboundary.topleft.lng), new google.maps.LatLng(huntboundary.bottomright.lat, huntboundary.bottomright.lng));
+
+	var mapOptions = {
+		center : bounds.getCenter(),
 		zoom : 11,
 		mapTypeId : google.maps.MapTypeId.TERRAIN
 	};
-	var map = new google.maps.Map($("map_canvas"), myOptions);
-	//boundary
-	var rectangle = new google.maps.Rectangle();
-	var bound = new google.maps.LatLngBounds(new google.maps.LatLng(huntboundary.topleft.lat, huntboundary.topleft.lng), new google.maps.LatLng(huntboundary.bottomright.lat, huntboundary.bottomright.lng));
+
+	var map = new google.maps.Map($("map_canvas"), mapOptions);
+
+	// This is the rectangular overlay that goes on top of the map to display the bounds
+	var rectangleOverlay = new google.maps.Rectangle();
 	var rectOptions = {
 		strokeColor : "#FF0000",
 		strokeOpacity : 0.7,
@@ -126,43 +154,52 @@ function gmaps() {
 		fillColor : "#FF0000",
 		fillOpacity : 0.35,
 		map : map,
-		bounds : bound
+		bounds : bounds
 	};
-	rectangle.setOptions(rectOptions);
+	rectangleOverlay.setOptions(rectOptions);
 	
 	var myMarker = new google.maps.Marker(
 	{
-		position: new google.maps.LatLng(center.lat, center.lng),
+		position: bounds.getCenter(),
 		draggable: true,
 		map: map
 	});
 
 	var gotoControlDiv = document.createElement('div');
-	var gotoControl = createGotoControl(gotoControlDiv, map, myMarker, new google.maps.LatLng(center.lat, center.lng));
-
+	var gotoControl = createGotoControl(gotoControlDiv, map, myMarker, bounds.getCenter());
+	
 	// Index is the order in which controls are rendered, all before default controls
 	gotoControlDiv.index = 1;
+	// display the control
 	map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(gotoControlDiv);
 
 	google.maps.event.addListener(map, 'click', function(e) {
-		alert("you can select location only within the hunt area \n Once selected Click again on the marker")
+		alert("You can only select a location within the hunt area.\n");
 	});
-	
+
 	google.maps.event.addListener(myMarker, 'drag', function(event) {
 		updateLatLng(myMarker, event.latLng);
 	});
-
+	
+	// TODO could do bounds checking here?
 	google.maps.event.addListener(myMarker, 'dragend', function(event) {
 		updateLatLng(myMarker, event.latLng);
 	});
 
 	google.maps.event.addListener(myMarker, 'click', function(event) {
-		submitLatLng(myMarker, event.latLng);
+		if (bounds.contains(myMarker.position)) {
+			submitLatLng(myMarker, event.latLng);
+		}
+		else {
+			alert("You can only select a location within the hunt area.\n");
+			myMarker.setPosition(bounds.getCenter());
+			updateLatLng(myMarker, myMarker.position);
+		}
 	});
-
 }
+
 //switches between displaying map and the form
-function mapdisp(x) {
+function displayMap(x) {
 	if (x) {
 		$('map_canvas').style.display = 'block';
 		$('contents').style.display = 'none';
@@ -181,7 +218,7 @@ function submitLatLng(marker) {
 	alert("Thanks for picking a location.");
 	morc.loc = new latlng(marker.getPosition().lat(), marker.getPosition().lng());
 	morc.from = "chosen";
-	mapdisp(false);
+	displayMap(false);
 	drawimg(morc);
 }
 
@@ -274,39 +311,17 @@ function createGotoControl(ctrlDiv, map, marker, center)
 	{
 		var latValue = ctrlLatInput.value;
 		var longValue = ctrlLongInput.value;
-		
-		if (latValue < -90 || latValue > 90)
-		{
-			alert("The latitude must be between -90 and 90 degrees.");
-		}
-		else if (longValue < -180 || longValue > 180)
-		{
-			alert("The longitude must be between -180 and 180 degrees.");
-		}
-		else
-		{
-			dropMarker(marker, new google.maps.LatLng(latValue, longValue));
-		}
+		dropMarker(marker, new google.maps.LatLng(latValue, longValue));
 	};
 
+	// BUG: If you move the marker out of bounds and click submit, this function still submits
 	// TODO: these checks are pointless?  Replace with bounds checking.
 	var onsubmit = function()
 	{
 		var latValue = ctrlLatInput.value;
 		var longValue = ctrlLongInput.value;
 		
-		if (latValue < -90 || latValue > 90)
-		{
-			alert("The latitude must be between -90 and 90 degrees.");
-		}
-		else if (longValue < -180 || longValue > 180)
-		{
-			alert("The longitude must be between -180 and 180 degrees.");
-		}
-		else
-		{
-			submitLatLng(marker, new google.maps.LatLng(latValue, longValue));
-		}
+		submitLatLng(marker, new google.maps.LatLng(latValue, longValue));
 	};
 
 	google.maps.event.addDomListener(ctrlBtn, 'click', onclick);
@@ -315,6 +330,8 @@ function createGotoControl(ctrlDiv, map, marker, center)
 }
 
 
+// FIX: function parameters are redundant.
+// You only need location, and if you have marker, you have location
 // Called when the user drags around the marker
 function updateLatLng(marker, location) {
 	document.getElementById('latitudeIn').value = location.lat().toFixed(5);

@@ -33,18 +33,21 @@
 <?php
 
 session_start();
+// If the user is already logged in, redirect them to their appropriate form page
 if(isset($_SESSION['login'])==true )
 {
 	if($_SESSION['who']=='students')
-	header("Location: user/");
+		header("Location: user/");
 	else if($_SESSION['who']=='teacher')
-	header("Location: admin/");
+		header("Location: admin/");
 }
+// Otherwise, print the login page
 else {
-form();
+	displayLoginForm();
 }
-function form()
-{$form='<form id="login" onsubmit="return verify();">
+
+function displayLoginForm() {
+	$form='<form id="login" onsubmit="return verify();">
     <h1>Log In</h1>
     <fieldset id="inputs">
         <input id="username" type="text" placeholder="Username" autofocus required>
@@ -59,15 +62,10 @@ function form()
         <a href="">Forgot your password?</a>
     </fieldset>
 </form>';
-echo $form;}
-
-
-
+	echo $form;
+}
 ?>
-
     	</div>
-
-		
 		</div>
 		<script src="js/script.js"></script>
 	</body>
