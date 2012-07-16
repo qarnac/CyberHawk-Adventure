@@ -8,8 +8,9 @@ session_start();
  */
 mb_internal_encoding("UTF-8"); 
 if(isset($_SESSION['login'])==true&&$_SESSION['who']=='students')
-{if($_POST['what']='hunts')
-logged();}
+{
+	if($_POST['what']=='hunts') logged();
+}
 
 else 
 {

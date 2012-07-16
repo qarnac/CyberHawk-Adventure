@@ -2,69 +2,25 @@
 	Login Page 
 	Checks for a valid session if exist redirects to welcome.php else ask user to login.
 	---->
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-
-		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-		Remove this if you use the .htaccess -->
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-
-		<title>Welcome</title>
-		<meta name="description" content="" />
-		<meta name="author" content="sabareesh kkanan subramani" />
-
-		<meta name="viewport" content="initial-scale=1.0" />
-
-		<!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
-		<link rel="shortcut icon" href="/favicon.ico" />
-		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-		<link rel="stylesheet" type="text/css" href="style/style.css" />
-
-	</head>
-
-	<body>
-		<div>
-			<header>
-				<h1>Cyber Scavenger</h1>
-			</header>
-		<div id="main" role="main">
 <?php
-
+include dirname(__FILE__) . '/html/header.html';
 session_start();
+
+
 if(isset($_SESSION['login'])==true )
 {
 	if($_SESSION['who']=='students')
-	header("Location: user/");
+		header("Location: user/");
 	else if($_SESSION['who']=='teacher')
-	header("Location: admin/");
+		header("Location: admin/");
 }
+// else give them the log in form.
 else {
-form();
+include dirname(__FILE__) . '/html/log_in_form.html';
 }
-function form()
-{$form='<form id="login" onsubmit="return verify();">
-    <h1>Log In</h1>
-    <fieldset id="inputs">
-        <input id="username" type="text" placeholder="Username" autofocus required>
-        <input id="password" type="password" placeholder="Password" required>
-        <select id="who">
-         <option value="students">Student</option>
-  <option value="teacher">Teacher</option>
-</select>
-    </fieldset>
-    <fieldset id="actions">
-        <input type="submit" id="submit" value="Log in">
-        <a href="">Forgot your password?</a>
-    </fieldset>
-</form>';
-echo $form;}
-
-
-
 ?>
-
+<!-- I don't really know why there's closing tags down here, let alone an include.
+I think this is something that I'd want to get rid of soon, but i'm just not sure where I'd move it to. -->
     	</div>
 
 		
