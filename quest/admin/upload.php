@@ -20,19 +20,8 @@ function process($x) {
 	$content = json_decode(x);
 	$x = array_keys(get_object_vars($content));
 	for ($i = 0; $i < count($x); $i++)
-		query("UPDATE stud_activity SET status='" . esc($content -> $x[$i] -> grant) . "',comments='" . esc($content -> $x[$i] -> comment) . "' WHERE id='" . $x[$i] . "' ");
+		mysql_query("UPDATE stud_activity SET status='" . mysql_escape_string($content -> $x[$i] -> grant) . "',comments='" . mysql_escape_string($content -> $x[$i] -> comment) . "' WHERE id='" . $x[$i] . "' ") or die("mysqlfailed");
 	echo "sucess";
-}
-
-//dbase query executer
-function query($x) {
-	$result = mysql_query($x) or die("mysqlfailed");
-	return $result;
-}
-
-//escapes mysql injection
-function esc($x) {
-	return mysql_escape_string($x);
 }
 ?>
 

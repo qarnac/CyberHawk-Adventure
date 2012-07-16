@@ -18,12 +18,12 @@ else
 function logged()
 {
 	include '../php/credentials.php';
-	$metah=query("SELECT * FROM meta" );
+	$metah=mysql_query("SELECT * FROM meta" ) or die(mysql_error());
 		$metaar=array();
 		while($x=mysql_fetch_assoc($metah))
 		array_push($metaar,$x);
 		$hunts=array();
-		$result=query("SELECT * FROM hunt WHERE tid='".$_SESSION['tid']."' AND status='open'" );
+		$result=mysql_query("SELECT * FROM hunt WHERE tid='".$_SESSION['tid']."' AND status='open'" ) or die(mysql_error());
 			if(mysql_num_rows($result)>0)
 			{
 				while($x=mysql_fetch_assoc($result))
@@ -35,13 +35,5 @@ function logged()
 			$temp[1]=$hunts;
 			$temp[2]=$metaar;
 			echo json_encode($temp);
-}
-
-
-function query($x)
-{
-	$query=$x;
-	$result=mysql_query($query) or die(mysql_error());
-	return $result;
 }
 ?>

@@ -10,20 +10,20 @@ if(isset($_SESSION['login'])==true&&$_SESSION['who']=='students')
 logged();
 else if($_SESSION['who']=='teacher')
 {
-header("Location: ../admin");	
+	header("Location: ../admin");	
 }
 else {
-		header("Location: ../");
+	header("Location: ../");
 }
 function logged()
 {
 	include '../php/credentials.php';
-	$metah=query("SELECT * FROM meta" );
+	$metah=mysql_query("SELECT * FROM meta" ) or die(mysql_error());
 		$metaar=array();
 		while($x=mysql_fetch_assoc($metah))
 		array_push($metaar,$x);
 		$hunts=array();
-		$result=query("SELECT * FROM hunt WHERE tid='".$_SESSION['tid']."' AND status='open'" );
+		$result=mysql_query("SELECT * FROM hunt WHERE tid='".$_SESSION['tid']."' AND status='open'" ) or die(mysql_error());
 			if(mysql_num_rows($result)>0)
 			{
 				while($x=mysql_fetch_assoc($result))
@@ -33,11 +33,5 @@ function logged()
 			}
 			$hunts=json_encode($hunts);
 include dirname(__FILE__) . '/htm/welcome_page.php';
-}
-function query($x)
-{
-	$query=$x;
-	$result=mysql_query($query) or die(mysql_error());
-	return $result;
 }
 ?>

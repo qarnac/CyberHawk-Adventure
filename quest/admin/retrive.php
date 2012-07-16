@@ -19,7 +19,7 @@ if (isset($_SESSION['login']) == true && $_SESSION['who'] == 'teacher') {
 }
 
 function activities($x) {
-	$studentactivities = query("SELECT stud_activity.*,students.firstname,students.lastname FROM stud_activity,students WHERE stud_activity.hunt_id='" . mysql_escape_string($x) . "' AND students.id=stud_activity.student_id");
+	$studentactivities = mysql_query("SELECT stud_activity.*,students.firstname,students.lastname FROM stud_activity,students WHERE stud_activity.hunt_id='" . mysql_escape_string($x) . "' AND students.id=stud_activity.student_id") or die("mysqlfailed");
 	if (mysql_num_rows($studentactivities) == 0) { //checks atleast for one student activity 
 		echo "none";
 	} else {
@@ -34,7 +34,7 @@ function activities($x) {
 //IF Session is valid this returns the username along with the hunts created by the teacher where the status of them is open
 function hunts() {
 	$hunts = array();
-	$result = query("SELECT * FROM hunt WHERE tid='" . $_SESSION['id'] . "' AND status='open'");
+	$result = mysql_query("SELECT * FROM hunt WHERE tid='" . $_SESSION['id'] . "' AND status='open'") or die("mysqlfailed");
 	if (mysql_num_rows($result) > 0) {
 		while ($x = mysql_fetch_assoc($result)) {
 			array_push($hunts, $x);
@@ -44,11 +44,5 @@ function hunts() {
 	$temp[1] = $hunts;
 	$temp = json_encode($temp);
 	echo $temp;
-}
-
-// Executes the mysql query
-function query($x) {
-	$result = mysql_query($x) or die("mysqlfailed");
-	return $result;
 }
 ?>
