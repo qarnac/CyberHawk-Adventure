@@ -2,6 +2,7 @@
 	Login Page 
 	Checks for a valid session if exist redirects to welcome.php else ask user to login.
 	---->
+	
 <?php
 include dirname(__FILE__) . '/html/header.html';
 session_start();
@@ -13,30 +14,10 @@ if(isset($_SESSION['login'])==true )
 	header("Location: admin/");
 }
 else {
-form();
+include dirname(__FILE__) . '/html/log_in_form.html';
 }
-function form()
-{$form='<form id="login" onsubmit="return verify();">
-    <h1>Log In</h1>
-    <fieldset id="inputs">
-        <input id="username" type="text" placeholder="Username" autofocus required>
-        <input id="password" type="password" placeholder="Password" required>
-        <select id="who">
-         <option value="students">Student</option>
-  <option value="teacher">Teacher</option>
-</select>
-    </fieldset>
-    <fieldset id="actions">
-        <input type="submit" id="submit" value="Log in">
-        <a href="">Forgot your password?</a>
-    </fieldset>
-</form>';
-echo $form;}
-
-
-
 ?>
-
+<!-- Don't really know why the div's get closed down here.  Will look into changing this later.  But for now, the div and the script are included down here. -->
     	</div>
 
 		
