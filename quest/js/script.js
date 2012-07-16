@@ -9,7 +9,7 @@ function verify()
 	var pwd=$('password').value;
 	var who=$('who').value;
 	var data="user="+user+"&pwd="+pwd+"&who="+who;
-	ajax(data,"php/login.php",check);
+	ajax(data,"../quest/php/login.php",check);
 	return false;
 }
 function $(x)

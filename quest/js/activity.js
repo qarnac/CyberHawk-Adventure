@@ -55,7 +55,7 @@ function updatebutton() {
 	temp.value = "Update DB";
 	//When this button is clicked the feed array is sent to the server
 	temp.onclick = function() {
-		ajax('content=' + JSON.stringify(feed), 'upload.php', handleupload);
+		ajax('content=' + JSON.stringify(feed), '../php/upload.php', handleupload);
 	};
 	return temp;
 }
@@ -167,7 +167,7 @@ function activityStatus(comments,x)
 function createimage(x)
 {
 	var img = document.createElement('img');
-	img.src = "../php/image.php?id=" + x;
+	img.src = "../quest/php/image.php?id=" + x;
 	img.onmouseover = function() {
 		this.style.height = '281px';
 		this.style.width = '450px';

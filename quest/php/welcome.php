@@ -6,18 +6,13 @@
  * Displays the activity created by students by showing a list of students who created activity and teacher can select a student to view the activity
  */
 session_start();
-if(isset($_SESSION['login'])==true&&$_SESSION['who']=='teacher')
-logged();
-else if($_SESSION['who']=='students')
+include '../php/credentials.php';
+if(isset($_SESSION['login'])==true&&$_SESSION['who']=='teacher') admin_logged();
+else if(isset($_SESSION['login'])==true&&$_SESSION['who']=='students') user_logged();
+
+function admin_logged()
 {
-header("Location: ../user");	
-}
-else {
-		header("Location: ../");
-}
-function logged()
-{
-	include '../php/credentials.php';
+	
 	$metah=mysql_query("SELECT * FROM meta" ) or die(mysql_error());
 		$metaar=array();
 		while($x=mysql_fetch_assoc($metah))
@@ -35,4 +30,22 @@ function logged()
 	include dirname(__FILE__) . '/html/welcome_page.php';
 }
 
+function user_logged()
+{
+	$metah=mysql_query("SELECT * FROM meta" ) or die(mysql_error());
+		$metaar=array();
+		while($x=mysql_fetch_assoc($metah))
+		array_push($metaar,$x);
+		$hunts=array();
+		$result=mysql_query("SELECT * FROM hunt WHERE tid='".$_SESSION['tid']."' AND status='open'" ) or die(mysql_error());
+			if(mysql_num_rows($result)>0)
+			{
+				while($x=mysql_fetch_assoc($result))
+				{
+				array_push($hunts,$x);
+				}
+			}
+			$hunts=json_encode($hunts);
+include dirname(__FILE__) . '/htm/welcome_page.php';
+}
 ?>

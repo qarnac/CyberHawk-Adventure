@@ -9,9 +9,9 @@ session_start();
 if(isset($_SESSION['login'])==true )
 {
 	if($_SESSION['who']=='students')
-	header("Location: user/");
+	include dirname(__FILE__) . '/html/user.html';
 	else if($_SESSION['who']=='teacher')
-	header("Location: admin/");
+	include dirname(__FILE__) . '/html/admin.html';
 }
 else {
 include dirname(__FILE__) . '/html/log_in_form.html';
