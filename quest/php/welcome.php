@@ -12,8 +12,7 @@ else if(isset($_SESSION['login'])==true&&$_SESSION['who']=='students') user_logg
 
 function admin_logged()
 {
-	
-	$metah=mysql_query("SELECT * FROM meta" ) or die(mysql_error());
+		$metah=mysql_query("SELECT * FROM meta" ) or die(mysql_error());
 		$metaar=array();
 		while($x=mysql_fetch_assoc($metah))
 		array_push($metaar,$x);
@@ -27,7 +26,7 @@ function admin_logged()
 				}
 			}
 			$hunts=json_encode($hunts);
-	include dirname(__FILE__) . '/html/welcome_page.php';
+	include dirname(__FILE__) . '/html/admin_welcome_page.php';
 }
 
 function user_logged()
@@ -46,6 +45,6 @@ function user_logged()
 				}
 			}
 			$hunts=json_encode($hunts);
-include dirname(__FILE__) . '/htm/welcome_page.php';
+include dirname(__FILE__) . '/htm/user_welcome_page.php';
 }
 ?>

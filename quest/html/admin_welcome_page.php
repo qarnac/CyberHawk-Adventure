@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Start admin_welcome_page.php -->
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
@@ -52,8 +53,7 @@
 					for(x=0;x<hunts.length;x++)
 					$('selecthunt').options[$('selecthunt').options.length]=new Option(hunts[x]['title'],x);
 				</script>
-				 <script type="text/javascript"
-      src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDSwGeMX946SO8b3_sZqqAbCzM5eloG-os&sensor=false">
-    </script>
+				 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDSwGeMX946SO8b3_sZqqAbCzM5eloG-os&sensor=false"> </script>
 			</body>
 			</html>
+<!-- End admin_welcome_page.php -->

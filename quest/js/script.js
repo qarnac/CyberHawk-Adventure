@@ -14,8 +14,7 @@ function verify()
 	ajax(data, PHP_FOLDER_LOCATION + "login.php",check);
 	return false;
 }
-function $(x)
-{return document.getElementById(x);}
+function $(x){return document.getElementById(x);}
 //ajax implementation POST
 function ajax(data,url,callback)
 {	
@@ -46,4 +45,4 @@ function check(x)
 	window.location.reload();
 	else if(x=="false")
 	alert("Username or Password is not correct");
-	}
+}

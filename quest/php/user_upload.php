@@ -7,12 +7,12 @@ if(isset($_POST['content'])&&<isset($_SESSION['login'])==true && $_SESSION['who'
 	$content=json_decode($content);
 	//decides media id
 	mysql_query("INSERT INTO image (images) VALUES ('temp')") or die(mysql_error());
-	$m= mysql_insert_id();
+	$mysql_id= mysql_insert_id();
 	//
-	$path="uploads/".$m.".jpeg";
+	$path="uploads/".$mysql_id.".jpeg";
 	//creates image file
 	decodeimage($content->media->file->dataurl, $path);
-	mysql_query("UPDATE image SET images='".$path."' WHERE id=$m") or die(mysql_error());
+	mysql_query("UPDATE image SET images='".$path."' WHERE id=$mysql_id") or die(mysql_error());
 
 	mysql_query("INSERT INTO stud_activity (student_id,hunt_id,media,media_id,created,status,lat,lng,aboutmedia,whythis,howhelpfull,yourdoubt,mquestion,choices) VALUES ($studentid,".mysql_escape_string($content->huntid).",'image.php',".$m.",'".date('Y-m-d H:i:s')."','new','".mysql_escape_string($content->media->loc->latlng->lat)."','".mysql_escape_string($content->media->loc->latlng->lng)."','".mysql_escape_string($content->aboutmedia)."','".mysql_escape_string($content->whythis)."','".mysql_escape_string($content->howhelpful)."','".mysql_escape_string($content->yourdoubt)."','".mysql_escape_string($content->mquestion)."','".choic($content)."')") or die(mysql_error());
 	

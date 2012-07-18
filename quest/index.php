@@ -7,7 +7,7 @@ if(isset($_SESSION['login'])==true )
 	if($_SESSION['who']=='students')
 	include dirname(__FILE__) . '/html/user.html';
 	else if($_SESSION['who']=='teacher')
-	include dirname(__FILE__) . '/html/admin.html';
+	include dirname(__FILE__) . '/html/teacher.html';
 }
 else {
 include dirname(__FILE__) . '/html/log_in_form.html';

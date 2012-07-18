@@ -10,7 +10,8 @@ if(isset($_POST['user']))
 	
 }
 function sess($usrname,$pwd,$who)
-{$query="SELECT * FROM $who WHERE username='$usrname' AND password='$pwd'";
+{
+	$query="SELECT * FROM $who WHERE username='$usrname' AND password='$pwd'";
 	$result=mysql_query($query) or die(mysql_error());
 	if(mysql_num_rows($result)==1)
 	{
