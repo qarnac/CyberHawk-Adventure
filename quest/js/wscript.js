@@ -87,7 +87,7 @@ function check(form,exe)
 		contents=JSON.stringify(contents);
 		contents="content="+contents;
 	
-			ajax(contents, "../php/upload.php", function(x) {
+			ajax(contents, PHP_FOLDER_LOCATON + "user_upload.php", function(x) {
 				if (x == "true")
 					alert("sucess");
 				else

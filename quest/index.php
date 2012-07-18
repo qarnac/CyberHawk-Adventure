@@ -1,9 +1,5 @@
-<!----
-	Login Page 
-	Checks for a valid session if exist redirects to welcome.php else ask user to login.
-	---->
-	
 <?php
+// If the user is logged in, loads the correct html page for that user.  Otherwise, it shows the log in form.
 include dirname(__FILE__) . '/html/header.html';
 session_start();
 if(isset($_SESSION['login'])==true )

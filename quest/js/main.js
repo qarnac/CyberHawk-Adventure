@@ -58,7 +58,7 @@ function huntsel(x) {
 		$('students').innerHTML = '';
 	if (x != 'null') {
 		var hunt = hunts[x];
-		ajax("what=activities&id=" + hunt['id'], '../quest/php/retrive.php', create_activity_obj);
+		ajax("what=activities&id=" + hunt['id'], PHP_FOLDER_LOCATION + 'retrive.php', create_activity_obj);
 
 	} else {
 		
