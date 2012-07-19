@@ -8,15 +8,13 @@ session_start();
  */
  // Not really sure why this one specifies the encoding when none of the other php files do.
 mb_internal_encoding("UTF-8"); 
-if(isset($_SESSION['login'])==true)
-{
-	include '../php/credentials.php';
-	if($_POST['what']=='hunts' && $_SESSION['who']=='students') logged();
-	else 
-		include dirname(__FILE__) . '/getActivity.php';
-}
-else echo "sessionfail";
+include '../php/credentials.php';
+// Until huntsel(x) is fixed, this needs to be here so that way teachers that are given this php file will just get redirected to the correct file.
+if($_POST['what']=='hunts' && $_SESSION['who']=='students') logged();
+	else include dirname(__FILE__) . '/getActivity.php';
 
+	
+	// Just like the other file, I'm not really sure we need to keep this wrapped in a function anymore.
 // Echos temp, which contains users first name, list of their hunts that are open, and everything that's stored in meta.
 function logged()
 {

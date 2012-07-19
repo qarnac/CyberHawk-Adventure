@@ -7,8 +7,8 @@
  */
 session_start();
 include '../php/credentials.php';
-if(isset($_SESSION['login'])==true&&$_SESSION['who']=='teacher') admin_logged();
-else if(isset($_SESSION['login'])==true&&$_SESSION['who']=='students') user_logged();
+if($_SESSION['who']=='teacher') admin_logged();
+else if($_SESSION['who']=='students') user_logged();
 
 function admin_logged()
 {

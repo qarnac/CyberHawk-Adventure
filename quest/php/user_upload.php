@@ -1,6 +1,6 @@
 <?php
 //scripts starts its execution from here by verifying the post request it received and also the session of the user
-if(isset($_POST['content'])&&<isset($_SESSION['login'])==true && $_SESSION['who']=='students')
+if(isset($_POST['content'])&& $_SESSION['who']=='students') // Removed isset($_SESSION['login]) because if $_SESSION['who'] is set, then so is $_SESSION['login']
 {
 	$studentid=$_SESSION['id'];
 	$content=$_POST['content'];
@@ -8,7 +8,6 @@ if(isset($_POST['content'])&&<isset($_SESSION['login'])==true && $_SESSION['who'
 	//decides media id
 	mysql_query("INSERT INTO image (images) VALUES ('temp')") or die(mysql_error());
 	$mysql_id= mysql_insert_id();
-	//
 	$path="uploads/".$mysql_id.".jpeg";
 	//creates image file
 	decodeimage($content->media->file->dataurl, $path);

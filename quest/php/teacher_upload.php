@@ -6,15 +6,12 @@
 include '../php/credentials.php';
 session_start();
 //scripts starts its execution from here by verifying the post request it received and also the session of the user
-if (isset($_SESSION['who']) == 'teacher') {
-	if (isset($_POST['content'])) {
+if (isset($_POST['content'])) {
 		process($_POST['content']);
-	} else//if there is unexpected request from the client
-		echo "unexpectedrequest";
-} else {//if session doesnt exist this commands client to redirect to loginpage
-	echo "sessionfail";
-}
-
+		//if there is unexpected request from the client
+	} else echo "unexpectedrequest";
+		
+// Do we really need this in a function when it's really the only thing in this file?
 //Processes the data sent from the client to upload it to the Database
 function process($x) {
 	$content = json_decode(x);
