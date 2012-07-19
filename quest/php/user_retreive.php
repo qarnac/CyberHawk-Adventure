@@ -13,7 +13,7 @@ if(isset($_SESSION['login'])==true)
 	include '../php/credentials.php';
 	if($_POST['what']=='hunts' && $_SESSION['who']=='students') logged();
 	else 
-		include dirname(__FILE__) . '/teacher_retreive.php';
+		include dirname(__FILE__) . '/getActivity.php';
 }
 else echo "sessionfail";
 
