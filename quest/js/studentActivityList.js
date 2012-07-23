@@ -24,13 +24,16 @@ function displayPage(serverResponse){
 // This function is the callback function from createStudentActivityList()
 // It's purpose is to parse the json, and then display it to the user.
 function studentActivityList(serverResponse){
+	document.getElementById('activity').innerHTML="";
 	var activities=JSON.parse(serverResponse);
-	var button=document.createElement("input");
-	button.setAttribute("type", "button");
-	button.setAttribute("value", "New Activity");
-	button.setAttribute("id", "newActivity");
-	button.onclick=createNewActivity;
-	document.getElementById("main").insertBefore(button, document.getElementById("clear"));
+	if(document.getElementById("newActivity")==null){
+		var button=document.createElement("input");
+		button.setAttribute("type", "button");
+		button.setAttribute("value", "New Activity");
+		button.setAttribute("id", "newActivity");
+		button.onclick=createNewActivity;
+		document.getElementById("main").insertBefore(button, document.getElementById("contents"));
+	}
 	for(i in activities){
 		displayactivity(activities[i], true);
 	}
