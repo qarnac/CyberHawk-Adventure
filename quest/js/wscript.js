@@ -24,8 +24,8 @@ function init(x) {
 }					
 var uniq=Math.floor((Math.random()*100)+1);
 //shortcut to get object with their id
-function $(x)
-{return document.getElementById(x);}
+function $(x) {return document.getElementById(x);}
+
 //ajax POST request
 function ajax(data,url,callback)
 {	
@@ -103,8 +103,8 @@ function check(form,exe)
 }
 // a custom prototype thats been added to array object to find existence of particular value
 Array.prototype.has=function(v){
-for (i=0; i<this.length; i++){
-if (this[i]==v) return true;
-}
-return false;
+	for (i=0; i<this.length; i++){
+		if (this[i]==v) return true;
+	}
+	return false;
 }

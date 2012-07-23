@@ -17,7 +17,7 @@
 		<link rel="stylesheet" type="text/css" href="style/style.css" />
 
 	</head>
-	<!-- What is 'what'? Where is it referenced/what is it used for?  Possibly give 'what' a more specific name? -->
+
 	<body>
 		<div id="map_canvas"></div>
 		<div id="contents">
