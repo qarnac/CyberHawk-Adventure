@@ -20,8 +20,8 @@ function create_activity_obj(x) {
 
 		var list_box = listbox();
 		feedactivity(x, list_box);
-		$('students').appendChild(list_box);
 		$('students').appendChild(clear());
+		$('students').appendChild(list_box);
 		$('students').appendChild(updatebutton());
 		//actdisp(x[m]);
 	}
@@ -73,7 +73,7 @@ function listbox() {
 		var x = activities.hassid(this.value);
 		if (x != "false") {
 			for ( i = 0; i < activities[x].contents.length; i++)
-				displayactivity(activities[x].contents[i])
+				displayactivity(activities[x].contents[i], false)
 		} else
 			alert("something went wrong")
 	};
@@ -81,7 +81,9 @@ function listbox() {
 }
 
 //displays the activity
-function displayactivity(x) {
+// Is now also called from studentActivityList to create the list.
+// Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
+function displayactivity(x, isStudent) {
 	var div = document.createElement('div');
 	div.className = 'elem';
 	//Image Element
@@ -95,7 +97,7 @@ function displayactivity(x) {
 	div.appendChild(otherquestions(x));
 	div.appendChild(clear());
 	//Comments and status Elements ad their Eventhandling on onchange to update the variable feed
-	div.appendChild(feedback(x['id']));
+	if(!isStudent) div.appendChild(feedback(x['id']));
 	div.appendChild(clear());
 	//Horijontal Ruler
 	div.appendChild(createElement('hr',''));
@@ -144,6 +146,7 @@ function feedback(x)
 }
 function activityStatus(comments,x)
 {
+	if(feed[x]==undefined) return;
 	var status= document.createElement('select');
 	status.options[status.options.length] = new Option("ACCEPT", "true");
 	status.options[status.options.length] = new Option("DECLINE", "false");
