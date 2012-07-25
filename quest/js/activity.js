@@ -90,7 +90,7 @@ function displayactivity(x, isStudent) {
 	div.appendChild(createimage(x['media_id']));
 	div.appendChild(clear());
 	//USER Name elements ,Multiple choice question Elements
-	div.appendChild(createElement('label', x['firstname'] + " " + x['lastname']))
+	div.appendChild(createElement('label', x['firstname'] + " " + x['lastname']));
 	div.appendChild(multiplechoice(x['mquestion'],JSON.parse(x['choices'])));
 	div.appendChild(clear());
 	//Other Question Elements

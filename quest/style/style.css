@@ -50,7 +50,7 @@ body {
 }
 
 #login:before {
-	content: '';
+/*	content: ''; */
 	position: absolute;
 	z-index: -1;
 	border: 1px dashed #ccc;
@@ -386,12 +386,31 @@ input[type="button"] {
 	font-size: 11px;
 	font-weight: bold;
 }
-#map_canvas {
+
+/* Added float_none on July 10, 2012 to override above label CSS behavior in maps UI */
+
+label.float_none {
+  float: none;
+}
+
+#googlemap {
+	position: absolute;
+	z-index: 10;
+	width: 100%;
+	height: 100%;
+	display: none;
+	top: 0px;
+	left: 0px;
+}
+
+#map_canvas { 
 	position: fixed;
 	z-index: 10;
 	width: 100%;
 	height: 100%;
 	display: none;
+	top: 0px;
+	left: 0px;
 }
 #content {
 	z-index: 1;

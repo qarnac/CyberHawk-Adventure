@@ -10,7 +10,15 @@
 function geocompress(file, type) {
 	this.file = compress(file, type);
 	this.loc = gpsverify(file);
-	this.verify=function(){if(this.file.dataurl && this.loc.latlng){this.file.dataurl=this.file.dataurl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");return true;}else return false;} 
+	this.verify = function() {
+		if(this.file.dataurl && this.loc.latlng) {
+			this.file.dataurl = this.file.dataurl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
 }
 
 // TODO: What type of object is 'x'?  What type of object is morc?
@@ -38,7 +46,8 @@ function compress(file, type) {
 					height *= MAX_WIDTH / width;
 					width = MAX_WIDTH;
 				}
-			} else {
+			}
+			else {
 				if (height > MAX_HEIGHT) {
 					width *= MAX_HEIGHT / height;
 					height = MAX_HEIGHT;
@@ -86,13 +95,15 @@ function gpsverify(file) {
 			if (checkloc(huntboundary, x)) {
 				loc.latlng = new latlng(jpeg.gps.latitude.value, jpeg.gps.longitude.value);
 				loc.from = "Native";
-			} else {
+			}
+			else {
 				alert("not inside the boundary");
 			}
 
-		} else {
+		}
+		else {
 			alert("The image you've selected is not geo tagged.\nPlease click on the location where you have taken the picture.\nOnce you have selected the right spot, please click 'Submit'");
-			mapdisp(true);
+			displayMap(true);
 			gmaps();
 		}
 	}
@@ -109,16 +120,17 @@ function rectcenter(x) {
 function gmaps() {
 	//map
 	var x = new Object();
-	var center = rectcenter(huntboundary);
-	var myOptions = {
-		center : new google.maps.LatLng(center.lat, center.lng),
+	//boundary
+	var bounds = new google.maps.LatLngBounds(new google.maps.LatLng(huntboundary.topleft.lat, huntboundary.topleft.lng), new google.maps.LatLng(huntboundary.bottomright.lat, huntboundary.bottomright.lng));
+	var mapOptions = {
+		center : bounds.getCenter(),
 		zoom : 11,
 		mapTypeId : google.maps.MapTypeId.TERRAIN
 	};
-	var map = new google.maps.Map($("map_canvas"), myOptions);
-	//boundary
-	var rectangle = new google.maps.Rectangle();
-	var bound = new google.maps.LatLngBounds(new google.maps.LatLng(huntboundary.topleft.lat, huntboundary.topleft.lng), new google.maps.LatLng(huntboundary.bottomright.lat, huntboundary.bottomright.lng));
+	var map = new google.maps.Map($("map_canvas"), mapOptions);
+
+	// This is the rectangular overlay that goes on top of the map to display the bounds
+	var rectangleOverlay = new google.maps.Rectangle();
 	var rectOptions = {
 		strokeColor : "#FF0000",
 		strokeOpacity : 0.7,
@@ -126,26 +138,26 @@ function gmaps() {
 		fillColor : "#FF0000",
 		fillOpacity : 0.35,
 		map : map,
-		bounds : bound
+		bounds : bounds
 	};
-	rectangle.setOptions(rectOptions);
+	rectangleOverlay.setOptions(rectOptions);
 	
 	var myMarker = new google.maps.Marker(
 	{
-		position: new google.maps.LatLng(center.lat, center.lng),
+		position: bounds.getCenter(),
 		draggable: true,
 		map: map
 	});
 
 	var gotoControlDiv = document.createElement('div');
-	var gotoControl = createGotoControl(gotoControlDiv, map, myMarker, new google.maps.LatLng(center.lat, center.lng));
+	var gotoControl = createGotoControl(gotoControlDiv, map, myMarker, bounds.getCenter());
 
 	// Index is the order in which controls are rendered, all before default controls
 	gotoControlDiv.index = 1;
 	map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(gotoControlDiv);
 
 	google.maps.event.addListener(map, 'click', function(e) {
-		alert("you can select location only within the hunt area \n Once selected Click again on the marker")
+		alert("You can only select a location within the hunt area.\n")
 	});
 	
 	google.maps.event.addListener(myMarker, 'drag', function(event) {
@@ -157,14 +169,25 @@ function gmaps() {
 	});
 
 	google.maps.event.addListener(myMarker, 'click', function(event) {
-		submitLatLng(myMarker, event.latLng);
-	});
+		if (bounds.contains(myMarker.position)) {
+			submitLatLng(myMarker, event.latLng);
+		}
+		else {
+			alert("You can only select a location within the hunt area.\n");
+			myMarker.setPosition(bounds.getCenter());
+			updateLatLng(myMarker, myMarker.position);
+		}
+    });
 
 }
 //switches between displaying map and the form
-function mapdisp(x) {
+function displayMap(x) {
 	if (x) {
+		$('googlemap').style.display = 'block';
 		$('map_canvas').style.display = 'block';
+		$('map_canvas').style.position = 'fixed';
+		$('map_canvas').style.top = "0px";
+		$('map_canvas').style.left = "0px";
 		$('contents').style.display = 'none';
 	} else {
 		$('map_canvas').style.display = 'none';
@@ -181,7 +204,7 @@ function submitLatLng(marker) {
 	alert("Thanks for picking a location.");
 	morc.loc = new latlng(marker.getPosition().lat(), marker.getPosition().lng());
 	morc.from = "chosen";
-	mapdisp(false);
+	displayMap(false);
 	drawimg(morc);
 }
 
@@ -275,18 +298,7 @@ function createGotoControl(ctrlDiv, map, marker, center)
 		var latValue = ctrlLatInput.value;
 		var longValue = ctrlLongInput.value;
 		
-		if (latValue < -90 || latValue > 90)
-		{
-			alert("The latitude must be between -90 and 90 degrees.");
-		}
-		else if (longValue < -180 || longValue > 180)
-		{
-			alert("The longitude must be between -180 and 180 degrees.");
-		}
-		else
-		{
-			dropMarker(marker, new google.maps.LatLng(latValue, longValue));
-		}
+		dropMarker(marker, new google.maps.LatLng(latValue, longValue));
 	};
 
 	// TODO: these checks are pointless?  Replace with bounds checking.
@@ -295,18 +307,7 @@ function createGotoControl(ctrlDiv, map, marker, center)
 		var latValue = ctrlLatInput.value;
 		var longValue = ctrlLongInput.value;
 		
-		if (latValue < -90 || latValue > 90)
-		{
-			alert("The latitude must be between -90 and 90 degrees.");
-		}
-		else if (longValue < -180 || longValue > 180)
-		{
-			alert("The longitude must be between -180 and 180 degrees.");
-		}
-		else
-		{
-			submitLatLng(marker, new google.maps.LatLng(latValue, longValue));
-		}
+		submitLatLng(marker, new google.maps.LatLng(latValue, longValue));
 	};
 
 	google.maps.event.addDomListener(ctrlBtn, 'click', onclick);

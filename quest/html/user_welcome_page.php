@@ -29,7 +29,7 @@
 		<div id="main" role="main">
 				<div style="float: left;width: 200px;font-weight:bold">Welcome <? echo $_SESSION['firstname']; ?> <a href="../php/logout.php">Log out</a></div>
 				<div style="float: left;width: 200px;">
-					<select onchange="huntsel(this.value)" id="selecthunt">
+					<select onchange="huntselection(this.value)" id="selecthunt">
   					<option value="null">Select</option>
   				
   					
@@ -40,7 +40,7 @@
 			</div>
 			</div>
 			</div>
-			<script src="js/wscript.js"></script>
+			<script src="../js/wscript.js"></script>
 			<script src="../js/dragdrop.js"></script>
 			<script src="../js/media.js"></script>
 			<script src="../js/jpegmeta.js"></script>

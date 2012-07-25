@@ -45,6 +45,7 @@ function user_logged()
 				}
 			}
 			$hunts=json_encode($hunts);
-include dirname(__FILE__) . '/htm/user_welcome_page.php';
+include dirname(__FILE__) . '/html/user_welcome_page.php';
 }
 ?>
+

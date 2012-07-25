@@ -13,9 +13,10 @@ $('selecthunt').options[$('selecthunt').options.length]=new Option(hunts[x]['tit
 */
 var hunts;
 var multiple;
-function init(x) {
+function wscript_init(x) {
 	hunts = JSON.parse(x);
 	$('username').innerHTML=hunts[0];
+
 	multiple=hunts[2][0].content;
 	hunts=hunts[1];
 	for ( x = 0; x < hunts.length; x++)
@@ -52,7 +53,8 @@ function ajax(data,url,callback)
 	xmlhttp.send(data);
 }
 //this function invoked when student selects a hunt
-function huntsel(x)
+//function huntsel(x)
+function huntselection(x)
 { 
 	var hunt=hunts[x];
 	huntboundary=new georect(new latlng(hunt['minlat'],hunt['minlng']),new latlng(hunt['maxlat'],hunt['maxlng']));
