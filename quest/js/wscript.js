@@ -57,6 +57,7 @@ function ajax(data,url,callback)
 function huntselection(x)
 { 
 	var hunt=hunts[x];
+	// TODO convert huntboundary to a google maps bounds object to delete georect
 	huntboundary=new georect(new latlng(hunt['minlat'],hunt['minlng']),new latlng(hunt['maxlat'],hunt['maxlng']));
 	$('activity').innerHTML=multiple;
 	starter();

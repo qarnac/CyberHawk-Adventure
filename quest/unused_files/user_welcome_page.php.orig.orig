@@ -101,3 +101,8 @@ function query($x)
 	return $result;
 }
 ?>
+<<<<<<< HEAD:quest/unused_files/user_welcome_page.php.orig
+>>>>>>> master:quest/user/welcome.php
+=======
+
+>>>>>>> d03e94c0704d89ae33bb9acd9a53fe78b7570f16:quest/user/welcome.php

@@ -12,13 +12,21 @@ function geocompress(file, type) {
 	this.file = compress(file, type);
 	this.loc = gpsverify(file);
 	this.verify = function() {
+<<<<<<< HEAD
 		if(this.file.dataurl && this.loc.latlng) {
+=======
+		if (this.file.dataurl && this.loc.latlng) {
+>>>>>>> d03e94c0704d89ae33bb9acd9a53fe78b7570f16
 			this.file.dataurl = this.file.dataurl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
 			return true;
 		}
 		else {
 			return false;
+<<<<<<< HEAD
 		}
+=======
+		} 
+>>>>>>> d03e94c0704d89ae33bb9acd9a53fe78b7570f16
 	}
 }
 
@@ -133,19 +141,27 @@ function gmaps() {
 	//map
 
 	var x = new Object();
+<<<<<<< HEAD
+	//boundary
+	var bounds = new google.maps.LatLngBounds(new google.maps.LatLng(huntboundary.topleft.lat, huntboundary.topleft.lng), new google.maps.LatLng(huntboundary.bottomright.lat, huntboundary.bottomright.lng));
+=======
 
 	//boundary
 	var bounds = new google.maps.LatLngBounds(new google.maps.LatLng(huntboundary.topleft.lat, huntboundary.topleft.lng), new google.maps.LatLng(huntboundary.bottomright.lat, huntboundary.bottomright.lng));
 
+>>>>>>> d03e94c0704d89ae33bb9acd9a53fe78b7570f16
 	var mapOptions = {
 		center : bounds.getCenter(),
 		zoom : 11,
 		mapTypeId : google.maps.MapTypeId.TERRAIN
 	};
+<<<<<<< HEAD
+=======
+
+>>>>>>> d03e94c0704d89ae33bb9acd9a53fe78b7570f16
 	var map = new google.maps.Map($("map_canvas"), mapOptions);
 
 	// This is the rectangular overlay that goes on top of the map to display the bounds
-	var rectangleOverlay = new google.maps.Rectangle();
 	var rectangleOverlay = new google.maps.Rectangle();
 	var rectOptions = {
 		strokeColor : "#FF0000",
@@ -167,14 +183,22 @@ function gmaps() {
 
 	var gotoControlDiv = document.createElement('div');
 	var gotoControl = createGotoControl(gotoControlDiv, map, myMarker, bounds.getCenter());
+<<<<<<< HEAD
+
+=======
 	
+>>>>>>> d03e94c0704d89ae33bb9acd9a53fe78b7570f16
 	// Index is the order in which controls are rendered, all before default controls
 	gotoControlDiv.index = 1;
 	// display the control
 	map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(gotoControlDiv);
 
 	google.maps.event.addListener(map, 'click', function(e) {
+<<<<<<< HEAD
 		alert("You can only select a location within the hunt area.\n")
+=======
+		alert("You can only select a location within the hunt area.\n");
+>>>>>>> d03e94c0704d89ae33bb9acd9a53fe78b7570f16
 	});
 
 	google.maps.event.addListener(myMarker, 'drag', function(event) {
@@ -195,7 +219,12 @@ function gmaps() {
 			myMarker.setPosition(bounds.getCenter());
 			updateLatLng(myMarker, myMarker.position);
 		}
+<<<<<<< HEAD
     });
+
+=======
+	});
+>>>>>>> d03e94c0704d89ae33bb9acd9a53fe78b7570f16
 }
 
 //switches between displaying map and the form
@@ -315,6 +344,10 @@ function createGotoControl(ctrlDiv, map, marker, center)
 	{
 		var latValue = ctrlLatInput.value;
 		var longValue = ctrlLongInput.value;
+<<<<<<< HEAD
+		
+=======
+>>>>>>> d03e94c0704d89ae33bb9acd9a53fe78b7570f16
 		dropMarker(marker, new google.maps.LatLng(latValue, longValue));
 	};
 

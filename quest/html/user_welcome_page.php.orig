@@ -1,4 +1,3 @@
-<<<<<<< HEAD:quest/unused_files/user_welcome_page.php
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -18,7 +17,7 @@
 		<link rel="stylesheet" type="text/css" href="style/style.css" />
 
 	</head>
-
+	<!-- What is 'what'? Where is it referenced/what is it used for?  Possibly give 'what' a more specific name? -->
 	<body>
 		<div id="map_canvas"></div>
 		<div id="contents">
@@ -30,7 +29,7 @@
 		<div id="main" role="main">
 				<div style="float: left;width: 200px;font-weight:bold">Welcome <? echo $_SESSION['firstname']; ?> <a href="../php/logout.php">Log out</a></div>
 				<div style="float: left;width: 200px;">
-					<select onchange="huntsel(this.value)" id="selecthunt">
+					<select onchange="huntselection(this.value)" id="selecthunt">
   					<option value="null">Select</option>
   				
   					
@@ -41,7 +40,7 @@
 			</div>
 			</div>
 			</div>
-			<script src="js/wscript.js"></script>
+			<script src="../js/wscript.js"></script>
 			<script src="../js/dragdrop.js"></script>
 			<script src="../js/media.js"></script>
 			<script src="../js/jpegmeta.js"></script>
@@ -57,42 +56,9 @@
     </script>
 			</body>
 			</html>
+<<<<<<< HEAD:quest/html/user_welcome_page.php
 =======
-<?php
-/*
- * This automatically gets appropriate hunt which is active to particular student depending on the teacher of the student.
- * It displays forms and allows user to fill the required information
- * allows image to be dropped or selected from a directory and also compresses the image and also tags the image with geo location if found in the meta tag else it asks user to tag the location of the image with a google map.
- * submits the data to the server
- */
-session_start();
-if(isset($_SESSION['login'])==true&&$_SESSION['who']=='students')
-logged();
-else if($_SESSION['who']=='teacher')
-{
-header("Location: ../admin");	
-}
-else {
-		header("Location: ../");
-}
-function logged()
-{
-	include '../php/credentials.php';
-	$metah=query("SELECT * FROM meta" );
-		$metaar=array();
-		while($x=mysql_fetch_assoc($metah))
-		array_push($metaar,$x);
-		$hunts=array();
-		$result=query("SELECT * FROM hunt WHERE tid='".$_SESSION['tid']."' AND status='open'" );
-			if(mysql_num_rows($result)>0)
-			{
-				while($x=mysql_fetch_assoc($result))
-				{
-				array_push($hunts,$x);
-				}
-			}
-			$hunts=json_encode($hunts);
-include dirname(__FILE__) . '/htm/welcome_page.php';
+<?
 }
 function query($x)
 {
@@ -101,3 +67,5 @@ function query($x)
 	return $result;
 }
 ?>
+
+>>>>>>> d03e94c0704d89ae33bb9acd9a53fe78b7570f16:quest/admin/welcome.php
