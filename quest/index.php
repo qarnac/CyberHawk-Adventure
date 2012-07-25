@@ -15,7 +15,6 @@ if(isset($_SESSION['login'])==true )
 else {
 include dirname(__FILE__) . '/html/log_in_form.html';
 }
-	$form='<form id="login" onsubmit="return verify();">
 ?>
 <!-- Don't really know why the div's get closed down here.  Will look into changing this later.  But for now, the div and the script are included down here. -->
 <!-- I think this is something that I'd want to get rid of soon, but i'm just not sure where I'd move it to. -->
