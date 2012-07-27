@@ -56,14 +56,21 @@ function ajax(data,url,callback)
 //function huntsel(x)
 function huntselection(x)
 { 
+<<<<<<< HEAD
+	var hunt=hunts[x];
+	// TODO convert huntboundary to a google maps bounds object to delete georect
+	huntboundary=new georect(new latlng(hunt['minlat'],hunt['minlng']),new latlng(hunt['maxlat'],hunt['maxlng']));
+	$('activity').innerHTML=multiple;
+	starter();
+=======
 	// When the user selects the null select, it will no longer even attempt to load activities.
 	if((x=document.getElementById("selecthunt").selectedIndex-1)>=0){
 		var hunt=hunts[x];
-	// TODO convert huntboundary to a google maps bounds object to delete georect
 		huntboundary=new georect(new latlng(hunt['minlat'],hunt['minlng']),new latlng(hunt['maxlat'],hunt['maxlng']));
 		$('activity').innerHTML=multiple;
 		starter();
 	}
+>>>>>>> 3e230e5ffa0aa77472c9e6c848695ff34a541f6a
 }
 //has the boundary information of selected hunt
 var huntboundary;
