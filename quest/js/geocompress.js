@@ -11,7 +11,7 @@ function geocompress(file, type) {
 	this.file = compress(file, type);
 	this.loc = gpsverify(file);
 	this.verify = function() {
-		if(this.file.dataurl && this.loc.latlng) {
+		if(this.file.dataurl && this.loc.lat && this.loc.lng) {
 			this.file.dataurl = this.file.dataurl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
 			return true;
 		}

@@ -56,10 +56,13 @@ function ajax(data,url,callback)
 //function huntsel(x)
 function huntselection(x)
 { 
-	var hunt=hunts[x];
-	huntboundary=new georect(new latlng(hunt['minlat'],hunt['minlng']),new latlng(hunt['maxlat'],hunt['maxlng']));
-	$('activity').innerHTML=multiple;
-	starter();
+	// When the user selects the null select, it will no longer even attempt to load activities.
+	if((x=document.getElementById("selecthunt").selectedIndex-1)>=0){
+		var hunt=hunts[x];
+		huntboundary=new georect(new latlng(hunt['minlat'],hunt['minlng']),new latlng(hunt['maxlat'],hunt['maxlng']));
+		$('activity').innerHTML=multiple;
+		starter();
+	}
 }
 //has the boundary information of selected hunt
 var huntboundary;
@@ -89,7 +92,7 @@ function check(form,exe)
 		contents=JSON.stringify(contents);
 		contents="content="+contents;
 	
-			ajax(contents, PHP_FOLDER_LOCATON + "user_upload.php", function(x) {
+			ajax(contents, PHP_FOLDER_LOCATION + "user_upload.php", function(x) {
 				if (x == "true")
 					alert("sucess");
 				else

@@ -9,5 +9,5 @@ $ques = mysql_query($query, $dbconnect);	//as question id is distinct it pulls o
 $result=mysql_fetch_array($ques);
 header('Content-Type: image/jpeg');
 if(mysql_num_rows($ques)==1)
-readfile("../user/".$result['images']);
+readfile("../uploads/".$result['images']);
 ?>
