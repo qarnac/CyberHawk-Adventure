@@ -12,7 +12,8 @@ function geocompress(file, type) {
 	this.file = compress(file, type);
 	this.loc = gpsverify(file);
 	this.verify = function() {
-		if(this.file.dataurl && this.loc.latlng) {
+		alert("well?\n" + this.loc.lat + ", " + this.loc.lng);
+		if (this.file.dataurl && this.loc.lat && this.loc.lng) {
 			this.file.dataurl = this.file.dataurl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
 			return true;
 		}
@@ -102,6 +103,8 @@ function gpsverify(file) {
 		if (jpeg.gps && jpeg.gps.longitude) {
 			var x = new latlng(jpeg.gps.latitude.value, jpeg.gps.longitude.value);
 			if (checkloc(huntboundary, x)) {
+//			var gps_loc = new google.maps.LatLng(jpeg.gps.latitude.value, jpeg.gps.longitude.value);
+//			if (huntboundary.contains(gps_loc)) { //  <- currently doing nothing.
 				loc.latlng = new latlng(jpeg.gps.latitude.value, jpeg.gps.longitude.value);
 				loc.from = "Native";
 			}
@@ -116,7 +119,6 @@ function gpsverify(file) {
 			gmaps();
 		}
 	}
-
 	return loc;
 }
 
@@ -130,13 +132,19 @@ function gpsverify(file) {
 
 //google maps used to get the geo cordinates of picture inside a hunt area
 function gmaps() {
-	//map
-
 	var x = new Object();
 
 	//boundary
-	var bounds = new google.maps.LatLngBounds(new google.maps.LatLng(huntboundary.topleft.lat, huntboundary.topleft.lng), new google.maps.LatLng(huntboundary.bottomright.lat, huntboundary.bottomright.lng));
-
+	// this is wrong, latlngbounds expects SW and NE, not NW and SE:
+	var southWestBound = new google.maps.LatLng(huntboundary.topleft.lat, huntboundary.topleft.lng);
+	var northEastBound = new google.maps.LatLng(huntboundary.bottomright.lat, huntboundary.bottomright.lng);
+	console.log("southwest: " + southWestBound);
+	console.log("northeast: " + northEastBound);
+	var bounds = new google.maps.LatLngBounds(southWestBound, northEastBound);
+	
+//	var bounds = new google.maps.LatLngBounds(new google.maps.LatLng(huntboundary.topleft.lat, huntboundary.topleft.lng), new google.maps.LatLng(huntboundary.bottomright.lat, huntboundary.bottomright.lng));
+//	var bounds = new google.maps.LatLngBounds(new google.maps.LatLng(huntboundary.getSouthWest()), new google.maps.LatLng(huntboundary.getNorthEast()));
+	
 	var mapOptions = {
 		center : bounds.getCenter(),
 		zoom : 11,
@@ -145,7 +153,6 @@ function gmaps() {
 	var map = new google.maps.Map($("map_canvas"), mapOptions);
 
 	// This is the rectangular overlay that goes on top of the map to display the bounds
-	var rectangleOverlay = new google.maps.Rectangle();
 	var rectangleOverlay = new google.maps.Rectangle();
 	var rectOptions = {
 		strokeColor : "#FF0000",
@@ -178,22 +185,34 @@ function gmaps() {
 	});
 
 	google.maps.event.addListener(myMarker, 'drag', function(event) {
-		updateLatLng(myMarker, event.latLng);
+		if (document.getElementById('decimalDMSSelect').selectedIndex == 0) {
+			updateLatLng(event.latLng);
+		}
+		else {
+			updateLatLngDMS(event.latLng);
+		}
+//		updateLatLngFollow(myFollowMarker, dropPrecision(event.latLng, bounds));
 	});
 	
 	// TODO could do bounds checking here?
 	google.maps.event.addListener(myMarker, 'dragend', function(event) {
-		updateLatLng(myMarker, event.latLng);
+		var location = enforceBounds(bounds, event.latLng);
+		placeMarker(myMarker, location);
+// 		updateLatLng(location);
+// 		updateLatLngDMS(location);
+//		updateLatLngFollow(myFollowMarker, dropPrecision(event.latLng, bounds));
+//		map.panTo(location);
 	});
 
 	google.maps.event.addListener(myMarker, 'click', function(event) {
 		if (bounds.contains(myMarker.position)) {
-			submitLatLng(myMarker, event.latLng);
+			submitLatLng(event.latLng);
 		}
 		else {
 			alert("You can only select a location within the hunt area.\n");
 			myMarker.setPosition(bounds.getCenter());
-			updateLatLng(myMarker, myMarker.position);
+			updateLatLng(myMarker.position);
+			updateLatLngDMS(myMarker.position);
 		}
     });
 }
@@ -216,11 +235,12 @@ function displayMap(x) {
 // acks the marker being chosen
 // then sets fields of the morc object
 // and switches back from the map to the form view
-// TODO: don't need to pass the whole marker...
 // TODO: Add code for clustering markers into the same latlng position
-function submitLatLng(marker) {
+function submitLatLng(location) {
 	alert("Thanks for picking a location.");
-	morc.loc = new latlng(marker.getPosition().lat(), marker.getPosition().lng());
+	console.log("location was this: " + location.toString());
+	morc.loc = new latlng(location.lat(), location.lng());
+	alert("wtf?: " + location.toString() + "\n" + morc.loc.lat + ", " + morc.loc.lng);
 	morc.from = "chosen";
 	displayMap(false);
 	drawimg(morc);
@@ -230,6 +250,9 @@ function submitLatLng(marker) {
 // TODO: set more id's/classes here and move styling to stylesheets
 function createGotoControl(ctrlDiv, map, marker, center)
 {
+	var latDMS = toDMS("lat", center.lat());
+	var lngDMS = toDMS("long", center.lng());
+	
 	ctrlDiv.id = "latlongctrl";
 	ctrlDiv.style.width = '300px';
 	ctrlDiv.style.backgroundColor = 'white';
@@ -272,16 +295,92 @@ function createGotoControl(ctrlDiv, map, marker, center)
 	ctrlLongLabel.style.display = "inline";
 	ctrlLongLabel.setAttribute("for", "longitudeIn");
 
+	var ctrlDecimalOrDMSSelect = document.createElement('select');
+	ctrlDecimalOrDMSSelect.id = "decimalDMSSelect";
+	ctrlDecimalOrDMSSelect.name = "decimalDMSSelect";
+	ctrlDecimalOrDMSSelect.add(new Option("Decimal", "0"));
+	ctrlDecimalOrDMSSelect.add(new Option("DMS", "1"));
+	ctrlDecimalOrDMSSelect.style.cssfloat = "right";
+	ctrlDecimalOrDMSSelect.selectedIndex = "1";
+
+
+	var ctrlSelectDiv = document.createElement('div');
+	ctrlSelectDiv.appendChild(ctrlDecimalOrDMSSelect);
+
 	layoutLatLongBox = document.createElement('div');
 	layoutLatLongBox.style.paddingBottom = '5px';
 	layoutLatLongBox.style.paddingTop = '5px';
-	layoutLatLongBox.style.textAlign = 'right';
+	layoutLatLongBox.style.display = "none";
+	layoutLatLongBox.appendChild(document.createElement('br'));
 	layoutLatLongBox.appendChild(ctrlLatLabel);
 	layoutLatLongBox.appendChild(ctrlLatInput);
+	layoutLatLongBox.appendChild(document.createElement('br'));
 	layoutLatLongBox.appendChild(ctrlLongLabel);
 	layoutLatLongBox.appendChild(ctrlLongInput);
 	
+	var ctrlLatNS = document.createElement('select');
+	ctrlLatNS.id = "latNSSelect";
+	ctrlLatNS.name = "latNSSelect";
+	ctrlLatNS.className = "short";
+	ctrlLatNS.add(new Option("North", "0"));
+	ctrlLatNS.add(new Option("South", "1"));
+	if (latDMS.compass == "N") { ctrlLatNS.selectedIndex = 0; }
+	else { ctrlLatNS.selectedIndex = 1; }
 	
+	var ctrlLatDegrees = document.createElement('input');
+	ctrlLatDegrees.id = "latDegrees";
+	ctrlLatDegrees.name = "latDegrees";
+	ctrlLatDegrees.value = latDMS.degrees;
+	ctrlLatDegrees.className = "float_none";
+	ctrlLatDegrees.style.display = "inline";
+	ctrlLatDegrees.style.width = "80px";
+	
+	var ctrlLatMinutes = document.createElement('input');
+	ctrlLatMinutes.id = "latMinutes";
+	ctrlLatMinutes.name = "latMinutes";
+	ctrlLatMinutes.value = latDMS.minutes;
+	ctrlLatMinutes.className = "float_none";
+	ctrlLatMinutes.style.display = "inline";
+	ctrlLatMinutes.style.width = "80px";
+	
+	var ctrlLongNS = document.createElement('select');
+	ctrlLongNS.id = "longNSSelect";
+	ctrlLongNS.name = "longNSSelect";
+	ctrlLongNS.className = "short";
+	ctrlLongNS.add(new Option("West", "0"));
+	ctrlLongNS.add(new Option("East", "1"));
+	if (lngDMS.compass == "W") { ctrlLongNS.selectedIndex = 0; }
+	else { ctrlLongNS.selectedIndex = 1; }
+	
+	var ctrlLongDegrees = document.createElement('input');
+	ctrlLongDegrees.id = "longDegrees";
+	ctrlLongDegrees.name = "longDegrees";
+	ctrlLongDegrees.value = lngDMS.degrees;
+	ctrlLongDegrees.className = "float_none";
+	ctrlLongDegrees.style.display = "inline";
+	ctrlLongDegrees.style.width = "80px";
+	
+	var ctrlLongMinutes = document.createElement('input');
+	ctrlLongMinutes.id = "longMinutes";
+	ctrlLongMinutes.name = "longMinutes";
+	ctrlLongMinutes.value = lngDMS.minutes;
+	ctrlLongMinutes.className = "float_none";
+	ctrlLongMinutes.style.display = "inline";
+	ctrlLongMinutes.style.width = "80px";
+	
+	var layoutDMSBox = document.createElement('div');
+	layoutDMSBox.style.paddingBottom = '5px';
+	layoutDMSBox.style.paddingTop = '5px';
+	layoutDMSBox.style.display = "block";
+	layoutDMSBox.appendChild(document.createElement('br'));
+	layoutDMSBox.appendChild(ctrlLatNS);
+	layoutDMSBox.appendChild(ctrlLatDegrees);
+	layoutDMSBox.appendChild(ctrlLatMinutes);
+	layoutDMSBox.appendChild(document.createElement('br'));
+	layoutDMSBox.appendChild(ctrlLongNS);
+	layoutDMSBox.appendChild(ctrlLongDegrees);
+	layoutDMSBox.appendChild(ctrlLongMinutes);
+
 	var ctrlBtn = document.createElement('a');
 	ctrlBtn.innerHTML = "Take me there!";
 	ctrlBtn.style.borderStyle = 'dotted';
@@ -305,45 +404,242 @@ function createGotoControl(ctrlDiv, map, marker, center)
 
 	// Assemble the custom control
 	ctrlDiv.appendChild(welcomeMsgDiv);
+	ctrlDiv.appendChild(ctrlSelectDiv);
+	ctrlDiv.appendChild(document.createElement('br'));
+	ctrlDiv.appendChild(layoutDMSBox);
 	ctrlDiv.appendChild(layoutLatLongBox);
 	ctrlDiv.appendChild(layoutBtnDiv);
 	ctrlDiv.appendChild(document.createElement('br'));
 	ctrlDiv.appendChild(document.createElement('hr'));
 	ctrlDiv.appendChild(layoutSubmitBtnDiv);
 
-	var onclick = function()
-	{
-		var latValue = ctrlLatInput.value;
-		var longValue = ctrlLongInput.value;
-		dropMarker(marker, new google.maps.LatLng(latValue, longValue));
-	};
+	google.maps.event.addDomListener(ctrlBtn, 'click', function(event) {
+		var latValue;
+		var longValue;
+		
+		if (ctrlDecimalOrDMSSelect.selectedIndex == "0")
+		{
+			latValue = ctrlLatInput.value;
+			longValue = ctrlLongInput.value;
+		}
+		else if (ctrlDecimalOrDMSSelect.selectedIndex == "1")
+		{
+			var latDirection;
+			var longDirection;
 
-	// BUG: If you move the marker out of bounds and click submit, this function still submits
-	// TODO: these checks are pointless?  Replace with bounds checking.
-	var onsubmit = function()
-	{
+			if (ctrlLatNS.selectedIndex == 0) { latDirection = "N"; }
+			else { latDirection = "S"; }
+			if (ctrlLongNS.selectedIndex == 0) { longDirection = "W"; }
+			else { longDirection = "E"; }
+			
+			latValue = toDecimal(latDirection, ctrlLatDegrees.value, ctrlLatMinutes.value);
+			longValue = toDecimal(longDirection, ctrlLongDegrees.value, ctrlLongMinutes.value);
+		}
+		placeMarker(marker, new google.maps.LatLng(latValue, longValue));
+	});
+
+	google.maps.event.addDomListener(ctrlSubmitBtn, 'click', function (event) {
+		// BUG: If you move the marker out of bounds and click submit, this function still submits
+		// TODO: bounds checking?
+
+		var latitude;
+		var longitude;
+		
+		if (ctrlDecimalOrDMSSelect.selectedIndex == "1") {
+			if (ctrlLatNS.selectedIndex == 0) { latDirection = "N"; }
+			else { latDirection = "S"; }
+			if (ctrlLongNS.selectedIndex == 0) { longDirection = "W"; }
+			else { longDirection = "E"; }
+			
+			latitude = toDecimal(latDirection, ctrlLatDegrees.value, ctrlLatMinutes.value);
+			longitude = toDecimal(longDirection, ctrlLongDegrees.value, ctrlLongMinutes.value);
+		}
+		else {
+			latitude = ctrlLatInput.value;
+			longitude = ctrlLongInput.value;
+		}
+		var location = new google.maps.LatLng(latitude, longitude);
+		submitLatLng(location);
+	});
+
+	google.maps.event.addDomListener(ctrlDecimalOrDMSSelect, 'change', function (event) {
 		var latValue = ctrlLatInput.value;
 		var longValue = ctrlLongInput.value;
 		
-		submitLatLng(marker, new google.maps.LatLng(latValue, longValue));
-	};
+		if (ctrlDecimalOrDMSSelect.selectedIndex == "1")
+		{
+			layoutDMSBox.style.display = "block";
+			layoutLatLongBox.style.display = "none";
 
-	google.maps.event.addDomListener(ctrlBtn, 'click', onclick);
+			updateLatLngDMS(new google.maps.LatLng(latValue, longValue));
+		}
+		else
+		{
+			layoutDMSBox.style.display = "none";
+			layoutLatLongBox.style.display = "block";
+			
+			var latDirection;
+			var longDirection;
 
-	google.maps.event.addDomListener(ctrlSubmitBtn, 'click', onsubmit);
+			if (ctrlLatNS.selectedIndex == 0) { latDirection = "N"; }
+			else { latDirection = "S"; }
+			if (ctrlLongNS.selectedIndex == 0) { longDirection = "W"; }
+			else { longDirection = "E"; }
+			
+			var latDec = toDecimal(latDirection, ctrlLatDegrees.value, ctrlLatMinutes.value);
+			var lngDec = toDecimal(longDirection, ctrlLongDegrees.value, ctrlLongMinutes.value);
+
+			updateLatLng(new google.maps.LatLng(latDec, lngDec));
+		}
+	});
 }
 
+function toDMS(direction, deg) {
+	var compass;
+	if ((direction == "lat") && (deg < 0)) {
+		compass = "S";
+	}
+	else if ((direction == "lat") && (deg > 0)) {
+		compass = "N";
+	}
+	else if ((direction == "long") && (deg < 0)) {
+		compass = "W";
+	}
+	else if ((direction == "long") && (deg > 0)) {
+		compass = "E";
+	}
+	
+	var degrees;
 
-// FIX: function parameters are redundant.
-// You only need location, and if you have marker, you have location
-// Called when the user drags around the marker
-function updateLatLng(marker, location) {
+	if (deg < 0) {
+		deg = deg * -1;
+	}
+	degrees = Math.floor(deg);
+	degrees = degrees.toFixed();
+	
+	var minutes_seconds = (deg % 1) * 60;
+	var minutes = Math.floor(minutes_seconds);
+	minutes = minutes.toFixed();
+	var seconds = Math.round((minutes_seconds % 1) * 60 * 100);
+	seconds = seconds.toFixed();
+	
+	return {
+		'compass': compass,
+		'degrees': degrees,
+		'minutes': minutes + "." + seconds
+	};
+}
+
+function toDecimal(direction, deg, minutes) {
+	minutes = parseFloat(minutes);
+	deg = parseFloat(deg);
+	var seconds = (Math.floor(minutes) * 60) + ((minutes % 1) * 100);
+	
+	var degrees = deg + (seconds / 3600);
+	if ((direction == "W") || (direction == "S")) {
+		degrees = degrees * -1;
+	}
+	
+	
+	return degrees;
+}
+
+function updateLatLng(location) {
 	document.getElementById('latitudeIn').value = location.lat().toFixed(5);
 	document.getElementById('longitudeIn').value = location.lng().toFixed(5);
 }
 
-// Called when the user clicks the "Take me there!" button
-function dropMarker(marker, location) {
-	updateLatLng(marker, location);
+// currently unused.
+function updateLatLngFollow(marker, location) {
+//	newLocation = dropPrecision(location);
+	document.getElementById('latitudeInFollow').value = location.lat().toFixed(5);
+	document.getElementById('longitudeInFollow').value = location.lng().toFixed(5);
 	marker.setPosition(location);
+	marker.setVisible(true);
 }
+
+function updateLatLngDMS(location) {
+	latDMS = toDMS("lat", location.lat());
+	longDMS = toDMS("long", location.lng());
+	
+	if (latDMS.compass == "N") { document.getElementById('latNSSelect').selectedIndex = 0; }
+	else { document.getElementById('latNSSelect').selectedIndex = 1; }
+	if (longDMS.compass == "W") { document.getElementById('longNSSelect').selectedIndex = 0; }
+	else { document.getElementById('longNSSelect').selectedIndex = 1; }
+
+	document.getElementById('latDegrees').value = latDMS.degrees;
+	document.getElementById('latMinutes').value = latDMS.minutes;
+	
+	document.getElementById('longDegrees').value = longDMS.degrees;
+	document.getElementById('longMinutes').value = longDMS.minutes;
+}
+
+// Called when the user clicks the "Take me there!" button
+function placeMarker(marker, location) {
+	updateLatLng(location);
+	updateLatLngDMS(location);
+	marker.setPosition(location);
+	marker.getMap().panTo(location);
+}
+
+
+// Currently unused, but will be rolled out soon.
+// We use this to reduce precision of LatLng's in order to 'clump' near locations together.
+// The gist is: Take each coord.
+//	Multiply by 1000 and use Math.floor() to drop the decimals.
+//	Divide by 1000 to get it back to a coord.
+//	Add .0005 to "center"
+// function reducePrecision(location) {
+// 	latitude = Math.floor(location.lat() * 1000) / 1000 + .0005;
+// 	longitude = Math.floor(location.lng() * 1000) / 1000 + .0005;
+// 	
+// 	newLoc = new google.maps.LatLng(latitude, longitude);
+// 	if (bounds.contains(newLoc)) {
+// 		return (newLoc);
+// 	}
+// 	// adjust latlng if coord falls out of bounds
+// 	else {
+// 		if (latitude < bounds.getSouthWest().lat())
+// 			latitude = bounds.getSouthWest().lat();
+// 		else if (latitude > bounds.getNorthEast().lat())
+// 			latitude = bounds.getNorthEast().lat();
+// 		if (longitude < bounds.getSouthWest().lng())
+// 			longitude = bounds.getSouthWest().lng();
+// 		else if (longitude < bounds.getNorthEast().lng())
+// 			longitude = bounds.getNorthEast().lng();
+// 
+// 		return(new google.maps.LatLng(latitude, longitude));
+// 	}
+// }
+
+function enforceBounds(bounds, location) {
+	console.log(bounds.toString());
+	if (bounds.contains(location)) {
+		return (location)
+	}
+	else {
+		var latitude = location.lat();
+		var longitude = location.lng();
+
+		if (latitude < bounds.getSouthWest().lat()) {
+			latitude = bounds.getSouthWest().lat();
+		}
+		else if (latitude > bounds.getNorthEast().lat()) {
+			latitude = bounds.getNorthEast().lat();
+		}
+		if (longitude < bounds.getSouthWest().lng()) {
+			longitude = bounds.getSouthWest().lng();
+		}
+		else if (longitude > bounds.getNorthEast().lng()) {
+			longitude = bounds.getNorthEast().lng();
+		}
+		console.log(latitude + ", " + longitude);
+		return(new google.maps.LatLng(latitude, longitude));
+	}
+}
+
+// Called when the user clicks the "Take me there!" button
+// function dropMarker(marker, location) {
+// 	updateLatLng(marker, location);
+// 	marker.setPosition(location);
+// }

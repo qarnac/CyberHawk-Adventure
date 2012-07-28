@@ -3,6 +3,8 @@ credentials.php
 
 *.DS_Store
 
+*~
+
 .project
 
 .settings/

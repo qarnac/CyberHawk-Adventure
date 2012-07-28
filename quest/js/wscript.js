@@ -53,54 +53,62 @@ function ajax(data,url,callback)
 	xmlhttp.send(data);
 }
 //this function invoked when student selects a hunt
-//function huntsel(x)
 function huntselection(x)
 { 
-	var hunt=hunts[x];
-	// TODO convert huntboundary to a google maps bounds object to delete georect
-	huntboundary=new georect(new latlng(hunt['minlat'],hunt['minlng']),new latlng(hunt['maxlat'],hunt['maxlng']));
-	$('activity').innerHTML=multiple;
-	starter();
+//	console.log(hunts);
+	// When the user selects the null select, it will no longer even attempt to load activities.
+// 	console.log(document.getElementById("selecthunt").selectedIndex-1);
+// 	window.console.log("anything?");
+	if ((x = document.getElementById("selecthunt").selectedIndex-1) >= 0) {
+//		console.log(x);
+		var hunt=hunts[x];
+		// TODO convert huntboundary to a google maps bounds object to delete georect
+//		var southWestPoint = new google.maps.LatLng(hunt['minlat'], hunt['minlng']);
+//		var northEastPoint = new google.maps.LatLng(hunt['maxlat'], hunt['maxlng']);
+//		console.log(southWestPoint.toString());
+//		huntboundary = new google.maps.LatLngBounds(southWestPoint, northEastPoint);
+		huntboundary=new georect(new latlng(hunt['minlat'],hunt['minlng']),new latlng(hunt['maxlat'],hunt['maxlng']));
+		$('activity').innerHTML=multiple;
+		starter();
+	}
 }
 //has the boundary information of selected hunt
 var huntboundary;
 //invoked when student submits the form .checks for validity of data and submits the information through ajax
 function check(form,exe)
 {
-	if(exe)
-	{
-		
-		var contents={};	
+	console.log("in form check");
+	if (exe) {
+		var contents={};
 		var x=document.getElementsByName('answer');
-		for(var i=0;i<x.length;i++)
-		{
-			if(x[i].checked)
-			contents['answer']=x[i].value;
+		for (var i=0;i<x.length;i++) {
+			if (x[i].checked)
+			contents['answer'] = x[i].value;
 			break;
 		}
 		var y=new Array("textarea","text","number");
-		for(var i=0;i<form.length;i++)
-		{
-		if(y.has(form[i].type))
-			contents[form[i].name]=form[i].value;	
+		for(var i=0; i<form.length; i++) {
+			if (y.has(form[i].type))
+				contents[form[i].name] = form[i].value;
 		}
-		if(morc && morc.verify())
-		{contents['media']=morc;
-		contents['huntid']=hunts[0]['id'];
-		contents=JSON.stringify(contents);
-		contents="content="+contents;
+		console.log("verifying morc");
+		if (morc && morc.verify()) {
+		console.log("in if");
+			contents['media'] = morc;
+			contents['huntid'] = hunts[0]['id'];
+			contents = JSON.stringify(contents);
+			contents = "content="+contents;
 	
-			ajax(contents, PHP_FOLDER_LOCATON + "user_upload.php", function(x) {
+			ajax(contents, PHP_FOLDER_LOCATION + "user_upload.php", function(x) {
 				if (x == "true")
-					alert("sucess");
+					alert("Success!");
 				else
 					alert(x);
-					
-			}); 
-
-	}
-	else
-	alert("please Select a Image");
+			});
+		}
+		else {
+			alert("Please select an image, and verify the coordinates.");
+		}
 	}
 	return false;
 }

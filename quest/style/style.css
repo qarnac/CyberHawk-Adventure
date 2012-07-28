@@ -238,6 +238,10 @@ select {
 	width: 200px;
 	margin: 2px 0 5px 5px;
 }
+select.short {
+	float: none;
+	width: 80px;
+}
 /*--------*/
 
 /*Dropbox*/
