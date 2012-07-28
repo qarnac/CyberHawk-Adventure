@@ -12,7 +12,6 @@ function geocompress(file, type) {
 	this.file = compress(file, type);
 	this.loc = gpsverify(file);
 	this.verify = function() {
-		alert("well?\n" + this.loc.lat + ", " + this.loc.lng);
 		if (this.file.dataurl && this.loc.lat && this.loc.lng) {
 			this.file.dataurl = this.file.dataurl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
 			return true;
@@ -90,8 +89,6 @@ function checkloc(rect, loc) {
 	return rect.topleft.lat < loc.lat && rect.bottomright.lat > loc.lat && rect.topleft.lng < loc.lng && rect.bottomright.lng > loc.lng;
 }
 
-
-
 //gets meta data like the geo tag in the image. if doesnt exist gets it with help of google maps and user
 function gpsverify(file) {
 	var loc = new Object();
@@ -122,29 +119,15 @@ function gpsverify(file) {
 	return loc;
 }
 
-// can be replaced with a call to google.maps.LatLngBounds.getCenter()
-//finds the center of a rectangle
-// function rectcenter(x) {
-// 
-// 	return new latlng((x.topleft.lat + x.bottomright.lat) / 2, (x.topleft.lng + x.bottomright.lng) / 2);
-// 
-// }
-
 //google maps used to get the geo cordinates of picture inside a hunt area
 function gmaps() {
 	var x = new Object();
 
 	//boundary
-	// this is wrong, latlngbounds expects SW and NE, not NW and SE:
 	var southWestBound = new google.maps.LatLng(huntboundary.topleft.lat, huntboundary.topleft.lng);
 	var northEastBound = new google.maps.LatLng(huntboundary.bottomright.lat, huntboundary.bottomright.lng);
-	console.log("southwest: " + southWestBound);
-	console.log("northeast: " + northEastBound);
 	var bounds = new google.maps.LatLngBounds(southWestBound, northEastBound);
-	
-//	var bounds = new google.maps.LatLngBounds(new google.maps.LatLng(huntboundary.topleft.lat, huntboundary.topleft.lng), new google.maps.LatLng(huntboundary.bottomright.lat, huntboundary.bottomright.lng));
-//	var bounds = new google.maps.LatLngBounds(new google.maps.LatLng(huntboundary.getSouthWest()), new google.maps.LatLng(huntboundary.getNorthEast()));
-	
+
 	var mapOptions = {
 		center : bounds.getCenter(),
 		zoom : 11,
@@ -237,10 +220,7 @@ function displayMap(x) {
 // and switches back from the map to the form view
 // TODO: Add code for clustering markers into the same latlng position
 function submitLatLng(location) {
-	alert("Thanks for picking a location.");
-	console.log("location was this: " + location.toString());
 	morc.loc = new latlng(location.lat(), location.lng());
-	alert("wtf?: " + location.toString() + "\n" + morc.loc.lat + ", " + morc.loc.lng);
 	morc.from = "chosen";
 	displayMap(false);
 	drawimg(morc);
@@ -539,8 +519,7 @@ function toDecimal(direction, deg, minutes) {
 	if ((direction == "W") || (direction == "S")) {
 		degrees = degrees * -1;
 	}
-	
-	
+
 	return degrees;
 }
 
@@ -613,7 +592,6 @@ function placeMarker(marker, location) {
 // }
 
 function enforceBounds(bounds, location) {
-	console.log(bounds.toString());
 	if (bounds.contains(location)) {
 		return (location)
 	}
@@ -633,13 +611,6 @@ function enforceBounds(bounds, location) {
 		else if (longitude > bounds.getNorthEast().lng()) {
 			longitude = bounds.getNorthEast().lng();
 		}
-		console.log(latitude + ", " + longitude);
 		return(new google.maps.LatLng(latitude, longitude));
 	}
 }
-
-// Called when the user clicks the "Take me there!" button
-// function dropMarker(marker, location) {
-// 	updateLatLng(marker, location);
-// 	marker.setPosition(location);
-// }

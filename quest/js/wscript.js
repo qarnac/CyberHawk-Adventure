@@ -55,17 +55,12 @@ function ajax(data,url,callback)
 //this function invoked when student selects a hunt
 function huntselection(x)
 { 
-//	console.log(hunts);
 	// When the user selects the null select, it will no longer even attempt to load activities.
-// 	console.log(document.getElementById("selecthunt").selectedIndex-1);
-// 	window.console.log("anything?");
 	if ((x = document.getElementById("selecthunt").selectedIndex-1) >= 0) {
-//		console.log(x);
 		var hunt=hunts[x];
 		// TODO convert huntboundary to a google maps bounds object to delete georect
 //		var southWestPoint = new google.maps.LatLng(hunt['minlat'], hunt['minlng']);
 //		var northEastPoint = new google.maps.LatLng(hunt['maxlat'], hunt['maxlng']);
-//		console.log(southWestPoint.toString());
 //		huntboundary = new google.maps.LatLngBounds(southWestPoint, northEastPoint);
 		huntboundary=new georect(new latlng(hunt['minlat'],hunt['minlng']),new latlng(hunt['maxlat'],hunt['maxlng']));
 		$('activity').innerHTML=multiple;
@@ -77,7 +72,6 @@ var huntboundary;
 //invoked when student submits the form .checks for validity of data and submits the information through ajax
 function check(form,exe)
 {
-	console.log("in form check");
 	if (exe) {
 		var contents={};
 		var x=document.getElementsByName('answer');
@@ -91,9 +85,7 @@ function check(form,exe)
 			if (y.has(form[i].type))
 				contents[form[i].name] = form[i].value;
 		}
-		console.log("verifying morc");
 		if (morc && morc.verify()) {
-		console.log("in if");
 			contents['media'] = morc;
 			contents['huntid'] = hunts[0]['id'];
 			contents = JSON.stringify(contents);
