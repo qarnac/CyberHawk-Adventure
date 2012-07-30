@@ -3,7 +3,10 @@
 // This php file simply queries the server, and then echo's the list of all the activities.
 session_start();
 include '../php/credentials.php';
-$result=mysql_query("SELECT stud_activity.*,students.firstname,students.lastname FROM stud_activity,students WHERE stud_activity.hunt_id='" . $_POST['hunt']. "' AND students.firstname='" . $_POST['name'] ."'") or die(mysql_error());
+$result=mysql_query("SELECT * 
+					FROM  `stud_activity` 
+					WHERE  `student_id` =" . $_SESSION['id'] . "
+					AND 'hunt_id' = " . $_POST['hunt']) or die(mysql_error());
 $activityList=array();
 if(mysql_num_rows($result)>0)
 			{
