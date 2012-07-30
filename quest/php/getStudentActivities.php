@@ -3,7 +3,7 @@
 // This php file simply queries the server, and then echo's the list of all the activities.
 session_start();
 include '../php/credentials.php';
-$result=mysql_query("SELECT stud_activity.*,students.firstname,students.lastname FROM stud_activity,students WHERE stud_activity.hunt_id='1' AND students.firstname='" . $_SESSION['id'] ."'") or die(mysql_error());
+$result=mysql_query("SELECT stud_activity.*,students.firstname,students.lastname FROM stud_activity,students WHERE stud_activity.hunt_id='" . $_POST['hunt']. "' AND students.firstname='" . $_POST['name'] ."'") or die(mysql_error());
 $activityList=array();
 if(mysql_num_rows($result)>0)
 			{
@@ -15,4 +15,5 @@ if(mysql_num_rows($result)>0)
 			$temp[0]= $_SESSION['firstname'];
 			$temp[1]=$activityList;
 echo json_encode($activityList);
+
 ?>

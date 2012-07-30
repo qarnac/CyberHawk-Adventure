@@ -7,7 +7,9 @@
 // If I find nothing else that I want to do before I call the php function, then I will move this into the html file.
 // Currently called by:  Nothing.
 function createStudentActivityList(){
-	ajax('who=student', PHP_FOLDER_LOCATION + "getStudentActivities.php", studentActivityList);
+	ajax('hunt=' + document.getElementById("selecthunt").value + // POSTS the huntid.
+		"&name=" + document.getElementById("username").innerHTML,    // Posts student firstname
+		PHP_FOLDER_LOCATION + "getStudentActivities.php", studentActivityList);  // Gives filename to post to and callback function.
 }
 
 // This function is called in order to create a new activity as a student.
