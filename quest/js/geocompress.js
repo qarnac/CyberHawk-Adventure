@@ -440,6 +440,7 @@ function createGotoControl(ctrlDiv, map, marker, center)
 		}
 		var location = new google.maps.LatLng(latitude, longitude);
 		submitLatLng(location);
+		document.getElementById("googlemap").style.height="0px";
 	});
 
 	google.maps.event.addDomListener(ctrlDecimalOrDMSSelect, 'change', function (event) {

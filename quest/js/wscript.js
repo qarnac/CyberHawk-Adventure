@@ -58,7 +58,7 @@ function huntselection(x)
 	// When the user selects the null select, it will no longer even attempt to load activities.
 	if ((x = document.getElementById("selecthunt").selectedIndex-1) >= 0) {
 		var hunt=hunts[x];
-		// TODO convert huntboundary to a google maps bounds object to delete georect
+		// TODO convert  to a google maps bounds object to delete georect
 //		var southWestPoint = new google.maps.LatLng(hunt['minlat'], hunt['minlng']);
 //		var northEastPoint = new google.maps.LatLng(hunt['maxlat'], hunt['maxlng']);
 //		huntboundary = new google.maps.LatLngBounds(southWestPoint, northEastPoint);
@@ -93,9 +93,9 @@ function check(form,exe)
 	
 			ajax(contents, PHP_FOLDER_LOCATION + "user_upload.php", function(x) {
 				if (x == "true")
-					alert("Success!");
+					window.location.reload();
 				else
-					alert(x);
+					alert("An error has occured while attempting to upload your file.");
 			});
 		}
 		else {

@@ -8,16 +8,17 @@
 // Currently called by:  Nothing.
 function createStudentActivityList(){
 	ajax('hunt=' + document.getElementById("selecthunt").value + // POSTS the huntid.
-		"&name=" + document.getElementById("username").innerHTML,    // Posts student firstname
+		"&id=" + document.getElementById("username").innerHTML,    // Posts student firstname
 		PHP_FOLDER_LOCATION + "getStudentActivities.php", studentActivityList);  // Gives filename to post to and callback function.
 }
 
 // This function is called in order to create a new activity as a student.
 // Shows the createActivity.html file.
+/*
 function createNewActivity(){
 	ajax("GET", "../quest/html/createActivity.htm", displayPage);
 }
-
+*/
 function displayPage(serverResponse){
 	var activityDiv=document.getElementById("activity");
 	activityDiv.innerHTML=serverResponse;
@@ -33,7 +34,7 @@ function studentActivityList(serverResponse){
 		button.setAttribute("type", "button");
 		button.setAttribute("value", "New Activity");
 		button.setAttribute("id", "newActivity");
-		button.onclick=createNewActivity;
+		button.onclick=huntselection;
 		document.getElementById("main").insertBefore(button, document.getElementById("contents"));
 	}
 	for(i in activities){
