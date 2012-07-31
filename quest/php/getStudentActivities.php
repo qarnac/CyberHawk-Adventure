@@ -6,17 +6,16 @@ include '../php/credentials.php';
 $result=mysql_query("SELECT * 
 					FROM  `stud_activity` 
 					WHERE  `student_id` =" . $_SESSION['id'] . "
-					AND 'hunt_id' = " . $_POST['hunt']) or die(mysql_error());
+					AND `hunt_id` = " . $_POST['hunt'] . ";") or die(mysql_error());
 $activityList=array();
 if(mysql_num_rows($result)>0)
-			{
-				while($x=mysql_fetch_assoc($result))
-				{
-				array_push($activityList,$x);
-				}
-			} 
-			$temp[0]= $_SESSION['firstname'];
-			$temp[1]=$activityList;
+	{
+		while($x=mysql_fetch_assoc($result))
+		{
+			array_push($activityList,$x);
+		}
+	} 
+$temp[0]= $_SESSION['firstname'];
+$temp[1]=$activityList;
 echo json_encode($activityList);
-
 ?>

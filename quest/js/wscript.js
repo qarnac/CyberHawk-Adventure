@@ -88,7 +88,7 @@ function check(form,exe)
 		}
 		if (morc && morc.verify()) {
 			contents['media'] = morc;
-			contents['huntid'] = hunts[0]['id'];
+			contents['huntid'] = document.getElementById("selecthunt").value;
 			contents = JSON.stringify(contents);
 			contents = "content="+contents;
 	
