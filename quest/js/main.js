@@ -8,7 +8,7 @@
 */
 
 //invoked by ajax function but loaded when the page is finished loading. THis receives the hunts from the server and it transfers it to javascript variable hunts
-function init(x) {
+function createHuntList(x) {
 	hunts = JSON.parse(x);
 	$('username').innerHTML = hunts[0];
 	hunts = hunts[1];
