@@ -322,10 +322,7 @@ label {
 	padding: 5px;
 	margin: 10px;
 }
-/* Added float_none on July 10, 2012 to override above label CSS behavior in maps UI */
-label.float_none {
-	float: none;
-}
+
 .small {
 	color: #666666;
 	display: block;

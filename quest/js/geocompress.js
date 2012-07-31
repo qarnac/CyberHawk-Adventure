@@ -130,19 +130,22 @@ function gmaps() {
 
 	var mapOptions = {
 		center : bounds.getCenter(),
-		zoom : 11,
-		mapTypeId : google.maps.MapTypeId.TERRAIN
+		zoom : 13,
+		mapTypeId : google.maps.MapTypeId.HYBRID
 	};
 	var map = new google.maps.Map($("map_canvas"), mapOptions);
+
+	map.fitBounds(bounds);
+	map.setZoom(map.getZoom() + 2);
 
 	// This is the rectangular overlay that goes on top of the map to display the bounds
 	var rectangleOverlay = new google.maps.Rectangle();
 	var rectOptions = {
-		strokeColor : "#FF0000",
+		strokeColor : "#B7DDF2",
 		strokeOpacity : 0.7,
 		strokeWeight : 2,
-		fillColor : "#FF0000",
-		fillOpacity : 0.35,
+		fillColor : "#B7DDF2",
+		fillOpacity : 0.25,
 		map : map,
 		bounds : bounds
 	};
