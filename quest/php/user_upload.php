@@ -13,7 +13,6 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 	//decides media id
 	query("INSERT INTO image (images) VALUES ('temp')");
 	$m= mysql_insert_id();
-	//
 	$path="../uploads/".$m.".jpeg";
 	//creates image file
 	decodeimage($content->media->file->dataurl, $path);

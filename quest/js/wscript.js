@@ -20,7 +20,7 @@ function wscript_init(x) {
 	multiple=hunts[2][0].content;
 	hunts=hunts[1];
 	for ( x = 0; x < hunts.length; x++)
-		$('selecthunt').options[$('selecthunt').options.length] = new Option(hunts[x]['title'], x);
+		$('selecthunt').options[$('selecthunt').options.length] = new Option(hunts[x]['title'], hunts[x]["id"]);
 		
 }					
 var uniq=Math.floor((Math.random()*100)+1);
@@ -76,9 +76,10 @@ function check(form,exe)
 		var contents={};
 		var x=document.getElementsByName('answer');
 		for (var i=0;i<x.length;i++) {
-			if (x[i].checked)
-			contents['answer'] = x[i].value;
-			break;
+			if (x[i].checked){
+				contents['answer'] = x[i].value;
+				break;
+			}
 		}
 		var y=new Array("textarea","text","number");
 		for(var i=0; i<form.length; i++) {
