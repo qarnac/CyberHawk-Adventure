@@ -13,7 +13,7 @@ function createHuntList(x) {
 	$('username').innerHTML = hunts[0];
 	hunts = hunts[1];
 	for ( x = 0; x < hunts.length; x++)
-		$('selecthunt').options[$('selecthunt').options.length] = new Option(hunts[x]['title'], x);
+		$('selecthunt').options[$('selecthunt').options.length] = new Option(hunts[x]['title'], hunts[x]['id']);
 }
 
 //Creates some random number
@@ -53,16 +53,10 @@ function ajax(data, url, callback) {
 }
 
 //this function invoked when student selects a hunt
-function huntsel(x) {
+function huntsel() {
 	$('activity').innerHTML = '';
-		$('students').innerHTML = '';
-	if (x != 'null') {
-		var hunt = hunts[x];
-		ajax("what=activities&id=" + hunt['id'], PHP_FOLDER_LOCATION + 'user_retrieve.php', create_activity_obj);
-	} else {
-		feed = {};
-		activities = [];
-	}
+	$('students').innerHTML = '';
+	ajax("what=activities&id=" + document.getElementById("selecthunt").value, PHP_FOLDER_LOCATION + 'user_retrieve.php', create_activity_obj);
 }
 
 //creates a dom element
