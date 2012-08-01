@@ -66,6 +66,8 @@ function createElement(x, y) {
 	return x;
 }
 
+//Pretty sure we could refactor these two prototype functions out and just use array's .indexOf() which returns -1
+
 // a custom prototype thats been added to array object to find existence of particular value
 Array.prototype.has = function(v) {
 	for ( i = 0; i < this.length; i++) {
