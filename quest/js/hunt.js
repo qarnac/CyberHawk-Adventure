@@ -13,20 +13,6 @@ function createmap(position,z)
 	 map = new google.maps.Map($("activity"), myOptions);
 	
 }
-function searchlocation(keyword)
-{
-
-	  var request = {
-    location:map.getCenter() ,
-    radius: '50000',
-    query: keyword
-  };
-
-  service = new google.maps.places.PlacesService(map);
-  service.textSearch(request, queryresults);
-	
-
-}
 
 function queryresults(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
