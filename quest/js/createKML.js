@@ -55,12 +55,7 @@ function createPlacemark(activity){
 		kml+=choices[i].choice + ".\t" + choices[i].content +"<br />";
 		if(choices[i].ans=="true") kml+="</b>";
 	}
-	kml+="]]> </description>"
-	/*
-	For some reason this code seems to not show up after the KML is parsed by google maps.  Possibly images aren't shown in descriptions?
-	This is something I'll look into once I get this script to add more in the description.
-	kml+="<![CDATA[<img src=\"" + PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id +"]]></description>\n"
-	*/
+	kml+="<img src=\"" + PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id +"\" width=\"100px\" height=\"100px\"/>]]></description>\n"
 	kml+="\t</Placemark>\n";
 	return kml;
 }
