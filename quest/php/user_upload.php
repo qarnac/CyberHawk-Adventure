@@ -4,6 +4,9 @@
  */
 include '../php/credentials.php';
 session_start();
+
+$PHP_MEDIA_PATH = "../uploads/";
+
 //scripts starts its execution from here by verifying the post request it received and also the session of the user
 if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 {
@@ -13,10 +16,11 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 	//decides media id
 	query("INSERT INTO image (images) VALUES ('temp')");
 	$m= mysql_insert_id();
-	$path="../uploads/".$m.".jpeg";
-	//creates image file
-	decodeimage($content->media->file->dataurl, $path);
-	query("UPDATE image SET images='".$path."' WHERE id=$m");
+	$img_filename = $m . ".jpeg";
+
+	// writes the image data to a file on disk
+	writeImage($content->media->file->dataurl, $PHP_MEDIA_PATH . $img_filename);
+	query("UPDATE image SET images='" . $img_filename . "' WHERE id=$m");
 
 	query("INSERT INTO stud_activity (student_id,hunt_id,media,media_id,created,status,lat,lng,aboutmedia,whythis,howhelpfull,yourdoubt,mquestion,choices) VALUES ($studentid,".esc($content->huntid).",'image.php',".$m.",'".date('Y-m-d H:i:s')."','new','".esc($content->media->loc->lat)."','".esc($content->media->loc->lng)."','".esc($content->aboutmedia)."','".esc($content->whythis)."','".esc($content->howhelpful)."','".esc($content->yourdoubt)."','".esc($content->mquestion)."','".choic($content)."')");
 
@@ -50,16 +54,16 @@ function esc($x)
 {
 	return mysql_escape_string($x);
 }
+
 //decodes the image to a binary file and finally a jpeg file
-function decodeimage($imageData,$outputfile)
+function writeImage($imageData,$outputfile)
 {
-
-$fp = fopen($outputfile, 'wb');
-$imageData=str_replace(' ','+',$imageData);
-fwrite($fp, base64_decode($imageData));
-fclose($fp);
-
+	$fp = fopen($outputfile, 'wb');
+	$imageData=str_replace(' ','+',$imageData);
+	fwrite($fp, base64_decode($imageData));
+	fclose($fp);
 }
+
 //converts boolean to string
 function btos($x)
 {
