@@ -189,18 +189,6 @@ function gmaps() {
 //		updateLatLngFollow(myFollowMarker, dropPrecision(event.latLng, bounds));
 //		map.panTo(location);
 	});
-
-	google.maps.event.addListener(myMarker, 'click', function(event) {
-		if (bounds.contains(myMarker.position)) {
-			submitLatLng(event.latLng);
-		}
-		else {
-			alert("You can only select a location within the hunt area.\n");
-			myMarker.setPosition(bounds.getCenter());
-			updateLatLng(myMarker.position);
-			updateLatLngDMS(myMarker.position);
-		}
-    });
 }
 
 //switches between displaying map and the form
