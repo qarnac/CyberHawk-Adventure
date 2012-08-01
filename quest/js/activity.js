@@ -6,26 +6,28 @@ var hunts;
 
 var activities = new Array();
 // Holds all the activities of a particular hunt organised by student id
+
 var feed = {};
 // Has the status of each activity like its id,comment and status.
+
+
 //Instantiates the array activities with student activitivities
 //This function is invoked by ajax function but this happens when the teacher selects a hunt.
 //It creates the list of all students and display them in the list box along with a update button.
 //It also creates the array activities .
-function create_activity_obj(x) {
-	if (x == "none")//server returns false if it cannot find any activities
-		alert("No one has created acticity yet");
+function create_activity_obj(allActivities) {
+	if (allActivities == "none")//server returns false if it cannot find any activities
+		alert("No one has created an activity yet");
 	else {
-		x = JSON.parse(x);
+		activities = [];
+		activityList = JSON.parse(allActivities);
 
-		var list_box = listbox();
-		feedactivity(x, list_box);
-		$('students').appendChild(clear());
-		$('students').appendChild(list_box);
-		$('students').appendChild(updatebutton());
-		//actdisp(x[m]);
+		var studentList = listbox();
+		feedactivity(activityList, studentList);
+		$('students').appendChild(studentList);
+//		$('students').appendChild(updatebutton());
+		//actdisp(allActivities[m]);
 	}
-
 }
 
 function feedactivity(x, list_box) {
@@ -37,6 +39,7 @@ function feedactivity(x, list_box) {
 			z.contents = new Array();
 			z.contents.push(x[m]);
 			activities.push(z);
+			// couldn't this just be replaced with .add() ?
 			list_box.addoption(x[m]['firstname'] + " " + x[m]['lastname'], x[m]['student_id']);
 		} else {
 			z = activities.hassid(x[m]['student_id']);
@@ -65,6 +68,7 @@ function listbox() {
 	temp.id = 'slist';
 	temp.size = 20;
 	temp.multiple = 'multiple';
+	// couldn't this just be replaced with .add() ?
 	temp.addoption = function(label, value) {
 		this.options[this.options.length] = new Option(label, value);
 	};
@@ -75,7 +79,7 @@ function listbox() {
 			for ( i = 0; i < activities[x].contents.length; i++)
 				displayactivity(activities[x].contents[i], false)
 		} else
-			alert("something went wrong")
+			alert("something went wrong in listbox()")
 	};
 	return temp;
 }
@@ -181,6 +185,8 @@ function createimage(x)
 	}
 	return img;
 }
+
+// don't really need this function....
 function clear()
 {
 	var clear = createElement('div', '');
