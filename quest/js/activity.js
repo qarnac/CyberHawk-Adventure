@@ -76,57 +76,156 @@ function listbox() {
 		$('activity').innerHTML = "";
 		var x = activities.hassid(this.value);
 		if (x != "false") {
-			for ( i = 0; i < activities[x].contents.length; i++)
-				displayactivity(activities[x].contents[i], false)
+			for ( i = 0; i < activities[x].contents.length; i++) {
+				displayactivity(activities[x].contents[i], false);
+//				generateActivityView(activities[x].contents[i], false);
+//				$('activity').appendChild('hr');
+			}
 		} else
 			alert("something went wrong in listbox()")
 	};
 	return temp;
 }
 
+function generateActivityView(activity, isStudent) {
+	var activityTable = document.createElement('table');
+	activityTable.className = "activityTable";
+	
+	var activityTableRow1 = document.createElement('tr');
+	var activityTableRow2 = document.createElement('tr');
+	var activityTableRow3 = document.createElement('tr');
+	
+	var studentName = document.createElement('td');
+	studentName.className = "studentName";
+	studentName.style.verticalAlign = "top";
+	studentName.innerHTML = "<strong>Student:</strong> " + activity['firstname'] + " " + activity['lastname'];
+	
+	var activityPhotoCell = document.createElement('td');
+	activityPhotoCell.className = "activityPhotoCell";
+	activityPhotoCell.style.textAlign = "center";
+	activityPhotoCell.appendChild(createimage(activity['media_id']));
+	
+	activityTableRow1.appendChild(studentName);
+	activityTableRow1.appendChild(activityPhotoCell);
+	
+	var multipleChoiceCell = generateMultipleChoiceList(activity['mquestion'], JSON.parse(activity['choices']));
+
+	var aboutPhotoText = document.createElement('div');
+	aboutPhotoText.innerHTML = activity['aboutmedia'];
+	var whyThisPhotoText = document.createElement('div');
+	whyThisPhotoText.innerHTML = activity['whythis'];
+	
+	var aboutPhotoCell = document.createElement('td');
+	aboutPhotoCell.appendChild(aboutPhotoText);
+	aboutPhotoCell.appendChild(whyThisPhotoText);
+	
+	activityTableRow2.appendChild(multipleChoiceCell);
+	activityTableRow2.appendChild(aboutPhotoCell);
+	
+	var howHelpfulText = document.createElement('div');
+	howHelpfulText.innerHTML = activity['howhelpfull'];
+	var furtherQuestionText = document.createElement('div');
+	furtherQuestionText.innerHTML = activity['yourdoubt'];
+	
+	activityTableRow3.appendChild(howHelpfulText);
+	activityTableRow3.appendChild(furtherQuestionText);
+	
+	activityTable.appendChild(activityTableRow1);
+	activityTable.appendChild(activityTableRow2);
+	activityTable.appendChild(activityTableRow3);
+	
+	$('activity').appendChild(activityTable);
+}
+
+// This generates the list of multiple choice answers, as well as the quetsion
+// and puts it in a table data cell
+function generateMultipleChoiceList(question, answerList) {
+	var cellData = document.createElement('td');
+	var questionText = document.createElement('span');
+	questionText.className = "multipleChoiceQuestionText";
+	questionText.innerHTML = question;
+	
+	var orderedList = document.createElement('ol');
+	orderedList.className = "multipleChoiceAnswers";
+	orderedList.style.listStyleType = "lower-alpha";
+	
+	for (i = 0; i < answerList.choices.length; i++) {
+		var answer = document.createElement('li');
+
+		if (answerList.choices[i].ans == "true") { // style correct answer
+			var answerSpan = document.createElement('span');
+			answerSpan.className = "correctAnswer";
+			answerSpan.style.color = "green";
+			answerSpan.style.borderBottomColor = "green";
+			answerSpan.style.borderBottomStyle = "dotted"
+			answerSpan.innerHTML = answerList.choices[i].content;
+			answer.appendChild(answerSpan);
+		}
+		else {
+			answer.innerHTML = answerList.choices[i].content;
+		}
+		orderedList.appendChild(answer);
+	}
+	
+	cellData.appendChild(questionText);
+	cellData.appendChild(orderedList);
+	return cellData;
+}
+
 //displays the activity
 // Is now also called from studentActivityList to create the list.
 // Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
-function displayactivity(x, isStudent) {
+function displayactivity(activity, isStudent) {
 	var div = document.createElement('div');
 	div.className = 'elem';
+
 	//Image Element
-	div.appendChild(createimage(x['media_id']));
+	div.appendChild(createimage(activity['media_id']));
 	div.appendChild(clear());
+
 	//USER Name elements ,Multiple choice question Elements
-	div.appendChild(createElement('label', x['firstname'] + " " + x['lastname']));
-	div.appendChild(multiplechoice(x['mquestion'],JSON.parse(x['choices'])));
+	div.appendChild(createElement('label', "<strong>Student:</strong> " + activity['firstname'] + " " + activity['lastname']));
+	div.appendChild(multiplechoice(activity['mquestion'], JSON.parse(activity['choices'])));
 	div.appendChild(clear());
+
 	//Other Question Elements
-	div.appendChild(otherquestions(x));
+	div.appendChild(otherquestions(activity));
 	div.appendChild(clear());
+
 	//Comments and status Elements ad their Eventhandling on onchange to update the variable feed
-	if(!isStudent) div.appendChild(feedback(x['id']));
+	if(!isStudent) div.appendChild(feedback(activity['id']));
 	div.appendChild(clear());
-	//Horijontal Ruler
+
+	//Horizontal Ruler
 	div.appendChild(createElement('hr',''));
+
 	//Append the div element to the div 'activity'
 	$('activity').appendChild(div);
 }
-function multiplechoice(question,ans)
+
+function multiplechoice(question, ans)
 {
-	var div=createElement('div', '');
+	var div = createElement('div', '');
 	var mchoice = createElement('label',question);
 	mchoice.style.width = '550px';
 	div.appendChild(mchoice);
 	div.appendChild(clear());
 	for ( y = 0; y < ans.choices.length; y++)
 		if (ans.choices[y].ans == "true") {
-			var temp = createElement('label', ans.choices[y].choice + " . " + ans.choices[y].content);
+			var temp = createElement('label', ans.choices[y].choice + ". " + ans.choices[y].content);
 			temp.style.color = "green";
+			temp.style.borderBottomStyle = "dashed";
+			temp.style.borderBottomColor = "green";
 			div.appendChild(temp);
 		} else
-			div.appendChild(createElement('label', ans.choices[y].choice + " . " + ans.choices[y].content));
+			div.appendChild(createElement('label', ans.choices[y].choice + ". " + ans.choices[y].content));
 	return div;
 }
+
 function otherquestions(x)
 {
 	var div=createElement('div', '');
+	// HTML ignores duplicate whitespace...
 	div.appendChild(createElement('label', 'About    : ' + x['aboutmedia']));
 	div.appendChild(createElement('label', 'Reason   : ' + x['whythis']));
 	div.appendChild(createElement('label', 'Evidence : ' + x['howhelpfull']));
@@ -171,10 +270,13 @@ function activityStatus(comments,x)
 	}
 	return status;
 }
+
 function createimage(x)
 {
 	var img = document.createElement('img');
 	img.src = PHP_FOLDER_LOCATION + "image.php?id=" + x;
+
+	// Might be nice to replace this with some jquery image box effect
 	img.onmouseover = function() {
 		this.style.height = '281px';
 		this.style.width = '450px';
