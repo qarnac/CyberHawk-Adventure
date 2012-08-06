@@ -3,7 +3,7 @@
 // Once the response is received, it will create the Placemarks on the map.
 // Placemarks will contain an image, and the questions/answers from the form.
 
-// Dependencies: wscript.js, json2.js, script.js
+// Dependencies: wscript.js, json2.js, script.js, egeoxml.js
 
 // Simply calls the getAllActivitiesFromHunt.php, and sets jsonToKML as the callback function.
 function createTeacherKML(){
@@ -12,7 +12,7 @@ function createTeacherKML(){
 		jsonToKML);
 }
 
-
+// Takes the response from getAllActivitiesFromHunt.php and turns it into a KML file.
 function jsonToKML(serverResponse){
 	serverResponse=JSON.parse(serverResponse);
 	var kml=initializeKML();                 // This string is going to hold all created KML, hence the simplistic name.
@@ -20,20 +20,9 @@ function jsonToKML(serverResponse){
 		kml+=createPlacemark(serverResponse[i]);
 	}
 	kml+=finishKML();
-	console.log(kml);
+	displayKML(kml);
 }
 
-// Made into function so that way anything that wants to be added onto the top of the KML file can easily be added.
-function initializeKML(){
-	// These lines must be at the top of a KML page according to the google documentation.
-	var kml="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http:\/\/www.opengis.net/kml/2.2\">\n<Document>\n"
-	return kml;
-}
-
-// Anything that you want to add to the KML file AFTER the placemarks should be added here.
-function finishKML(){
-	return "</Document>\n</kml>";
-}
 // Is called for every activity response from the server.
 // Creates the appropiate <Placemark> for the activity.
 function createPlacemark(activity){
@@ -58,4 +47,40 @@ function createPlacemark(activity){
 	kml+="<img src=\"" + PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id +"\" width=\"100px\" height=\"100px\"/>]]></description>\n"
 	kml+="\t</Placemark>\n";
 	return kml;
+}
+
+// Made into function so that way anything that wants to be added onto the top of the KML file can easily be added.
+function initializeKML(){
+	// These lines must be at the top of a KML page according to the google documentation.
+	var kml="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<kml xmlns=\"http:\/\/www.opengis.net/kml/2.2\">\n<Document>\n"
+	return kml;
+}
+
+// Anything that you want to add to the KML file AFTER the placemarks should be added here.
+function finishKML(){
+	return "</Document>\n</kml>";
+}
+
+// This function is then passed the KML string after it has been created.
+// The purpose of this function is to take the KML string and to correctly display it to the viewer.
+function displayKML(kml){
+	intializeMapForKML();
+	map=document.getElementById("map_canvas");
+	exml = new EGeoXml("exml", map, null, {sidebarid:"the_side_bar"});
+    exml.parseString(kml);
+}
+
+// This sets up the map for the viewing of the KML that we created.
+// Any changes to the behavior of the map for the purposes of the KML viewer should be changed here.
+// This will also be used to reset the map object if it was used for anything else.
+function initializeMapForKML(){
+    var myOptions = {
+		center: new google.maps.LatLng(0,0),
+		zoom: 4,
+		mapTypeId: google.maps.MapTypeId.SATELLITE,
+		preserveViewport: true,
+		minZoom:2
+    };
+    map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
+    map.setZoom(3);
 }
