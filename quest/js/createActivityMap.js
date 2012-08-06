@@ -3,7 +3,7 @@
 // Once the response is received, it will create the Placemarks on the map.
 // Placemarks will contain an image, and the questions/answers from the form.
 
-// Dependencies: wscript.js, json2.js, script.js, geocompress.js and google API v3.
+// Dependencies: wscript.js, json2.js, script.js, and google API v3.
 
 // Simply calls the getAllActivitiesFromHunt.php, and sets jsonToMap as the callback function.
 function createTeacherMap(){
@@ -68,10 +68,23 @@ function initializeMap(activity){
 	div.setAttribute("id", "map_canvas");
 	document.getElementById("activity").appendChild(div);
 	div.style.height="500px";
-	div.style.width="70%";
+	div.style.width="100%";
 	div.style.display = 'block';
 	div.style.position = 'fixed';
 	div.style.top = "0px";
 	div.style.left = "0px";
+	document.getElementById("slist").style.display="none";
+	document.getElementById("mapButton").value="List View";
 	map = new google.maps.Map(div, myOptions);
+}
+// This is the function called by the view Map button.
+// It's responsible for setting up the display of the map, and then setting up the display of the list if the map already exists.
+function mapListButton(){
+	if(document.getElementById("map_canvas")==null) createTeacherMap();
+	else {
+	// Currently, not a lot is done to show the list again, so it doesn't need to be wrapped into a function.
+		document.getElementById("activity").removeChild(document.getElementById("map_canvas"))
+		document.getElementById("slist").style.display="block";
+		document.getElementById("mapButton").value="Map View";
+		}
 }

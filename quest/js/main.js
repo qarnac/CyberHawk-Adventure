@@ -62,7 +62,7 @@ function huntsel() {
 		button.setAttribute("type", "button");
 		button.setAttribute("value", "Map View");
 		button.setAttribute("id", "mapButton");
-		button.onclick=createTeacherMap;
+		button.onclick=mapListButton;
 		document.getElementById("contentSection").insertBefore(button, document.getElementById("newhunt"));
 	}
 }
