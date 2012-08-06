@@ -32,18 +32,29 @@ function createPlacemark(activity){
 	
 	// Text is used in the onclick function, but does not need to be generated every single time we click, so it is kept outside of the actual function.
 	var text= activity["student_id"] // As of now, getAllActivitiesFromHunt.php does NOT return student name, so student ID is being used in place.
-	text+="<![CDATA[<br />"
-	text+="<br />" + activity.mquestion + "<br />";
+	text+="<![CDATA[<br /> <br />"
+	text+="<div><img src=\"" + PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id +"\" width=\"100px\" height=\"100px\" style=\"float:left\"/>\n<div style=\"float:left\">";
+	text+=activity.mquestion + "<br />";
 	choices=JSON.parse(activity.choices);
 	choices=choices.choices; // This might be the ugliest line of code I've ever had to write...
 	// Go through the data for the choices, and bold only the one that is correct.
 	for(var i=0; i<choices.length; i++){
+		var side=(i%2)? "right" : "left"
+		text+="<div style=\"float:" + side + "\">";
 		if(choices[i].ans=="true") text+="<b>";
-		text+=choices[i].choice + ".\t" + choices[i].content +"<br />";
+		text+=choices[i].choice + ".\t" + choices[i].content;
+		// We want 2 questions on a line, so we tab every other.
 		if(choices[i].ans=="true") text+="</b>";
+		text+="</div>";
+		if(side=="right") text+="<br />";
 	}
-	text+="<img src=\"" + PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id +"\" width=\"100px\" height=\"100px\"/>\n";
+	text+="</div></div> <br /><table>"
 	
+	text+="<tr>What is this picture about? <br />" + activity.aboutmedia + "</tr>";
+	text+="<tr>Why did you choose this picture? <br />" + activity.whythis + "</tr>";
+	text+="<tr>How does this picture show what you have learned about in your science class? <br />" + activity.howhelpfull + "</tr>";
+	text+="<tr>What is a question you have about this picture? <br />" + activity.yourdoubt + "</tr> </table>";
+	console.log(text);
 	
 	// When the Placemark is clicked, we want to show all of the information about it.
 	google.maps.event.addListener(marker, "click", function(){
