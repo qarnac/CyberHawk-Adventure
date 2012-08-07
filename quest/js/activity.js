@@ -187,7 +187,7 @@ function generateMultipleChoiceList(question, answerList) {
 	return cellData;
 }
 
-function editActivity(id){
+function submitEdit(id){
 	var form=document.getElementsByName('multiple')[0];
 	var x=document.getElementsByName('answer');
 	var contents={};
@@ -248,7 +248,7 @@ function displayactivity(activity, isStudent) {
 		button.setAttribute("type", "button");
 		button.setAttribute("value", "edit");
 		// Use this ugly syntax because it's the only way I know of passing the parameter to an onclick function.
-		button.onclick=function(){editActivity(activity["id"]);}
+		button.onclick=function(){editActivity(activity);}
 	div.appendChild(button);
 	//Append the div element to the div 'activity'
 	$('activity').appendChild(div);
@@ -257,6 +257,8 @@ function editActivity(activity){
 // multiple gets initialized in wscript_init.  It's supposed to be multiple.htm.
 	$('activity').innerHTML=multiple;
 	choices=JSON.parse(activity.choices);
+	// Ugly onsubmit, but only way I know of passing a parameter onsubmit.	
+	document.getElementsByName("multiple")[0].onsubmit=function(){submitEdit(activity['id']);};
 	// At some point in time, we need to redo the way choices is encoded.  There is no reason the following line should be needed.
 	choices=choices.choices;
 	document.getElementsByName("aboutmedia")[0].innerHTML=activity.aboutmedia;
@@ -268,7 +270,9 @@ function editActivity(activity){
 	document.getElementsByName("b")[0].value=choices[1].content;
 	document.getElementsByName("c")[0].value=choices[2].content;
 	document.getElementsByName("d")[0].value=choices[3].content;
-	docment.getElementsByName("e")[0].value=choices[4].content;
+	document.getElementsByName("e")[0].value=choices[4].content;
+	
+	
 }
 
 // Deprecated code.
