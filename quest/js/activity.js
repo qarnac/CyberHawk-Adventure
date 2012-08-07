@@ -30,6 +30,8 @@ function create_activity_obj(allActivities) {
 	}
 }
 
+// I wonder if it would be better to only fetch student activities
+// once the student has been selected, instead of all students at the same time.
 function feedactivity(x, list_box) {
 	for ( m = 0; m < x.length; m++) {
 		var z;
@@ -75,15 +77,19 @@ function listbox() {
 	temp.onchange = function() {
 		$('activity').innerHTML = "";
 		var x = activities.hassid(this.value);
-		if (x != "false") {
-			for ( i = 0; i < activities[x].contents.length; i++) {
-				displayactivity(activities[x].contents[i], false);
-//				generateActivityView(activities[x].contents[i], false);
+		if (x == "false") {
+			// Shouldn't happen.  Means user clicked on a name that is not in the listbox.
+			alert("something went wrong in listbox()");
+		}
+		else {
+			for ( var i = 0; i < activities[x].contents.length; i++) {
+//				displayactivity(activities[x].contents[i], false);
+				generateActivityView(activities[x].contents[i], false);
 //				$('activity').appendChild('hr');
 			}
-		} else
-			alert("something went wrong in listbox()")
+		}
 	};
+
 	return temp;
 }
 
@@ -149,7 +155,7 @@ function generateMultipleChoiceList(question, answerList) {
 	orderedList.className = "multipleChoiceAnswers";
 	orderedList.style.listStyleType = "lower-alpha";
 	
-	for (i = 0; i < answerList.choices.length; i++) {
+	for (var i = 0; i < answerList.choices.length; i++) {
 		var answer = document.createElement('li');
 
 		if (answerList.choices[i].ans == "true") { // style correct answer
@@ -276,7 +282,7 @@ function createimage(x)
 	var img = document.createElement('img');
 	img.src = PHP_FOLDER_LOCATION + "image.php?id=" + x;
 
-	// Might be nice to replace this with some jquery image box effect
+	// Might be nice to replace onmouseover with some jquery image box effect
 	img.onmouseover = function() {
 		this.style.height = '281px';
 		this.style.width = '450px';
