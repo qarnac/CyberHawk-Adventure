@@ -1,3 +1,39 @@
+.activityTable {
+	min-height: 100%;
+	width: 700px;
+	position: relative;
+}
+
+.activityTable img {
+/*
+	height: 80px;
+	width:100px;
+	margin-left:580px;
+	margin-right:40px;
+	position: absolute;
+*/
+}
+
+.questionLabel {
+	font-weight: bold;
+	font-style: italic;
+}
+
+.multipleChoiceAnswers {
+	list-style-type: lower-alpha;
+	padding-bottom: 1px;
+}
+
+.multipleChoiceAnswers li {
+	margin-bottom: .5em;
+}
+
+.correctAnswer {
+	color: green;
+	border-bottom-color: green;
+	border-bottom-style: dotted;
+}
+
 .elem {
 	display: block;
 	min-height:100%;
