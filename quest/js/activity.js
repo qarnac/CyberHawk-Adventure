@@ -96,49 +96,57 @@ function listbox() {
 function generateActivityView(activity, isStudent) {
 	var activityTable = document.createElement('table');
 	activityTable.className = "activityTable";
-	
+	activityTable.cellPadding = "5px";
+
 	var activityTableRow1 = document.createElement('tr');
 	var activityTableRow2 = document.createElement('tr');
-	var activityTableRow3 = document.createElement('tr');
-	
-	var studentName = document.createElement('td');
-	studentName.className = "studentName";
-	studentName.style.verticalAlign = "top";
-	studentName.innerHTML = "<strong>Student:</strong> " + activity['firstname'] + " " + activity['lastname'];
 	
 	var activityPhotoCell = document.createElement('td');
 	activityPhotoCell.className = "activityPhotoCell";
-	activityPhotoCell.style.textAlign = "center";
 	activityPhotoCell.appendChild(createimage(activity['media_id']));
-	
-	activityTableRow1.appendChild(studentName);
-	activityTableRow1.appendChild(activityPhotoCell);
-	
-	var multipleChoiceCell = generateMultipleChoiceList(activity['mquestion'], JSON.parse(activity['choices']));
 
+	var aboutLabel = document.createElement('div');
+	aboutLabel.innerHTML = "What is this picture about?";
+	aboutLabel.className = "questionLabel";
+	var whyLabel = document.createElement('div');
+	whyLabel.innerHTML = "Why did you choose this picture";
+	whyLabel.className = "questionLabel";
+	var helpfulLabel = document.createElement('div');
+	helpfulLabel.innerHTML = "How does this picture show what you've learned in class?";
+	helpfulLabel.className = "questionLabel";
+	var furtherLabel = document.createElement('div');
+	furtherLabel.innerHTML = "What is a question you have about this picture?";
+	furtherLabel.className = "questionLabel";
+	
 	var aboutPhotoText = document.createElement('div');
 	aboutPhotoText.innerHTML = activity['aboutmedia'];
 	var whyThisPhotoText = document.createElement('div');
 	whyThisPhotoText.innerHTML = activity['whythis'];
-	
-	var aboutPhotoCell = document.createElement('td');
-	aboutPhotoCell.appendChild(aboutPhotoText);
-	aboutPhotoCell.appendChild(whyThisPhotoText);
-	
-	activityTableRow2.appendChild(multipleChoiceCell);
-	activityTableRow2.appendChild(aboutPhotoCell);
-	
 	var howHelpfulText = document.createElement('div');
 	howHelpfulText.innerHTML = activity['howhelpfull'];
 	var furtherQuestionText = document.createElement('div');
 	furtherQuestionText.innerHTML = activity['yourdoubt'];
 	
-	activityTableRow3.appendChild(howHelpfulText);
-	activityTableRow3.appendChild(furtherQuestionText);
+	var aboutPhotoCell = document.createElement('td');
+	aboutPhotoCell.style.width = "600px";
+	aboutPhotoCell.appendChild(aboutLabel);
+	aboutPhotoCell.appendChild(aboutPhotoText);
+	aboutPhotoCell.appendChild(whyLabel);
+	aboutPhotoCell.appendChild(whyThisPhotoText);
+	aboutPhotoCell.appendChild(helpfulLabel);
+	aboutPhotoCell.appendChild(howHelpfulText);
+	aboutPhotoCell.appendChild(furtherLabel);
+	aboutPhotoCell.appendChild(furtherQuestionText);
+
+	activityTableRow1.appendChild(activityPhotoCell);
+	activityTableRow1.appendChild(aboutPhotoCell);
+		
+	var multipleChoiceCell = generateMultipleChoiceList(activity['mquestion'], JSON.parse(activity['choices']));
+
+	activityTableRow2.appendChild(multipleChoiceCell);
 	
 	activityTable.appendChild(activityTableRow1);
 	activityTable.appendChild(activityTableRow2);
-	activityTable.appendChild(activityTableRow3);
 	
 	$('activity').appendChild(activityTable);
 }
@@ -147,13 +155,16 @@ function generateActivityView(activity, isStudent) {
 // and puts it in a table data cell
 function generateMultipleChoiceList(question, answerList) {
 	var cellData = document.createElement('td');
+	cellData.colSpan = "2";
+	var questionLabel = document.createElement('div');
+	questionLabel.className = "questionLabel";
+	questionLabel.innerHTML = "Multiple choice question:";
 	var questionText = document.createElement('span');
 	questionText.className = "multipleChoiceQuestionText";
 	questionText.innerHTML = question;
 	
 	var orderedList = document.createElement('ol');
 	orderedList.className = "multipleChoiceAnswers";
-	orderedList.style.listStyleType = "lower-alpha";
 	
 	for (var i = 0; i < answerList.choices.length; i++) {
 		var answer = document.createElement('li');
@@ -161,9 +172,6 @@ function generateMultipleChoiceList(question, answerList) {
 		if (answerList.choices[i].ans == "true") { // style correct answer
 			var answerSpan = document.createElement('span');
 			answerSpan.className = "correctAnswer";
-			answerSpan.style.color = "green";
-			answerSpan.style.borderBottomColor = "green";
-			answerSpan.style.borderBottomStyle = "dotted"
 			answerSpan.innerHTML = answerList.choices[i].content;
 			answer.appendChild(answerSpan);
 		}
@@ -173,11 +181,13 @@ function generateMultipleChoiceList(question, answerList) {
 		orderedList.appendChild(answer);
 	}
 	
+	cellData.appendChild(questionLabel);
 	cellData.appendChild(questionText);
 	cellData.appendChild(orderedList);
 	return cellData;
 }
 
+// Deprecated Code.
 //displays the activity
 // Is now also called from studentActivityList to create the list.
 // Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
@@ -205,10 +215,35 @@ function displayactivity(activity, isStudent) {
 	//Horizontal Ruler
 	div.appendChild(createElement('hr',''));
 
+	// Going to add an edit button for the student.
+	var button=document.createElement("input");
+		button.setAttribute("type", "button");
+		button.setAttribute("value", "edit");
+		// Use this ugly syntax because it's the only way I know of passing the parameter to an onclick function.
+		button.onclick=function(){editActivity(activity);}
+	div.appendChild(button);
 	//Append the div element to the div 'activity'
 	$('activity').appendChild(div);
 }
+function editActivity(activity){
+// multiple gets initialized in wscript_init.  It's supposed to be multiple.htm.
+	$('activity').innerHTML=multiple;
+	choices=JSON.parse(activity.choices);
+	// At some point in time, we need to redo the way choices is encoded.  There is no reason the following line should be needed.
+	choices=choices.choices;
+	document.getElementsByName("aboutmedia")[0].innerHTML=activity.aboutmedia;
+	document.getElementsByName("whythis")[0].innerHTML=activity.whythis;
+	document.getElementsByName("howhelpful")[0].innerHTML=activity.howhelpfull;
+	document.getElementsByName("yourdoubt")[0].innerHTML=activity.yourdoubt;
+	document.getElementsByName("mquestion")[0].innerHTML=activity.mquestion;
+	document.getElementsByName("a")[0].value=choices[0].content;
+	document.getElementsByName("b")[0].value=choices[1].content;
+	document.getElementsByName("c")[0].value=choices[2].content;
+	document.getElementsByName("d")[0].value=choices[3].content;
+	docment.getElementsByName("e")[0].value=choices[4].content;
+}
 
+// Deprecated code.
 function multiplechoice(question, ans)
 {
 	var div = createElement('div', '');
@@ -282,14 +317,18 @@ function createimage(x)
 	var img = document.createElement('img');
 	img.src = PHP_FOLDER_LOCATION + "image.php?id=" + x;
 
+	img.style.height = "160px";
+	img.style.width = "200px";
 	// Might be nice to replace onmouseover with some jquery image box effect
+/*
 	img.onmouseover = function() {
-		this.style.height = '281px';
+		this.style.height = '280px';
 		this.style.width = '450px';
 	}
+*/
 	img.onmouseout = function() {
-		this.style.height = '80px';
-		this.style.width = '100px';
+		this.style.height = '160px';
+		this.style.width = '200px';
 	}
 	return img;
 }
