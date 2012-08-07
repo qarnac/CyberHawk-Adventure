@@ -31,9 +31,9 @@ function createPlacemark(activity){
 	marker.setMap(map);
 	
 	// Text is used in the onclick function, but does not need to be generated every single time we click, so it is kept outside of the actual function.
-	var text= activity["student_id"] // As of now, getAllActivitiesFromHunt.php does NOT return student name, so student ID is being used in place.
+	var text= activity["firstname"] + " " + activity["lastname"]; // As of now, getAllActivitiesFromHunt.php does NOT return student name, so student ID is being used in place.
 	text+="<![CDATA[<br /> <br />"
-	text+="<div><img src=\"" + PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id +"\" width=\"100px\" height=\"100px\" style=\"float:left\"/>\n<div style=\"float:left\">";
+	text+="<div><img src=\"" + PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id +"\" width=\"100px\" height=\"100px\" style=\"float:left\"/>\n";
 	text+=activity.mquestion + "<br />";
 	choices=JSON.parse(activity.choices);
 	choices=choices.choices; // This might be the ugliest line of code I've ever had to write...
@@ -48,12 +48,12 @@ function createPlacemark(activity){
 		text+="</div>";
 		if(side=="right") text+="<br />";
 	}
-	text+="</div></div> <br /><table>"
+	text+="</div> <br /> <br />"
 	
-	text+="<tr>What is this picture about? <br />" + activity.aboutmedia + "</tr>";
-	text+="<tr>Why did you choose this picture? <br />" + activity.whythis + "</tr>";
-	text+="<tr>How does this picture show what you have learned about in your science class? <br />" + activity.howhelpfull + "</tr>";
-	text+="<tr>What is a question you have about this picture? <br />" + activity.yourdoubt + "</tr> </table>";
+	text+="What is this picture about? <br />" + activity.aboutmedia + "<br />";
+	text+="Why did you choose this picture? <br />" + activity.whythis + "<br />";
+	text+="How does this picture show what you have learned about in your science class? <br />" + activity.howhelpfull + "<br />";
+	text+="What is a question you have about this picture? <br />" + activity.yourdoubt + "<br />";
 	console.log(text);
 	
 	// When the Placemark is clicked, we want to show all of the information about it.
