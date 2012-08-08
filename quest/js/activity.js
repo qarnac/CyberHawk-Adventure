@@ -241,7 +241,7 @@ function editActivity(activity){
 	document.getElementsByName("b")[0].value=choices[1].content;
 	document.getElementsByName("c")[0].value=choices[2].content;
 	document.getElementsByName("d")[0].value=choices[3].content;
-	docment.getElementsByName("e")[0].value=choices[4].content;
+	document.getElementsByName("e")[0].value=choices[4].content;
 }
 
 function multiplechoice(question, ans)
