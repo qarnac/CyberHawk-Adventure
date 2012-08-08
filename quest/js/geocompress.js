@@ -6,11 +6,14 @@
  * finds geo location of image
  * If geo location is not found displays map which allows user to select a location from it.
  */
-//creates the media object that has compressed image data url and geo co-ordinates
+
+// geocompress is the main point of entry into this file.
+// As of Aug 8, 2012, only called from dragdrop.js
+// creates the media object that has compressed image data url and geo co-ordinates
 // This is eventually POST'd in upload.php
 function geocompress(file, type) {
 	this.file = compress(file, type);
-	this.loc = gpsverify(file);
+	this.loc = gpsverify(file);  // If gps coords not embedded, will start google map
 	this.verify = function() {
 		if (this.file.dataurl && this.loc.lat && this.loc.lng) {
 			this.file.dataurl = this.file.dataurl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
@@ -89,7 +92,7 @@ function checkloc(rect, loc) {
 	return rect.topleft.lat < loc.lat && rect.bottomright.lat > loc.lat && rect.topleft.lng < loc.lng && rect.bottomright.lng > loc.lng;
 }
 
-//gets meta data like the geo tag in the image. if doesnt exist gets it with help of google maps and user
+// If gps coords not embedded, will start google map UI for manual user GPS entry
 function gpsverify(file) {
 	var loc = new Object();
 	var binary_reader = new FileReader();
@@ -108,19 +111,18 @@ function gpsverify(file) {
 			else {
 				alert("not inside the boundary");
 			}
-
 		}
 		else {
 			alert("The image you've selected is not geo tagged.\nPlease click on the location where you have taken the picture.\nOnce you have selected the right spot, please click 'Submit'");
 			displayMap(true);
-			gmaps();
+			instantiateGoogleMap();
 		}
 	}
 	return loc;
 }
 
-//google maps used to get the geo cordinates of picture inside a hunt area
-function gmaps() {
+// This function builds the map interface with the proper locations, bounds, etc.
+function instantiateGoogleMap() {
 	var x = new Object();
 
 	//boundary
