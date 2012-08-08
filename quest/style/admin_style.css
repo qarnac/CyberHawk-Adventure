@@ -1,13 +1,33 @@
 .activityTable {
 	min-height: 100%;
-	width: 700px;
+	width: 690px;
 	position: relative;
 }
 
+#activity {
+	list-style-type: none;
+	margin-left: 0px;
+	padding-left: 0px;
+}
+
+.activityItem {
+	margin-left: 0px;
+	width: 700px;
+}
+
+.activityItem:nth-child(odd) {
+	margin-left: 0px;
+	background-color: #f2f2f2;
+}
+
+.activityPhotoCell {
+	width: 200px;
+}
+
 .activityTable img {
+	height: 160px;
+	width: 200px;
 /*
-	height: 80px;
-	width:100px;
 	margin-left:580px;
 	margin-right:40px;
 	position: absolute;
@@ -26,6 +46,7 @@
 
 .multipleChoiceAnswers li {
 	margin-bottom: .5em;
+	background-color: none;
 }
 
 .correctAnswer {

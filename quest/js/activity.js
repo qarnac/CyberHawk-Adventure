@@ -78,14 +78,12 @@ function listbox() {
 		$('activity').innerHTML = "";
 		var x = activities.hassid(this.value);
 		if (x == "false") {
-			// Shouldn't happen.  Means user clicked on a name that is not in the listbox.
-			alert("something went wrong in listbox()");
+			// Only happens when a user is selected, and then unselected (via shift-click)
+			//alert("something went wrong in listbox()");
 		}
 		else {
 			for ( var i = 0; i < activities[x].contents.length; i++) {
-//				displayactivity(activities[x].contents[i], false);
-				generateActivityView(activities[x].contents[i], false);
-//				$('activity').appendChild('hr');
+					generateActivityView(activities[x].contents[i], false);
 			}
 		}
 	};
@@ -148,7 +146,10 @@ function generateActivityView(activity, isStudent) {
 	activityTable.appendChild(activityTableRow1);
 	activityTable.appendChild(activityTableRow2);
 	
-	$('activity').appendChild(activityTable);
+	var tableItem = document.createElement('li');
+	tableItem.className = "activityItem";
+	tableItem.appendChild(activityTable);
+	$('activity').appendChild(tableItem);
 }
 
 // This generates the list of multiple choice answers, as well as the quetsion
@@ -187,35 +188,6 @@ function generateMultipleChoiceList(question, answerList) {
 	return cellData;
 }
 
-function submitEdit(id){
-	var form=document.getElementsByName('multiple')[0];
-	var x=document.getElementsByName('answer');
-	var contents={};
-	for (var i=0;i<x.length;i++) {
-		if (x[i].checked){
-			contents['answer'] = x[i].value;
-			break;
-			}
-		}
-		var y=new Array("textarea","text","number");
-		for(var i=0; i<form.length; i++) {
-			if (y.has(form[i].type))
-				contents[form[i].name] = form[i].value;
-		}
-		contents['id']=id;
-		contents=JSON.stringify(contents);
-	ajax("contents="+contents, PHP_FOLDER_LOCATION + "updateActivity.php", function(response){
-			if(response=="true"){
-			console.log("success");
-			window.location.reload();
-			}else{
-				console.log(response);
-				alert("An error has occurred");
-			}
-	});
-}
-
-// Deprecated Code.
 //displays the activity
 // Is now also called from studentActivityList to create the list.
 // Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
@@ -253,12 +225,11 @@ function displayactivity(activity, isStudent) {
 	//Append the div element to the div 'activity'
 	$('activity').appendChild(div);
 }
+
 function editActivity(activity){
 // multiple gets initialized in wscript_init.  It's supposed to be multiple.htm.
 	$('activity').innerHTML=multiple;
 	choices=JSON.parse(activity.choices);
-	// Ugly onsubmit, but only way I know of passing a parameter onsubmit.	
-	document.getElementsByName("multiple")[0].onsubmit=function(){submitEdit(activity['id']);};
 	// At some point in time, we need to redo the way choices is encoded.  There is no reason the following line should be needed.
 	choices=choices.choices;
 	document.getElementsByName("aboutmedia")[0].innerHTML=activity.aboutmedia;
@@ -270,12 +241,9 @@ function editActivity(activity){
 	document.getElementsByName("b")[0].value=choices[1].content;
 	document.getElementsByName("c")[0].value=choices[2].content;
 	document.getElementsByName("d")[0].value=choices[3].content;
-	document.getElementsByName("e")[0].value=choices[4].content;
-	
-	
+	docment.getElementsByName("e")[0].value=choices[4].content;
 }
 
-// Deprecated code.
 function multiplechoice(question, ans)
 {
 	var div = createElement('div', '');
@@ -349,19 +317,18 @@ function createimage(x)
 	var img = document.createElement('img');
 	img.src = PHP_FOLDER_LOCATION + "image.php?id=" + x;
 
-	img.style.height = "160px";
-	img.style.width = "200px";
+// 	img.style.height = "160px";
+// 	img.style.width = "200px";
+	
 	// Might be nice to replace onmouseover with some jquery image box effect
-/*
-	img.onmouseover = function() {
-		this.style.height = '280px';
-		this.style.width = '450px';
-	}
-*/
-	img.onmouseout = function() {
-		this.style.height = '160px';
-		this.style.width = '200px';
-	}
+// 	img.onmouseover = function() {
+// 		this.style.height = '281px';
+// 		this.style.width = '450px';
+// 	}
+// 	img.onmouseout = function() {
+// 		this.style.height = '160px';
+// 		this.style.width = '200px';
+// 	}
 	return img;
 }
 
