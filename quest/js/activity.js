@@ -212,16 +212,18 @@ function displayactivity(activity, isStudent) {
 	if(!isStudent) div.appendChild(feedback(activity['id']));
 	div.appendChild(clear());
 
-	//Horizontal Ruler
-	div.appendChild(createElement('hr',''));
-
-	// Going to add an edit button for the student.
+		// Going to add an edit button for the student.
 	var button=document.createElement("input");
 		button.setAttribute("type", "button");
 		button.setAttribute("value", "edit");
 		// Use this ugly syntax because it's the only way I know of passing the parameter to an onclick function.
 		button.onclick=function(){editActivity(activity);}
 	div.appendChild(button);
+	
+	//Horizontal Ruler
+	div.appendChild(createElement('hr',''));
+
+
 	//Append the div element to the div 'activity'
 	$('activity').appendChild(div);
 }
@@ -232,6 +234,8 @@ function editActivity(activity){
 	choices=JSON.parse(activity.choices);
 	// Ugly onsubmit, but only way I know of passing a parameter onsubmit.  
 	document.getElementsByName("multiple")[0].onsubmit=function(){submitEdit(activity['id']);};
+	var img=createimage(activity.media_id);
+	document.getElementById("img").appendChild(img);
 	// At some point in time, we need to redo the way choices is encoded.  There is no reason the following line should be needed.
 	choices=choices.choices;
 	document.getElementsByName("aboutmedia")[0].innerHTML=activity.aboutmedia;
@@ -239,6 +243,9 @@ function editActivity(activity){
 	document.getElementsByName("howhelpful")[0].innerHTML=activity.howhelpfull;
 	document.getElementsByName("yourdoubt")[0].innerHTML=activity.yourdoubt;
 	document.getElementsByName("mquestion")[0].innerHTML=activity.mquestion;
+	for(var i=0; i<choices.length; i++){
+		if(choices[i].content=="Correct") document.getElementsByName("answer")[i].checked=true;
+	}
 	document.getElementsByName("a")[0].value=choices[0].content;
 	document.getElementsByName("b")[0].value=choices[1].content;
 	document.getElementsByName("c")[0].value=choices[2].content;
