@@ -230,6 +230,8 @@ function editActivity(activity){
 // multiple gets initialized in wscript_init.  It's supposed to be multiple.htm.
 	$('activity').innerHTML=multiple;
 	choices=JSON.parse(activity.choices);
+	// Ugly onsubmit, but only way I know of passing a parameter onsubmit.  
+	document.getElementsByName("multiple")[0].onsubmit=function(){submitEdit(activity['id']);};
 	// At some point in time, we need to redo the way choices is encoded.  There is no reason the following line should be needed.
 	choices=choices.choices;
 	document.getElementsByName("aboutmedia")[0].innerHTML=activity.aboutmedia;
@@ -241,7 +243,34 @@ function editActivity(activity){
 	document.getElementsByName("b")[0].value=choices[1].content;
 	document.getElementsByName("c")[0].value=choices[2].content;
 	document.getElementsByName("d")[0].value=choices[3].content;
-	docment.getElementsByName("e")[0].value=choices[4].content;
+	document.getElementsByName("e")[0].value=choices[4].content;
+}
+function submitEdit(id){
+	var form=document.getElementsByName('multiple')[0];
+	var x=document.getElementsByName('answer');
+	var contents={};
+	for (var i=0;i<x.length;i++) {
+		if (x[i].checked){
+			contents['answer'] = x[i].value;
+			break;
+			}
+		}
+		var y=new Array("textarea","text","number");
+		for(var i=0; i<form.length; i++) {
+			if (y.has(form[i].type))
+				contents[form[i].name] = form[i].value;
+		}
+		contents['id']=id;
+		contents=JSON.stringify(contents);
+	ajax("contents="+contents, PHP_FOLDER_LOCATION + "updateActivity.php", successfulUpload);
+}
+
+function successfulUpload(serverResponse){
+	if(serverResponse=="true") window.location.reload();
+	else{
+	console.log(serverResponse);
+	alert("An error has occurred");
+	}
 }
 
 function multiplechoice(question, ans)

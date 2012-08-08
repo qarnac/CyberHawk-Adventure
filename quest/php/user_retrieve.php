@@ -22,9 +22,7 @@ else {
 function logged()
 {
 	$metah=mysql_query("SELECT * FROM meta" ) or die(mysql_error());
-		$metaar=array();
-		while($x=mysql_fetch_assoc($metah))
-		array_push($metaar,$x);
+		$metaar=file_get_contents("http://ouyangdev.cs.csusm.edu/cyberhawk/quest/html/createActivity.htm");
 		$hunts=array();
 		$result=mysql_query("SELECT * FROM hunt WHERE tid='".$_SESSION['tid']."' AND status='open'" ) or die(mysql_error());
 			if(mysql_num_rows($result)>0)
