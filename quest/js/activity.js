@@ -228,24 +228,39 @@ function displayactivity(activity, isStudent) {
 	$('activity').appendChild(div);
 }
 
+var huntboundary;
 function editActivity(activity){
 // multiple gets initialized in wscript_init.  It's supposed to be multiple.htm.
 	$('activity').innerHTML=multiple;
 	choices=JSON.parse(activity.choices);
 	// Ugly onsubmit, but only way I know of passing a parameter onsubmit.  
 	document.getElementsByName("multiple")[0].onsubmit=function(){submitEdit(activity['id']);};
+	
+	// Adds the image that was already uploaded to the edit page.
 	var img=createimage(activity.media_id);
 	document.getElementById("img").appendChild(img);
+	
 	// At some point in time, we need to redo the way choices is encoded.  There is no reason the following line should be needed.
 	choices=choices.choices;
+	// Sets up the non-multiple choice questions.
 	document.getElementsByName("aboutmedia")[0].innerHTML=activity.aboutmedia;
 	document.getElementsByName("whythis")[0].innerHTML=activity.whythis;
 	document.getElementsByName("howhelpful")[0].innerHTML=activity.howhelpfull;
 	document.getElementsByName("yourdoubt")[0].innerHTML=activity.yourdoubt;
 	document.getElementsByName("mquestion")[0].innerHTML=activity.mquestion;
+	// Selects the correct Radio Button for the multiple choice questions.
 	for(var i=0; i<choices.length; i++){
 		if(choices[i].content=="Correct") document.getElementsByName("answer")[i].checked=true;
 	}
+	
+	// Sets up huntboundary in order so when a new image is uploaded, they can plot the location on the map.
+	var hunt;	
+	for(var i=0; i<hunts.length; i++){
+		if(hunts[i]['id']==document.getElementById("selecthunt").value) hunt=hunts[i];
+	}
+	huntboundary=new georect(new latlng(hunt['minlat'],hunt['minlng']),new latlng(hunt['maxlat'],hunt['maxlng']));
+	
+	// Fill the multiple choice questions with the correct answers.
 	document.getElementsByName("a")[0].value=choices[0].content;
 	document.getElementsByName("b")[0].value=choices[1].content;
 	document.getElementsByName("c")[0].value=choices[2].content;
@@ -253,6 +268,7 @@ function editActivity(activity){
 	document.getElementsByName("e")[0].value=choices[4].content;
 }
 function submitEdit(id){
+	console.log("submit");
 	var form=document.getElementsByName('multiple')[0];
 	var x=document.getElementsByName('answer');
 	var contents={};
@@ -268,6 +284,9 @@ function submitEdit(id){
 				contents[form[i].name] = form[i].value;
 		}
 		contents['id']=id;
+		if(morc && morc.verify()){
+			contents['media'] = morc;
+		}
 		contents=JSON.stringify(contents);
 	ajax("contents="+contents, PHP_FOLDER_LOCATION + "updateActivity.php", successfulUpload);
 }
@@ -275,8 +294,7 @@ function submitEdit(id){
 function successfulUpload(serverResponse){
 	if(serverResponse=="true") window.location.reload();
 	else{
-	console.log(serverResponse);
-	alert("An error has occurred");
+	alert(serverResponse);
 	}
 }
 
