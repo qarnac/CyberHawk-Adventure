@@ -233,9 +233,8 @@ function editActivity(activity){
 // multiple gets initialized in wscript_init.  It's supposed to be multiple.htm.
 	$('activity').innerHTML=multiple;
 	choices=JSON.parse(activity.choices);
-	// Ugly onsubmit, but only way I know of passing a parameter onsubmit.  
-	document.getElementsByName("multiple")[0].onsubmit=function(){submitEdit(activity['id']);};
-	
+	// Ugly onsubmit, but only way I know of passing a parameter onsubmit.
+	document.getElementsByName("multiple")[0].onsubmit=function(){submitEdit(activity['id']); return false;};
 	// Adds the image that was already uploaded to the edit page.
 	var img=createimage(activity.media_id);
 	document.getElementById("img").appendChild(img);
@@ -250,7 +249,7 @@ function editActivity(activity){
 	document.getElementsByName("mquestion")[0].innerHTML=activity.mquestion;
 	// Selects the correct Radio Button for the multiple choice questions.
 	for(var i=0; i<choices.length; i++){
-		if(choices[i].content=="Correct") document.getElementsByName("answer")[i].checked=true;
+		if(choices[i].ans=="true") document.getElementsByName("answer")[i].checked=true;
 	}
 	
 	// Sets up huntboundary in order so when a new image is uploaded, they can plot the location on the map.
