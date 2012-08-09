@@ -38,6 +38,7 @@ function studentActivityList(serverResponse){
 		document.getElementById("main").insertBefore(button, document.getElementById("contents"));
 	}
 	for(i in activities){
-		displayactivity(activities[i], true);
+		//displayactivity(activities[i], true);
+		generateActivityView(activities[i], true);
 	}
 }

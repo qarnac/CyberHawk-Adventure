@@ -1,5 +1,6 @@
 /**
  * @author sabareesh kkanan subramani
+ * Additions by Bill Sanders and Jeff Rackauckas
  */
 var hunts;
 // All the hunts from the teacher will be stored in this variable
@@ -65,6 +66,7 @@ function updatebutton() {
 	return temp;
 }
 
+// This is the listbox which houses each teacher's students.
 function listbox() {
 	var temp = document.createElement('select');
 	temp.id = 'slist';
@@ -87,11 +89,22 @@ function listbox() {
 			}
 		}
 	};
-
 	return temp;
 }
 
+// Is now also called from studentActivityList to create the list.
+// Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
 function generateActivityView(activity, isStudent) {
+	// Add the Edit activity button first, so that it displays just to the right of the Activity View
+	var editButton = document.createElement("input");
+	editButton.setAttribute("type", "button");
+	editButton.setAttribute("value", "Edit Activity");
+	// Use this ugly syntax because it's the only way I know of passing the parameter to an onclick function.
+	editButton.onclick = function() {
+		editActivity(activity);
+	}
+	$('activity').appendChild(editButton);
+
 	var activityTable = document.createElement('table');
 	activityTable.className = "activityTable";
 	activityTable.cellPadding = "5px";
@@ -99,9 +112,12 @@ function generateActivityView(activity, isStudent) {
 	var activityTableRow1 = document.createElement('tr');
 	var activityTableRow2 = document.createElement('tr');
 	
+	var activityPhoto = document.createElement('img');
+	activityPhoto.src = PHP_FOLDER_LOCATION + "image.php?id=" + activity['media_id'];
+	
 	var activityPhotoCell = document.createElement('td');
 	activityPhotoCell.className = "activityPhotoCell";
-	activityPhotoCell.appendChild(createimage(activity['media_id']));
+	activityPhotoCell.appendChild(activityPhoto);
 
 	var aboutLabel = document.createElement('div');
 	aboutLabel.innerHTML = "What is this picture about?";
@@ -126,7 +142,7 @@ function generateActivityView(activity, isStudent) {
 	furtherQuestionText.innerHTML = activity['yourdoubt'];
 	
 	var aboutPhotoCell = document.createElement('td');
-	aboutPhotoCell.style.width = "600px";
+	aboutPhotoCell.className = "aboutPhotoCell";
 	aboutPhotoCell.appendChild(aboutLabel);
 	aboutPhotoCell.appendChild(aboutPhotoText);
 	aboutPhotoCell.appendChild(whyLabel);
@@ -152,7 +168,7 @@ function generateActivityView(activity, isStudent) {
 	$('activity').appendChild(tableItem);
 }
 
-// This generates the list of multiple choice answers, as well as the quetsion
+// This generates the list of multiple choice answers, as well as the question
 // and puts it in a table data cell
 function generateMultipleChoiceList(question, answerList) {
 	var cellData = document.createElement('td');
@@ -169,7 +185,6 @@ function generateMultipleChoiceList(question, answerList) {
 	
 	for (var i = 0; i < answerList.choices.length; i++) {
 		var answer = document.createElement('li');
-
 		if (answerList.choices[i].ans == "true") { // style correct answer
 			var answerSpan = document.createElement('span');
 			answerSpan.className = "correctAnswer";
@@ -188,102 +203,73 @@ function generateMultipleChoiceList(question, answerList) {
 	return cellData;
 }
 
-//displays the activity
-// Is now also called from studentActivityList to create the list.
-// Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
-function displayactivity(activity, isStudent) {
-	var div = document.createElement('div');
-	div.className = 'elem';
-
-	//Image Element
-	div.appendChild(createimage(activity['media_id']));
-	div.appendChild(clear());
-
-	//USER Name elements ,Multiple choice question Elements
-	div.appendChild(createElement('label', "<strong>Student:</strong> " + activity['firstname'] + " " + activity['lastname']));
-	div.appendChild(multiplechoice(activity['mquestion'], JSON.parse(activity['choices'])));
-	div.appendChild(clear());
-
-	//Other Question Elements
-	div.appendChild(otherquestions(activity));
-	div.appendChild(clear());
-
-	//Comments and status Elements ad their Eventhandling on onchange to update the variable feed
-	if(!isStudent) div.appendChild(feedback(activity['id']));
-	div.appendChild(clear());
-
-		// Going to add an edit button for the student.
-	var button=document.createElement("input");
-		button.setAttribute("type", "button");
-		button.setAttribute("value", "edit");
-		// Use this ugly syntax because it's the only way I know of passing the parameter to an onclick function.
-		button.onclick=function(){editActivity(activity);}
-	div.appendChild(button);
-	
-	//Horizontal Ruler
-	div.appendChild(createElement('hr',''));
-
-
-	//Append the div element to the div 'activity'
-	$('activity').appendChild(div);
-}
-
 var huntboundary;
-function editActivity(activity){
-// multiple gets initialized in wscript_init.  It's supposed to be multiple.htm.
-	$('activity').innerHTML=multiple;
-	choices=JSON.parse(activity.choices);
+function editActivity(activity) {
+	// multiple gets initialized in wscript_init.  It's supposed to be multiple.htm.
+	$('activity').innerHTML = multiple;
+	choices = JSON.parse(activity.choices);
 	// Ugly onsubmit, but only way I know of passing a parameter onsubmit.
-	document.getElementsByName("multiple")[0].onsubmit=function(){submitEdit(activity['id']); return false;};
+	document.getElementsByName("multiple")[0].onsubmit = function() {
+		submitEdit(activity['id']); return false;
+	};
 	// Adds the image that was already uploaded to the edit page.
-	var img=createimage(activity.media_id);
+	var img = document.createElement('img');
+	img.src = PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
+	
 	document.getElementById("img").appendChild(img);
 	
 	// At some point in time, we need to redo the way choices is encoded.  There is no reason the following line should be needed.
 	choices=choices.choices;
 	// Sets up the non-multiple choice questions.
-	document.getElementsByName("aboutmedia")[0].innerHTML=activity.aboutmedia;
-	document.getElementsByName("whythis")[0].innerHTML=activity.whythis;
-	document.getElementsByName("howhelpful")[0].innerHTML=activity.howhelpfull;
-	document.getElementsByName("yourdoubt")[0].innerHTML=activity.yourdoubt;
-	document.getElementsByName("mquestion")[0].innerHTML=activity.mquestion;
+	document.getElementsByName("aboutmedia")[0].innerHTML = activity.aboutmedia;
+	document.getElementsByName("whythis")[0].innerHTML = activity.whythis;
+	document.getElementsByName("howhelpful")[0].innerHTML = activity.howhelpfull;
+	document.getElementsByName("yourdoubt")[0].innerHTML = activity.yourdoubt;
+	document.getElementsByName("mquestion")[0].innerHTML = activity.mquestion;
 	// Selects the correct Radio Button for the multiple choice questions.
-	for(var i=0; i<choices.length; i++){
-		if(choices[i].ans=="true") document.getElementsByName("answer")[i].checked=true;
+	for(var i=0; i<choices.length; i++) {
+		if (choices[i].ans == "true") {
+			document.getElementsByName("answer")[i].checked = true;
+		}
 	}
 	
 	// Sets up huntboundary in order so when a new image is uploaded, they can plot the location on the map.
-	var hunt;	
-	for(var i=0; i<hunts.length; i++){
-		if(hunts[i]['id']==document.getElementById("selecthunt").value) hunt=hunts[i];
+	var hunt;
+	for (var i=0; i<hunts.length; i++) {
+		if (hunts[i]['id'] == document.getElementById("selecthunt").value) {
+			hunt=hunts[i];
+		}
 	}
-	huntboundary=new georect(new latlng(hunt['minlat'],hunt['minlng']),new latlng(hunt['maxlat'],hunt['maxlng']));
+
+	huntboundary = new georect(new latlng(hunt['minlat'],hunt['minlng']),new latlng(hunt['maxlat'],hunt['maxlng']));
 	
 	// Fill the multiple choice questions with the correct answers.
-	document.getElementsByName("a")[0].value=choices[0].content;
-	document.getElementsByName("b")[0].value=choices[1].content;
-	document.getElementsByName("c")[0].value=choices[2].content;
-	document.getElementsByName("d")[0].value=choices[3].content;
-	document.getElementsByName("e")[0].value=choices[4].content;
+	document.getElementsByName("a")[0].value = choices[0].content;
+	document.getElementsByName("b")[0].value = choices[1].content;
+	document.getElementsByName("c")[0].value = choices[2].content;
+	document.getElementsByName("d")[0].value = choices[3].content;
+	document.getElementsByName("e")[0].value = choices[4].content;
 }
-function submitEdit(id){
+
+function submitEdit(id) {
 	console.log("submit");
-	var form=document.getElementsByName('multiple')[0];
-	var x=document.getElementsByName('answer');
-	var contents={};
-	for (var i=0;i<x.length;i++) {
-		if (x[i].checked){
+	var form = document.getElementsByName('multiple')[0];
+	var x = document.getElementsByName('answer');
+	var contents = {};
+	for (var i = 0; i < x.length; i++) {
+		if (x[i].checked) {
 			contents['answer'] = x[i].value;
 			break;
 			}
 		}
 		var y=new Array("textarea","text","number");
-		for(var i=0; i<form.length; i++) {
-			if (y.has(form[i].type))
+		for (var i=0; i<form.length; i++) {
+			if (y.has(form[i].type)) {
 				contents[form[i].name] = form[i].value;
+			}
 		}
 		contents['id']=id;
-		if(morc && morc.verify()){
+		if (morc && morc.verify()) {
 			contents['media'] = morc;
 		}
 		contents=JSON.stringify(contents);
@@ -291,45 +277,18 @@ function submitEdit(id){
 }
 
 function successfulUpload(serverResponse){
-	if(serverResponse=="true") window.location.reload();
-	else{
-	alert(serverResponse);
+	if (serverResponse=="true") {
+		window.location.reload();
+	}
+	else {
+		alert(serverResponse);
 	}
 }
 
-function multiplechoice(question, ans)
-{
-	var div = createElement('div', '');
-	var mchoice = createElement('label',question);
-	mchoice.style.width = '550px';
-	div.appendChild(mchoice);
-	div.appendChild(clear());
-	for ( y = 0; y < ans.choices.length; y++)
-		if (ans.choices[y].ans == "true") {
-			var temp = createElement('label', ans.choices[y].choice + ". " + ans.choices[y].content);
-			temp.style.color = "green";
-			temp.style.borderBottomStyle = "dashed";
-			temp.style.borderBottomColor = "green";
-			div.appendChild(temp);
-		} else
-			div.appendChild(createElement('label', ans.choices[y].choice + ". " + ans.choices[y].content));
-	return div;
-}
-
-function otherquestions(x)
-{
-	var div=createElement('div', '');
-	// HTML ignores duplicate whitespace...
-	div.appendChild(createElement('label', 'About    : ' + x['aboutmedia']));
-	div.appendChild(createElement('label', 'Reason   : ' + x['whythis']));
-	div.appendChild(createElement('label', 'Evidence : ' + x['howhelpfull']));
-	div.appendChild(createElement('label', 'Question : ' + x['yourdoubt']));
-	return div;
-}
 function feedback(x)
 {
-	var div=createElement('div','');
-	var comments=createElement('div','');
+	var div = createElement('div','');
+	var comments = createElement('div','');
 	var label = createElement('label', 'Comments');
 	label.style.width = '80px';
 	var textarea = document.createElement('textarea');
@@ -343,8 +302,8 @@ function feedback(x)
 }
 function activityStatus(comments,x)
 {
-	if(feed[x]==undefined) return;
-	var status= document.createElement('select');
+	if(feed[x] == undefined) return;
+	var status = document.createElement('select');
 	status.options[status.options.length] = new Option("ACCEPT", "true");
 	status.options[status.options.length] = new Option("DECLINE", "false");
 	status.onchange = function() {
@@ -365,27 +324,7 @@ function activityStatus(comments,x)
 	return status;
 }
 
-function createimage(x)
-{
-	var img = document.createElement('img');
-	img.src = PHP_FOLDER_LOCATION + "image.php?id=" + x;
-
-// 	img.style.height = "160px";
-// 	img.style.width = "200px";
-	
-	// Might be nice to replace onmouseover with some jquery image box effect
-// 	img.onmouseover = function() {
-// 		this.style.height = '281px';
-// 		this.style.width = '450px';
-// 	}
-// 	img.onmouseout = function() {
-// 		this.style.height = '160px';
-// 		this.style.width = '200px';
-// 	}
-	return img;
-}
-
-// don't really need this function....
+// don't really need this as a separate function....
 function clear()
 {
 	var clear = createElement('div', '');

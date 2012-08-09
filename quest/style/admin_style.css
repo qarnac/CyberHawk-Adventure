@@ -24,14 +24,13 @@
 	width: 200px;
 }
 
+.aboutPhotoCell {
+	width: 600px;
+}
+
 .activityTable img {
 	height: 160px;
 	width: 200px;
-/*
-	margin-left:580px;
-	margin-right:40px;
-	position: absolute;
-*/
 }
 
 .questionLabel {
