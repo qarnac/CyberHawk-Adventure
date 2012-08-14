@@ -1,3 +1,5 @@
+// This file is intended for use in creating new hunts. Currently does nothing
+
 var map;
 function createmap(position,z)
 {
