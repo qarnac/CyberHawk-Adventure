@@ -32,7 +32,7 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 		<style type="text/css">@import "style/main.css";</style>
 		<!--Google Earth API-->
 		
-		<script src="http://www.google.com/jsapi"></script>
+		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
 		
 		<!--Google Map API
 		<script src="http://maps.google.com/maps?file=api&v=2&key=AIzaSyDSwGeMX946SO8b3_sZqqAbCzM5eloG-os"></script>
