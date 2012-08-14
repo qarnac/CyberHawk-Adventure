@@ -31,10 +31,9 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 		<!-- link rel=stylesheet href="style/main.css" type="text/css" /-->
 		<style type="text/css">@import "style/main.css";</style>
 		<!--Google Earth API-->
-		<!--
+		
 		<script src="http://www.google.com/jsapi"></script>
-		-->
-		<script src="http://www.google.com/jsapi?key=AIzaSyDSwGeMX946SO8b3_sZqqAbCzM5eloG-os" type="text/javascript"></script>
+		
 		<!--Google Map API
 		<script src="http://maps.google.com/maps?file=api&v=2&key=AIzaSyDSwGeMX946SO8b3_sZqqAbCzM5eloG-os"></script>
 		-->
