@@ -479,6 +479,10 @@ label.float_none {
 	border-bottom-style: dotted;
 }
 
+.unansweredQuestion {
+	color: #9D1B0B;
+}
+
 /* end styling for displaying student activities */
 
 /* This is in the Image uploader section of createActivity.html */

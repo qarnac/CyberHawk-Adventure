@@ -11,6 +11,8 @@ var activities = new Array();
 var feed = {};
 // Has the status of each activity like its id,comment and status.
 
+var EMPTY_QUESTION_RESPONSE = "This question has not been responded to.";
+
 
 //Instantiates the array activities with student activitivities
 //This function is invoked by ajax function but this happens when the teacher selects a hunt.
@@ -139,12 +141,31 @@ function generateActivityView(activity, isStudent) {
 	
 	var aboutPhotoText = document.createElement('div');
 	aboutPhotoText.innerHTML = activity['aboutmedia'];
+	if (activity['aboutmedia'] == "") {
+		aboutPhotoText.innerHTML = EMPTY_QUESTION_RESPONSE;
+		aboutPhotoText.className = "unansweredQuestion";
+	}
+
 	var whyThisPhotoText = document.createElement('div');
 	whyThisPhotoText.innerHTML = activity['whythis'];
+	if (activity['whythis'] == "") {
+		whyThisPhotoText.innerHTML = EMPTY_QUESTION_RESPONSE;
+		whyThisPhotoText.className = "unansweredQuestion";
+	}
+
 	var howHelpfulText = document.createElement('div');
 	howHelpfulText.innerHTML = activity['howhelpfull'];
+	if (activity['howhelpfull'] == "") {
+		howHelpfulText.innerHTML = EMPTY_QUESTION_RESPONSE;
+		howHelpfulText.className = "unansweredQuestion";
+	}
+
 	var furtherQuestionText = document.createElement('div');
 	furtherQuestionText.innerHTML = activity['yourdoubt'];
+	if (activity['yourdoubt'] == "") {
+		furtherQuestionText.innerHTML = EMPTY_QUESTION_RESPONSE;
+		furtherQuestionText.className = "unansweredQuestion";
+	}
 	
 	var aboutPhotoCell = document.createElement('td');
 	aboutPhotoCell.className = "aboutPhotoCell";
@@ -183,7 +204,13 @@ function generateMultipleChoiceList(question, answerList) {
 	questionLabel.innerHTML = "Multiple choice question:";
 	var questionText = document.createElement('span');
 	questionText.className = "multipleChoiceQuestionText";
-	questionText.innerHTML = question;
+	if (question != "") {
+		questionText.innerHTML = question;
+	}
+	else {
+		questionText.innerHTML = EMPTY_QUESTION_RESPONSE;
+		questionText.className = "unansweredQuestion";
+	}
 	
 	var orderedList = document.createElement('ol');
 	orderedList.className = "multipleChoiceAnswers";
