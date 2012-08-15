@@ -70,38 +70,33 @@ function huntselection(x)
 //has the boundary information of selected hunt
 var huntboundary;
 //invoked when student submits the form .checks for validity of data and submits the information through ajax
-function check(form,exe)
+function check(form)
 {
-	if (exe) {
-		var contents={};
-		var x=document.getElementsByName('answer');
-		for (var i=0;i<x.length;i++) {
-			if (x[i].checked){
-				contents['answer'] = x[i].value;
-				break;
-			}
+	var contents={};
+	var x = document.getElementsByName('answer');
+	for (var i = 0; i < x.length; i++) {
+		if (x[i].checked) {
+			contents['answer'] = x[i].value;
+			break;
 		}
-		var y=new Array("textarea","text","number");
-		for(var i=0; i<form.length; i++) {
-			if (y.has(form[i].type))
-				contents[form[i].name] = form[i].value;
-		}
-		if (morc && morc.verify()) {
-			contents['media'] = morc;
-			contents['huntid'] = document.getElementById("selecthunt").value;
-			contents = JSON.stringify(contents);
-			contents = "content="+contents;
-	
-			ajax(contents, PHP_FOLDER_LOCATION + "user_upload.php", function(x) {
-				if (x == "true")
-					window.location.reload();
-				else
-					alert("An error has occured while attempting to upload your file.");
-			});
-		}
-		else {
-			alert("Please select an image, and verify the coordinates.");
-		}
+	}
+	var y=new Array("textarea","text","number");
+	for(var i = 0; i < form.length; i++) {
+		if (y.has(form[i].type))
+			contents[form[i].name] = form[i].value;
+	}
+	if (morc && morc.verify()) {
+		contents['media'] = morc;
+		contents['huntid'] = document.getElementById("selecthunt").value;
+		contents = JSON.stringify(contents);
+		contents = "content="+contents;
+
+		ajax(contents, PHP_FOLDER_LOCATION + "user_upload.php", function(x) {
+			if (x == "true")
+				window.location.reload();
+			else
+				alert("An error has occured while attempting to upload your file.");
+		});
 	}
 	return false;
 }
