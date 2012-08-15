@@ -482,7 +482,7 @@ label.float_none {
 /* end styling for displaying student activities */
 
 /* This is in the Image uploader section of createActivity.html */
-.activityImage {
+#activityImage {
 	height: 280px;
 	width: 460px;
 }
