@@ -96,14 +96,19 @@ function listbox() {
 // Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
 function generateActivityView(activity, isStudent) {
 	// Add the Edit activity button first, so that it displays just to the right of the Activity View
-	var editButton = document.createElement("input");
-	editButton.setAttribute("type", "button");
-	editButton.setAttribute("value", "Edit Activity");
-	// Use this ugly syntax because it's the only way I know of passing the parameter to an onclick function.
-	editButton.onclick = function() {
-		editActivity(activity);
+	if (isStudent == true) {
+		var editButton = document.createElement("input");
+		editButton.setAttribute("type", "button");
+		editButton.setAttribute("value", "Edit Activity");
+		// Use this ugly syntax because it's the only way I know of passing the parameter to an onclick function.
+		editButton.onclick = function() {
+			editActivity(activity);
+		}
+		$('activity').appendChild(editButton);
 	}
-	$('activity').appendChild(editButton);
+	else {
+		// feedback code goes here.
+	}
 
 	var activityTable = document.createElement('table');
 	activityTable.className = "activityTable";
