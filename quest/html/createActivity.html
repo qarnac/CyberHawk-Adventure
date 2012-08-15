@@ -3,7 +3,7 @@
 		<input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="1000000" />  
 		<div> 	<label for="fileselect">Files to upload:</label> 
 				<input type="file" id="img_fselect" name="fileselect"  onChange="FileSelectHandler(event);"  accept="image/jpg,image/gif,image/jpeg,image/png"/> 	   
-				   <div id="img" class="filedrag" ondragover="FileDragHover(event)" ondragleave="FileDragHover(event)" ondrop="FileSelectHandler(event)" >or drop files here</div> 
+				   <div class="filedrag" ondragover="FileDragHover(event)" ondragleave="FileDragHover(event)" ondrop="FileSelectHandler(event)" ><img src="" id="activityImage">or drop files here</div> 
 		</div> 
 	</fieldset>                
 <form class="activ" name="multiple" onsubmit="return check(this,true);">

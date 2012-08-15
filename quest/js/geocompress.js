@@ -216,7 +216,9 @@ function submitLatLng(location) {
 	morc.loc = new latlng(location.lat(), location.lng());
 	morc.from = "chosen";
 	displayMap(false);
-	drawimg(morc);
+	var activityImage = document.getElementById('activityImage');
+	activityImage.parentNode.innerHTML = "";
+	activityImage.src = morc.file.dataurl;
 }
 
 // This function fills an html div with the contents of the map latlng control
