@@ -17,7 +17,7 @@ function admin_logged()
 		while($x=mysql_fetch_assoc($metah))
 		array_push($metaar,$x);
 		$hunts=array();
-		$result=mysql_query("SELECT * FROM hunt WHERE tid='".$_SESSION['id']."' AND status='open'" ) or die(mysql_error());
+		$result=mysql_query("SELECT * FROM hunt WHERE teacher_id='".$_SESSION['id']."' AND status='open'" ) or die(mysql_error());
 			if(mysql_num_rows($result)>0)
 			{
 				while($x=mysql_fetch_assoc($result))
@@ -36,7 +36,7 @@ function user_logged()
 		while($x=mysql_fetch_assoc($metah))
 		array_push($metaar,$x);
 		$hunts=array();
-		$result=mysql_query("SELECT * FROM hunt WHERE tid='".$_SESSION['tid']."' AND status='open'" ) or die(mysql_error());
+		$result=mysql_query("SELECT * FROM hunt WHERE teacher_id='".$_SESSION['teacher_id']."' AND status='open'" ) or die(mysql_error());
 			if(mysql_num_rows($result)>0)
 			{
 				while($x=mysql_fetch_assoc($result))

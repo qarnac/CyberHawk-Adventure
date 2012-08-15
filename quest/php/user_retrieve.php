@@ -24,7 +24,7 @@ function logged()
 	$metah=mysql_query("SELECT * FROM meta" ) or die(mysql_error());
 		$metaar=file_get_contents("http://ouyangdev.cs.csusm.edu/cyberhawk/quest/html/createActivity.html");
 		$hunts=array();
-		$result=mysql_query("SELECT * FROM hunt WHERE tid='".$_SESSION['tid']."' AND status='open'" ) or die(mysql_error());
+		$result=mysql_query("SELECT * FROM hunt WHERE teacher_id='".$_SESSION['teacher_id']."' AND status='open'" ) or die(mysql_error());
 			if(mysql_num_rows($result)>0)
 			{
 				while($x=mysql_fetch_assoc($result))
