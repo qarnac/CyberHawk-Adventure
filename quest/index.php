@@ -20,6 +20,5 @@ include dirname(__FILE__) . '/html/log_in_form.html';
 <!-- I think this is something that I'd want to get rid of soon, but i'm just not sure where I'd move it to. -->
     	</div>
 		</div>
-		<script src="js/script.js"></script>
 	</body>
 </html>

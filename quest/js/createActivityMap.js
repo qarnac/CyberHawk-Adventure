@@ -32,7 +32,7 @@ function createPlacemark(activity){
 	google.maps.event.addListener(marker, "click", function(){
 	// This sets it up so that way an infowindow pops up and shows the text that we just created in the text variable above.
 	info=new google.maps.InfoWindow();
-	info.setContent(generateActivityView(activity, true));
+	info.setContent(generateActivityView(activity, false));
 	info.setPosition(new google.maps.LatLng(activity.lat, activity.lng));
 	info.open(map);
 	});
