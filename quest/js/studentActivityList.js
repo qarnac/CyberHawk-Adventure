@@ -16,7 +16,7 @@ function createStudentActivityList(){
 // Shows the createActivity.html file.
 /*
 function createNewActivity(){
-	ajax("GET", "../quest/html/createActivity.htm", displayPage);
+	ajax("GET", "../quest/html/createActivity.html", displayPage);
 }
 */
 function displayPage(serverResponse){
