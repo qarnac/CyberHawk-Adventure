@@ -85,7 +85,7 @@ function listbox() {
 		}
 		else {
 			for ( var i = 0; i < activities[x].contents.length; i++) {
-					generateActivityView(activities[x].contents[i], false);
+					$('activity').appendChild(generateActivityView(activities[x].contents[i], false));
 			}
 		}
 	};
@@ -170,7 +170,7 @@ function generateActivityView(activity, isStudent) {
 	var tableItem = document.createElement('li');
 	tableItem.className = "activityItem";
 	tableItem.appendChild(activityTable);
-	$('activity').appendChild(tableItem);
+	return tableItem;
 }
 
 // This generates the list of multiple choice answers, as well as the question
