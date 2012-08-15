@@ -1,3 +1,6 @@
+// THIS FILE IS NOT USED IN THE CURRENT BUILD OF CYBERSCAVENGER.
+// The code is being saved for the event that we want to give teachers the capability to download the map view (possible archiving).
+
 // The purpose of this js file is to take care of the creation of the KML files.
 // Queries the server for the list of activities active in a specific hunt.
 // Once the response is received, it will create the Placemarks on the map.
