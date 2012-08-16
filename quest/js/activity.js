@@ -248,7 +248,7 @@ function editActivity(activity) {
 	var img = document.createElement('img');
 	img.src = PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
 	
-	document.getElementById("img").appendChild(img);
+	document.getElementById("activityImage").appendChild(img);
 	
 	// At some point in time, we need to redo the way choices is encoded.  There is no reason the following line should be needed.
 	choices=choices.choices;
