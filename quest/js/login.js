@@ -14,30 +14,9 @@ function verify()
 	ajax(data, PHP_FOLDER_LOCATION + "login.php",verifyLogin);
 	return false;
 }
+
 function $(x){return document.getElementById(x);}
-//ajax implementation POST
-function ajax(data,url,callback)
-{	
-	var xmlhttp;
-	if (window.XMLHttpRequest)
-	  {// code for IE7+, Firefox, Chrome, Opera, Safari
-	  xmlhttp=new XMLHttpRequest();
-	  }
-	else
-	  {// code for IE6, IE5
-	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-	  }
-	xmlhttp.onreadystatechange=function()
-	  {
-	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
-		{
-		callback(xmlhttp.responseText);
-		}
-	  }
-	xmlhttp.open("POST",url,true);
-	xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-	xmlhttp.send(data);
-}
+
 //reacts according to the verification of credentials. if correct just refresh the page that will redirect to different page which has user functionalities
 function verifyLogin(x)
 {

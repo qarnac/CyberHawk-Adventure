@@ -3,7 +3,6 @@
 * handles ajax
 * handles selection of a hunt activity
 * Creates activitiy array
-* USED by welcome.php
 * Wherever you see variable x it is a temporary varibale used for multiple operations
 */
 
@@ -27,11 +26,14 @@ function $(x) {
 //ajax POST request
 function ajax(data, url, callback) {
 	var xmlhttp;
+	
 	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
 		xmlhttp = new XMLHttpRequest();
-	} else {// code for IE6, IE5
+	}
+	else {// code for IE6, IE5
 		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
+	
 	xmlhttp.onreadystatechange = function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			if (xmlhttp.responseText == 'sessionfail')
@@ -39,17 +41,16 @@ function ajax(data, url, callback) {
 			callback(xmlhttp.responseText);
 		}
 	}
-	if(data=="GET")
+	if (data=="GET")
 	{
 		xmlhttp.open("GET",url,true);
 		xmlhttp.send();
 	}
-	else{
+	else {
 		xmlhttp.open("POST", url, true);
-	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xmlhttp.send(data);
+		xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xmlhttp.send(data);
 	}
-	
 }
 
 //this function is invoked when a teacher selects a hunt
