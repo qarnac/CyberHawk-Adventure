@@ -245,10 +245,7 @@ function editActivity(activity) {
 		submitEdit(activity['id']); return false;
 	};
 	// Adds the image that was already uploaded to the edit page.
-	var img = document.createElement('img');
-	img.src = PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
-	
-	document.getElementById("activityImage").appendChild(img);
+	document.getElementById("activityImage").src = PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
 	
 	// At some point in time, we need to redo the way choices is encoded.  There is no reason the following line should be needed.
 	choices=choices.choices;

@@ -468,7 +468,7 @@ label.float_none {
 	padding-bottom: 1px;
 }
 
-.fChoiceAnswers li {
+.multipleChoiceAnswers li {
 	margin-bottom: .5em;
 	background-color: none;
 }

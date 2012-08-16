@@ -15,7 +15,7 @@ function geocompress(file, type) {
 	this.file = compress(file, type);
 	this.loc = gpsverify(file);  // If gps coords not embedded, will start google map
 	this.verify = function() {
-		if (this.file.dataurl && this.loc.lat && this.loc.lng) {
+		if (this.file.dataurl && this.loc.lat() && this.loc.lng()) {
 			this.file.dataurl = this.file.dataurl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
 			return true;
 		}
@@ -71,12 +71,6 @@ function compress(file, type) {
 	return x;
 }
 
-// TODO: do we really need this?  Is there a good reason not to use google.maps.LatLng()?
-//constructor for latlng object
-function latlng(lat, lng) {
-	this.lat = parseFloat(lat);
-	this.lng = parseFloat(lng);
-}
 
 //constructor for a rectangle object
 function georect(dim1, dim2) {
@@ -89,7 +83,7 @@ function georect(dim1, dim2) {
 //checks whether a latlng point is inside a rectangle
 // Only called within this file
 function checkloc(rect, loc) {
-	return rect.topleft.lat < loc.lat && rect.bottomright.lat > loc.lat && rect.topleft.lng < loc.lng && rect.bottomright.lng > loc.lng;
+	return rect.topleft.lat() < loc.lat() && rect.bottomright.lat() > loc.lat() && rect.topleft.lng() < loc.lng() && rect.bottomright.lng() > loc.lng();
 }
 
 // If gps coords not embedded, will start google map UI for manual user GPS entry
@@ -101,11 +95,11 @@ function gpsverify(file) {
 	binary_reader.onloadend = function(e) {
 		var jpeg = new JpegMeta.JpegFile(e.target.result, file.name);
 		if (jpeg.gps && jpeg.gps.longitude) {
-			var x = new latlng(jpeg.gps.latitude.value, jpeg.gps.longitude.value);
+			var x = new google.maps.LatLng(jpeg.gps.latitude.value, jpeg.gps.longitude.value);
 			if (checkloc(huntboundary, x)) {
 //			var gps_loc = new google.maps.LatLng(jpeg.gps.latitude.value, jpeg.gps.longitude.value);
 //			if (huntboundary.contains(gps_loc)) { //  <- currently doing nothing.
-				loc.latlng = new latlng(jpeg.gps.latitude.value, jpeg.gps.longitude.value);
+				loc.latlng = new google.maps.LatLng(jpeg.gps.latitude.value, jpeg.gps.longitude.value);
 				loc.from = "Native";
 			}
 			else {
@@ -126,8 +120,8 @@ function instantiateGoogleMap() {
 	var x = new Object();
 
 	//boundary
-	var southWestBound = new google.maps.LatLng(huntboundary.topleft.lat, huntboundary.topleft.lng);
-	var northEastBound = new google.maps.LatLng(huntboundary.bottomright.lat, huntboundary.bottomright.lng);
+	var southWestBound = new google.maps.LatLng(huntboundary.topleft.lat(), huntboundary.topleft.lng());
+	var northEastBound = new google.maps.LatLng(huntboundary.bottomright.lat(), huntboundary.bottomright.lng());
 	var bounds = new google.maps.LatLngBounds(southWestBound, northEastBound);
 
 	var mapOptions = {
@@ -213,7 +207,7 @@ function displayMap(x) {
 // and switches back from the map to the form view
 // TODO: Add code for clustering markers into the same latlng position
 function submitLatLng(location) {
-	morc.loc = new latlng(location.lat(), location.lng());
+	morc.loc = new google.maps.LatLng(location.lat(), location.lng());
 	morc.from = "chosen";
 	displayMap(false);
 	var activityImageDiv = document.getElementById('activityImage').parentNode;
