@@ -52,11 +52,11 @@ function ajax(data, url, callback) {
 	
 }
 
-//this function invoked when student selects a hunt
+//this function is invoked when a teacher selects a hunt
 function huntsel() {
 	$('activity').innerHTML = '';
 	$('students').innerHTML = '';
-	ajax("what=activities&id=" + document.getElementById("selecthunt").value, PHP_FOLDER_LOCATION + 'user_retrieve.php', create_activity_obj);
+	ajax("what=activities&id=" + document.getElementById("selecthunt").value, PHP_FOLDER_LOCATION + 'getHunts.php', create_activity_obj);
 	if(document.getElementById("mapButton")==null){
 		var button=document.createElement("input");
 		button.setAttribute("type", "button");
