@@ -2,7 +2,7 @@
 session_start();
 include '../php/credentials.php';
 	$hunts = array();
-	$result = mysql_query("SELECT * FROM hunt WHERE tid='" . $_SESSION['id'] . "' AND status='open'") or die(mysql_error());
+	$result = mysql_query("SELECT * FROM hunt WHERE teacher_id='" . $_SESSION['id'] . "' AND status='open'") or die(mysql_error());
 	if (mysql_num_rows($result) > 0) {
 		while ($x = mysql_fetch_assoc($result)) {
 			array_push($hunts, $x);
