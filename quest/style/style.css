@@ -468,7 +468,7 @@ label.float_none {
 	padding-bottom: 1px;
 }
 
-.multipleChoiceAnswers li {
+.fChoiceAnswers li {
 	margin-bottom: .5em;
 	background-color: none;
 }
@@ -490,3 +490,19 @@ label.float_none {
 	height: 280px;
 	width: 460px;
 }
+
+
+}
+.dummyimg{
+	height: 80px;
+	width:100px;
+	
+	margin-right:40px;
+	float:right;
+	
+}
+#students {
+	margin-left:700px;
+	position: fixed;
+}
+
