@@ -57,7 +57,7 @@ function check(form)
 	}
 	var y=new Array("textarea","text","number");
 	for(var i = 0; i < form.length; i++) {
-		if (y.has(form[i].type))
+		if (y.indexof(form[i].type)!=-1)
 			contents[form[i].name] = form[i].value;
 	}
 	if (morc && morc.verify()) {
@@ -74,11 +74,4 @@ function check(form)
 		});
 	}
 	return false;
-}
-// a custom prototype thats been added to array object to find existence of particular value
-Array.prototype.has=function(v){
-	for (i=0; i<this.length; i++){
-		if (this[i]==v) return true;
-	}
-	return false;
-}
+}fh

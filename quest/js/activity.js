@@ -296,7 +296,7 @@ function submitEdit(id) {
 		}
 		var y=new Array("textarea","text","number");
 		for (var i=0; i<form.length; i++) {
-			if (y.has(form[i].type)) {
+			if (y.indexOf(form[i].type)!=-1) {
 				contents[form[i].name] = form[i].value;
 			}
 		}
