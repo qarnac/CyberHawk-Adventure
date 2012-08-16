@@ -83,11 +83,10 @@ function listbox() {
 		var x = activities.hassid(this.value);
 		if (x == "false") {
 			// Only happens when a user is selected, and then unselected (via shift-click)
-			//alert("something went wrong in listbox()");
 		}
 		else {
 			for ( var i = 0; i < activities[x].contents.length; i++) {
-					$('activity').appendChild(generateActivityView(activities[x].contents[i], false));
+				$('activity').appendChild(generateActivityView(activities[x].contents[i], false));
 			}
 		}
 	};
@@ -191,6 +190,7 @@ function generateActivityView(activity, isStudent) {
 	var tableItem = document.createElement('li');
 	tableItem.className = "activityItem";
 	tableItem.appendChild(activityTable);
+	
 	return tableItem;
 }
 
