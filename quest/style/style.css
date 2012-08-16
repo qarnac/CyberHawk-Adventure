@@ -502,7 +502,6 @@ label.float_none {
 	
 }
 #students {
-	margin-left:700px;
-	position: fixed;
+	float:right;
 }
 

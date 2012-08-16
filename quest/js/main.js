@@ -22,7 +22,7 @@ function $(x) {
 	return document.getElementById(x);
 }
 
-
+var PHP_FOLDER_LOCATION="http://ouyangdev.cs.csusm.edu/cyberhawk/quest/php/";
 //ajax POST request
 function ajax(data, url, callback) {
 	var xmlhttp;
