@@ -7,6 +7,11 @@
  * If geo location is not found displays map which allows user to select a location from it.
  */
 
+ // Nice global variable up here...
+ // Wanted to move the string to an easy to find spot in case it ever needs to be changed in the future.
+ var NEW_ACTIVITY_MAP_INSTRUCTIONS="Please enter the latitude and longitude for the place in your photo. Click <strong>'Take me there!'</strong> to find this place on the map.  If the map takes you to the right place, click <strong>'Submit!'</strong>"
+
+ 
 // geocompress is the main point of entry into this file.
 // As of Aug 8, 2012, only called from dragdrop.js
 // creates the media object that has compressed image data url and geo co-ordinates
@@ -108,7 +113,6 @@ function gpsverify(file) {
 		}
 		else {
 			alert("The image you've selected is not geo tagged.\nPlease click on the location where you have taken the picture.\nOnce you have selected the right spot, please click 'Submit'");
-			displayMap(true);
 			instantiateGoogleMap();
 		}
 	}
@@ -123,16 +127,10 @@ function instantiateGoogleMap() {
 	var southWestBound = new google.maps.LatLng(huntboundary.topleft.lat(), huntboundary.topleft.lng());
 	var northEastBound = new google.maps.LatLng(huntboundary.bottomright.lat(), huntboundary.bottomright.lng());
 	var bounds = new google.maps.LatLngBounds(southWestBound, northEastBound);
-
-	var mapOptions = {
-		center : bounds.getCenter(),
-		zoom : 13,
-		mapTypeId : google.maps.MapTypeId.HYBRID
-	};
-	var map = new google.maps.Map($("map_canvas"), mapOptions);
+	
+	var map = initializeMap(bounds.getCenter().lat(), bounds.getCenter().lng(), document.getElementById("main"));
 
 	map.fitBounds(bounds);
-	map.setZoom(map.getZoom() + 2);
 
 	// This is the rectangular overlay that goes on top of the map to display the bounds
 	var rectangleOverlay = new google.maps.Rectangle();
@@ -187,21 +185,6 @@ function instantiateGoogleMap() {
 	});
 }
 
-//switches between displaying map and the form
-function displayMap(x) {
-	if (x) {
-		$('googlemap').style.display = 'block';
-		$('map_canvas').style.display = 'block';
-		$('map_canvas').style.position = 'fixed';
-		$('map_canvas').style.top = "0px";
-		$('map_canvas').style.left = "0px";
-		$('contents').style.display = 'none';
-	} else {
-		$('map_canvas').style.display = 'none';
-		$('contents').style.display = 'block';
-	}
-}
-
 // acks the marker being chosen
 // then sets fields of the morc object
 // and switches back from the map to the form view
@@ -209,7 +192,8 @@ function displayMap(x) {
 function submitLatLng(location) {
 	morc.loc = new google.maps.LatLng(location.lat(), location.lng());
 	morc.from = "chosen";
-	displayMap(false);
+	removeMap();
+	document.getElementById("activity").innerHTML=multiple;
 	var activityImageDiv = document.getElementById('activityImage').parentNode;
 	activityImageDiv.innerHTML = "";
 	var activityImage = document.createElement('img');
@@ -235,8 +219,7 @@ function createGotoControl(ctrlDiv, map, marker, center)
 	ctrlDiv.style.textAlign = 'right';
 	ctrlDiv.style.cursor = 'pointer';
 
-	var INSTRUCTIONS = "Please enter the latitude and longitude for the place in your photo. Click <strong>'Take me there!'</strong> to find this place on the map.  If the map takes you to the right place, click <strong>'Submit!'</strong>"
-	
+	var INSTRUCTIONS = NEW_ACTIVITY_MAP_INSTRUCTIONS;	
 	var welcomeMsgDiv = document.createElement('div');
 	welcomeMsgDiv.id = "welcomeTxt";
 	welcomeMsgDiv.name = "welcomeTxt";
