@@ -255,31 +255,33 @@ function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 	ctrlDiv.appendChild(layoutSubmitBtnDiv);
 
 	google.maps.event.addDomListener(ctrlBtn, 'click', function(event) {
-		var latValue;
-		var longValue;
-		
-		if (ctrlDecimalOrDMSSelect.selectedIndex == "0")
-		{
-			latValue = ctrlLatInput.value;
-			longValue = ctrlLongInput.value;
-		}
-		else if (ctrlDecimalOrDMSSelect.selectedIndex == "1")
-		{
-			var latDirection;
-			var longDirection;
-
-			if (ctrlLatNS.selectedIndex == 0) { latDirection = "N"; }
-			else { latDirection = "S"; }
-			if (ctrlLongNS.selectedIndex == 0) { longDirection = "W"; }
-			else { longDirection = "E"; }
-			
-			latValue = toDecimal(latDirection, ctrlLatDegrees.value, ctrlLatMinutes.value);
-			longValue = toDecimal(longDirection, ctrlLongDegrees.value, ctrlLongMinutes.value);
-		}
 		if(!isRectangle){
-			placeMarker(toPlot, new google.maps.LatLng(latValue, longValue));
+			var latValue;
+			var longValue;
+			
+			if (ctrlDecimalOrDMSSelect.selectedIndex == "0")
+			{
+				latValue = ctrlLatInput.value;
+				longValue = ctrlLongInput.value;
 			}
-	});
+			else if (ctrlDecimalOrDMSSelect.selectedIndex == "1")
+			{
+				var latDirection;
+				var longDirection;
+
+				if (ctrlLatNS.selectedIndex == 0) { latDirection = "N"; }
+				else { latDirection = "S"; }
+				if (ctrlLongNS.selectedIndex == 0) { longDirection = "W"; }
+				else { longDirection = "E"; }
+				
+				latValue = toDecimal(latDirection, ctrlLatDegrees.value, ctrlLatMinutes.value);
+				longValue = toDecimal(longDirection, ctrlLongDegrees.value, ctrlLongMinutes.value);
+			}
+			placeMarker(toPlot, new google.maps.LatLng(latValue, longValue));
+		} else{
+				updateRectangle(toPlot);
+			}
+		});
 
 	google.maps.event.addDomListener(ctrlSubmitBtn, 'click', onSubmit);
 
@@ -441,4 +443,51 @@ function toDMS(direction, deg) {
 		'degrees': degrees,
 		'minutes': minutes + "." + seconds
 	};
+}
+
+// This is the function that is called by the take me there! button.
+// It's purpose is to change the rectangle to fit the typed in criteria.
+function updateRectangle(rectangle){
+	var northeastBounds;
+	var southwestBounds;
+	// Make sure that we read the currently showing lat/lng.
+	if(document.getElementById("decimalDMSSelect").value==0){
+		southwestBounds=new google.maps.LatLng(
+							document.getElementById("latitudeIn").value-document.getElementById("heightIn").value/2,
+							document.getElementById("longitudeIn").value-document.getElementById("widthIn").value/2);
+		northeastBounds=new google.maps.LatLng(
+							document.getElementById("latitudeIn").value+document.getElementById("heightIn").value/2,
+							document.getElementById("longitudeIn").value+document.getElementById("widthIn").value/2);
+	} else{
+		var direction=(document.getElementById("latNSSelect").value==0) ? "N" : "S";
+		var lat=toDecimal(direction, document.getElementById("latDegrees").value,
+									document.getElementById("latMinutes").value);
+		direction=(document.getElementById("longNSSelect").value==0) ? "W" : "E";
+		var lng=toDecimal(direction, document.getElementById("longDegrees").value,
+									document.getElementById("longMinutes").value);
+		southwestBounds=new google.maps.LatLng(lat-document.getElementById("DMSHeight").value/2,
+												lng-document.getElementById("DMSWidth").value/2);
+		northeastBounds=new google.maps.LatLng(lat+document.getElementById("DMSHeight").value/2,
+												lng+document.getElementById("DMSWidth").value/2);
+	}
+		bounds=new google.maps.LatLngBounds(southwestBounds, northeastBounds);
+	var rectOptions = {
+		bounds : bounds
+	};
+	rectangle.setOptions(rectOptions);
+	rectangle.getMap().panTo(rectangle.getBounds().getCenter());
+}
+
+// Converts DMS Coordinates to decimal.
+function toDecimal(direction, deg, minutes) {
+	minutes = parseFloat(minutes);
+	deg = parseFloat(deg);
+	var seconds = (Math.floor(minutes) * 60) + ((minutes % 1) * 100);
+	
+	var degrees = deg + (seconds / 3600);
+	if ((direction == "W") || (direction == "S")) {
+		degrees = degrees * -1;
+	}
+
+	return degrees;
 }

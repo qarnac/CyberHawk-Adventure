@@ -212,20 +212,6 @@ function GoToControlOnSubmit(event) {
 		document.getElementById("googlemap").style.height="0px";
 	}
 
-
-function toDecimal(direction, deg, minutes) {
-	minutes = parseFloat(minutes);
-	deg = parseFloat(deg);
-	var seconds = (Math.floor(minutes) * 60) + ((minutes % 1) * 100);
-	
-	var degrees = deg + (seconds / 3600);
-	if ((direction == "W") || (direction == "S")) {
-		degrees = degrees * -1;
-	}
-
-	return degrees;
-}
-
 // currently unused.
 function updateLatLngFollow(marker, location) {
 //	newLocation = dropPrecision(location);
