@@ -132,18 +132,8 @@ function instantiateGoogleMap() {
 
 	map.fitBounds(bounds);
 
-	// This is the rectangular overlay that goes on top of the map to display the bounds
-	var rectangleOverlay = new google.maps.Rectangle();
-	var rectOptions = {
-		strokeColor : "#B7DDF2",
-		strokeOpacity : 0.7,
-		strokeWeight : 2,
-		fillColor : "#B7DDF2",
-		fillOpacity : 0.25,
-		map : map,
-		bounds : bounds
-	};
-	rectangleOverlay.setOptions(rectOptions);
+	// Creates the Rectangle overlay on the map.
+	createRectangleOverlay(map, bounds);
 	
 	var myMarker = new google.maps.Marker(
 	{
@@ -152,13 +142,7 @@ function instantiateGoogleMap() {
 		map: map
 	});
 
-	var gotoControlDiv = document.createElement('div');
-	var gotoControl = createGotoControl(gotoControlDiv, map, myMarker, bounds.getCenter());
-	
-	// Index is the order in which controls are rendered, all before default controls
-	gotoControlDiv.index = 1;
-	// display the control
-	map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(gotoControlDiv);
+	var gotoControl = createGotoControl(map, bounds.getCenter(), GoToControlOnSubmit, myMarker, true);
 
 	google.maps.event.addListener(map, 'click', function(e) {
 		alert("You can only select a location within the hunt area.\n")
@@ -202,198 +186,8 @@ function submitLatLng(location) {
 	activityImageDiv.appendChild(activityImage);
 }
 
-// This function fills an html div with the contents of the map latlng control
-// TODO: set more id's/classes here and move styling to stylesheets
-function createGotoControl(ctrlDiv, map, marker, center)
-{
-	var latDMS = toDMS("lat", center.lat());
-	var lngDMS = toDMS("long", center.lng());
-	
-	ctrlDiv.id = "latlongctrl";
-	ctrlDiv.style.width = '300px';
-	ctrlDiv.style.backgroundColor = 'white';
-	ctrlDiv.style.borderStyle = 'solid';
-	ctrlDiv.style.borderWidth = '1px';
-	ctrlDiv.style.padding = '15px';
-	ctrlDiv.style.margin = '5px';
-	ctrlDiv.style.textAlign = 'right';
-	ctrlDiv.style.cursor = 'pointer';
-
-	var INSTRUCTIONS = NEW_ACTIVITY_MAP_INSTRUCTIONS;	
-	var welcomeMsgDiv = document.createElement('div');
-	welcomeMsgDiv.id = "welcomeTxt";
-	welcomeMsgDiv.name = "welcomeTxt";
-	welcomeMsgDiv.style.textAlign = 'left';
-	welcomeMsgDiv.innerHTML = INSTRUCTIONS;
-
-	var ctrlLatInput = document.createElement('input');
-	ctrlLatInput.id = "latitudeIn";
-	ctrlLatInput.name = "latitudeIn";
-	// 5 decimal places is accurate to about 1 meter
-	ctrlLatInput.value = center.lat().toFixed(5);
-	
-	var ctrlLongInput = document.createElement('input');
-	ctrlLongInput.id = "longitudeIn";
-	ctrlLongInput.name = "longitudeIn";
-	// 5 decimal places is accurate to about 1 meter
-	ctrlLongInput.value = center.lng().toFixed(5);
-	
-	var ctrlLatLabel = document.createElement('label');
-	ctrlLatLabel.innerHTML = "Latitude";
-	ctrlLatLabel.className = "float_none";
-	ctrlLatLabel.style.display = "inline";
-	ctrlLatLabel.setAttribute("for", "latitudeIn");
-	
-	var ctrlLongLabel = document.createElement('label');
-	ctrlLongLabel.innerHTML = "Longitude";
-	ctrlLongLabel.className = "float_none";
-	ctrlLongLabel.style.display = "inline";
-	ctrlLongLabel.setAttribute("for", "longitudeIn");
-
-	var ctrlDecimalOrDMSSelect = document.createElement('select');
-	ctrlDecimalOrDMSSelect.id = "decimalDMSSelect";
-	ctrlDecimalOrDMSSelect.name = "decimalDMSSelect";
-	ctrlDecimalOrDMSSelect.add(new Option("Decimal", "0"));
-	ctrlDecimalOrDMSSelect.add(new Option("DMS", "1"));
-	ctrlDecimalOrDMSSelect.style.cssfloat = "right";
-	ctrlDecimalOrDMSSelect.selectedIndex = "1";
-
-
-	var ctrlSelectDiv = document.createElement('div');
-	ctrlSelectDiv.appendChild(ctrlDecimalOrDMSSelect);
-
-	layoutLatLongBox = document.createElement('div');
-	layoutLatLongBox.style.paddingBottom = '5px';
-	layoutLatLongBox.style.paddingTop = '5px';
-	layoutLatLongBox.style.display = "none";
-	layoutLatLongBox.appendChild(document.createElement('br'));
-	layoutLatLongBox.appendChild(ctrlLatLabel);
-	layoutLatLongBox.appendChild(ctrlLatInput);
-	layoutLatLongBox.appendChild(document.createElement('br'));
-	layoutLatLongBox.appendChild(ctrlLongLabel);
-	layoutLatLongBox.appendChild(ctrlLongInput);
-	
-	var ctrlLatNS = document.createElement('select');
-	ctrlLatNS.id = "latNSSelect";
-	ctrlLatNS.name = "latNSSelect";
-	ctrlLatNS.className = "short";
-	ctrlLatNS.add(new Option("North", "0"));
-	ctrlLatNS.add(new Option("South", "1"));
-	if (latDMS.compass == "N") { ctrlLatNS.selectedIndex = 0; }
-	else { ctrlLatNS.selectedIndex = 1; }
-	
-	var ctrlLatDegrees = document.createElement('input');
-	ctrlLatDegrees.id = "latDegrees";
-	ctrlLatDegrees.name = "latDegrees";
-	ctrlLatDegrees.value = latDMS.degrees;
-	ctrlLatDegrees.className = "float_none";
-	ctrlLatDegrees.style.display = "inline";
-	ctrlLatDegrees.style.width = "80px";
-	
-	var ctrlLatMinutes = document.createElement('input');
-	ctrlLatMinutes.id = "latMinutes";
-	ctrlLatMinutes.name = "latMinutes";
-	ctrlLatMinutes.value = latDMS.minutes;
-	ctrlLatMinutes.className = "float_none";
-	ctrlLatMinutes.style.display = "inline";
-	ctrlLatMinutes.style.width = "80px";
-	
-	var ctrlLongNS = document.createElement('select');
-	ctrlLongNS.id = "longNSSelect";
-	ctrlLongNS.name = "longNSSelect";
-	ctrlLongNS.className = "short";
-	ctrlLongNS.add(new Option("West", "0"));
-	ctrlLongNS.add(new Option("East", "1"));
-	if (lngDMS.compass == "W") { ctrlLongNS.selectedIndex = 0; }
-	else { ctrlLongNS.selectedIndex = 1; }
-	
-	var ctrlLongDegrees = document.createElement('input');
-	ctrlLongDegrees.id = "longDegrees";
-	ctrlLongDegrees.name = "longDegrees";
-	ctrlLongDegrees.value = lngDMS.degrees;
-	ctrlLongDegrees.className = "float_none";
-	ctrlLongDegrees.style.display = "inline";
-	ctrlLongDegrees.style.width = "80px";
-	
-	var ctrlLongMinutes = document.createElement('input');
-	ctrlLongMinutes.id = "longMinutes";
-	ctrlLongMinutes.name = "longMinutes";
-	ctrlLongMinutes.value = lngDMS.minutes;
-	ctrlLongMinutes.className = "float_none";
-	ctrlLongMinutes.style.display = "inline";
-	ctrlLongMinutes.style.width = "80px";
-	
-	var layoutDMSBox = document.createElement('div');
-	layoutDMSBox.style.paddingBottom = '5px';
-	layoutDMSBox.style.paddingTop = '5px';
-	layoutDMSBox.style.display = "block";
-	layoutDMSBox.appendChild(document.createElement('br'));
-	layoutDMSBox.appendChild(ctrlLatNS);
-	layoutDMSBox.appendChild(ctrlLatDegrees);
-	layoutDMSBox.appendChild(ctrlLatMinutes);
-	layoutDMSBox.appendChild(document.createElement('br'));
-	layoutDMSBox.appendChild(ctrlLongNS);
-	layoutDMSBox.appendChild(ctrlLongDegrees);
-	layoutDMSBox.appendChild(ctrlLongMinutes);
-
-	var ctrlBtn = document.createElement('a');
-	ctrlBtn.innerHTML = "Take me there!";
-	ctrlBtn.style.borderStyle = 'dotted';
-	ctrlBtn.style.borderWidth = '1px';
-	ctrlBtn.style.padding = '1px';
-
-	var layoutBtnDiv = document.createElement('div');
-	layoutBtnDiv.appendChild(ctrlBtn);
-	layoutBtnDiv.style.textAlign = 'right';
-
-	var ctrlSubmitBtn = document.createElement('a');
-	ctrlSubmitBtn.innerHTML = "Submit!";
-	ctrlSubmitBtn.style.backgroundColor = 'green';
-	ctrlSubmitBtn.style.borderStyle = 'dotted';
-	ctrlSubmitBtn.style.borderWidth = '1px';
-	ctrlSubmitBtn.style.padding = '1px';
-
-	var layoutSubmitBtnDiv = document.createElement('div');
-	layoutSubmitBtnDiv.appendChild(ctrlSubmitBtn);
-	layoutSubmitBtnDiv.style.textAlign = 'center';
-
-	// Assemble the custom control
-	ctrlDiv.appendChild(welcomeMsgDiv);
-	ctrlDiv.appendChild(ctrlSelectDiv);
-	ctrlDiv.appendChild(document.createElement('br'));
-	ctrlDiv.appendChild(layoutDMSBox);
-	ctrlDiv.appendChild(layoutLatLongBox);
-	ctrlDiv.appendChild(layoutBtnDiv);
-	ctrlDiv.appendChild(document.createElement('br'));
-	ctrlDiv.appendChild(document.createElement('hr'));
-	ctrlDiv.appendChild(layoutSubmitBtnDiv);
-
-	google.maps.event.addDomListener(ctrlBtn, 'click', function(event) {
-		var latValue;
-		var longValue;
-		
-		if (ctrlDecimalOrDMSSelect.selectedIndex == "0")
-		{
-			latValue = ctrlLatInput.value;
-			longValue = ctrlLongInput.value;
-		}
-		else if (ctrlDecimalOrDMSSelect.selectedIndex == "1")
-		{
-			var latDirection;
-			var longDirection;
-
-			if (ctrlLatNS.selectedIndex == 0) { latDirection = "N"; }
-			else { latDirection = "S"; }
-			if (ctrlLongNS.selectedIndex == 0) { longDirection = "W"; }
-			else { longDirection = "E"; }
-			
-			latValue = toDecimal(latDirection, ctrlLatDegrees.value, ctrlLatMinutes.value);
-			longValue = toDecimal(longDirection, ctrlLongDegrees.value, ctrlLongMinutes.value);
-		}
-		placeMarker(marker, new google.maps.LatLng(latValue, longValue));
-	});
-
-	google.maps.event.addDomListener(ctrlSubmitBtn, 'click', function (event) {
+// The function that is called when the GoToControl Submit button is clicked.
+function GoToControlOnSubmit(event) {
 		// BUG: If you move the marker out of bounds and click submit, this function still submits
 		// TODO: bounds checking?
 
@@ -416,39 +210,7 @@ function createGotoControl(ctrlDiv, map, marker, center)
 		var location = new google.maps.LatLng(latitude, longitude);
 		submitLatLng(location);
 		document.getElementById("googlemap").style.height="0px";
-	});
-
-	google.maps.event.addDomListener(ctrlDecimalOrDMSSelect, 'change', function (event) {
-		var latValue = ctrlLatInput.value;
-		var longValue = ctrlLongInput.value;
-		
-		if (ctrlDecimalOrDMSSelect.selectedIndex == "1")
-		{
-			layoutDMSBox.style.display = "block";
-			layoutLatLongBox.style.display = "none";
-
-			updateLatLngDMS(new google.maps.LatLng(latValue, longValue));
-		}
-		else
-		{
-			layoutDMSBox.style.display = "none";
-			layoutLatLongBox.style.display = "block";
-			
-			var latDirection;
-			var longDirection;
-
-			if (ctrlLatNS.selectedIndex == 0) { latDirection = "N"; }
-			else { latDirection = "S"; }
-			if (ctrlLongNS.selectedIndex == 0) { longDirection = "W"; }
-			else { longDirection = "E"; }
-			
-			var latDec = toDecimal(latDirection, ctrlLatDegrees.value, ctrlLatMinutes.value);
-			var lngDec = toDecimal(longDirection, ctrlLongDegrees.value, ctrlLongMinutes.value);
-
-			updateLatLng(new google.maps.LatLng(latDec, lngDec));
-		}
-	});
-}
+	}
 
 function toDMS(direction, deg) {
 	var compass;
@@ -497,11 +259,6 @@ function toDecimal(direction, deg, minutes) {
 	}
 
 	return degrees;
-}
-
-function updateLatLng(location) {
-	document.getElementById('latitudeIn').value = location.lat().toFixed(5);
-	document.getElementById('longitudeIn').value = location.lng().toFixed(5);
 }
 
 // currently unused.

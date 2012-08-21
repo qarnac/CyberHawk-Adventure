@@ -1,45 +1,48 @@
-// This file is intended for use in creating new hunts. Currently does nothing
+// The purpose of this file is for the creation of the new hunts.
+// When the New Hunt button is clicked, the createHunt function is called.
 
-var map;
-function createmap(position,z)
-{
-	if(!z)
-	z=11;
-	currentloc();
-	$('activity').innerHTML="";
-		var myOptions = {
-		center :new google.maps.LatLng(position.coords.latitude,position.coords.longitude),
-		zoom : z,
-		mapTypeId : google.maps.MapTypeId.TERRAIN
-	};
-	 map = new google.maps.Map($("activity"), myOptions);
-	
-}
+// Dependencies:  mapFunctions.js
 
-function queryresults(results, status) {
-  if (status == google.maps.places.PlacesServiceStatus.OK) {
-    for (var i = 0; i < results.length; i++) {
-      var place = results[i];
-      
-    }
-  }
-}
-function currentloc()
-{
-	if (navigator.geolocation) 
-    navigator.geolocation.getCurrentPosition(createmap, errorFunction);
-
-}
+var DEFAULT_LAT=33.128760;
+var DEFAULT_LNG=-117.159450;
+var DEFAULT_RECT_SIZE=.25;
+// Is called when the New Hunt button is clicked.
+// Checks if the browser can find out users location, if so, use that for the coords to load the google map.
+// Otherwise, we center it at the default coords.
 function createhunt () {
-	currentloc();
-  
+  if (navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(receivedLocation, noLocation);
+	}
+	else {
+		noLocation();
+	}
 }
 
-function errorFunction(e)
-{ 
-	var x=new Object();
-	x.coords=new Object();
-	x.coords.latitude=39.828175; 
-	x.coords.longitude=-98.5795;
-	createmap(x,4);
+function receivedLocation(position){
+	newHuntMap(initializeMap(position.coords.latitude, position.coords.longitude));
 }
+function noLocation(){
+	newHuntMap(initializeMap(DEFAULT_LAT, DEFAULT_LNG));
+}
+
+// The current plan for this is to set it up so that way there is a default rectangle, which can be grabbed and moved.
+// It can also be shrunk/grown by use of the middle mouse wheel.
+// I also want to set up a control box where the user can type in lat/lng values, and then also have a size option, so the user can use that to shape the box.
+function newHuntMap(map){
+	// Creates the rectangle at the center of the map, and is the default size (according to the default variable).
+	var southwest=new google.maps.LatLng(map.getCenter().lat()-DEFAULT_RECT_SIZE/2, map.getCenter().lng()-DEFAULT_RECT_SIZE/2);
+	var northeast=new google.maps.LatLng(map.getCenter().lat()+DEFAULT_RECT_SIZE/2, map.getCenter().lng()+DEFAULT_RECT_SIZE/2);
+	var bounds=new google.maps.LatLngBounds(southwest, northeast);
+	rectangle=createRectangleOverlay(map, bounds);
+	rectangle.setEditable(true);
+	createGotoControl(map, rectangle.getBounds().getCenter(), newHuntSubmit, rectangle, true)
+	google.maps.event.addListener(rectangle, "bounds_changed", function(event){
+		updateLatLng(rectangle.getBounds().getCenter());
+	});
+}
+
+function newHuntSubmit(){
+
+}
+
+

@@ -270,7 +270,7 @@ function editActivity(activity) {
 		}
 	}
 
-	huntboundary = new georect(new latlng(hunt['minlat'],hunt['minlng']),new latlng(hunt['maxlat'],hunt['maxlng']));
+	huntboundary = new georect(new google.maps.LatLng(hunt['minlat'],hunt['minlng']),new google.maps.LatLng(hunt['maxlat'],hunt['maxlng']));
 	
 	// Fill the multiple choice questions with the correct answers.
 	document.getElementsByName("a")[0].value = choices[0].content;
