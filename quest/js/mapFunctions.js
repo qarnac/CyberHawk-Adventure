@@ -97,31 +97,26 @@ function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 	var ctrlHeightLabel;
 	var ctrlWidthInput;
 	var ctrlHeightInput;
+	var DMSWidthLabel;
+	var DMSHeightLabel;
+	var DMSWidthInput;
+	var DMSHeightInput;
 	if(isRectangle){
-		ctrlWidthLabel=document.createElement("label");
-		ctrlWidthLabel.innerHTML="Width";
-		ctrlWidthLabel.className="float_none";
-		ctrlWidthLabel.style.display="inline";
-		ctrlWidthLabel.setAttribute("for", "widthIn");
-		
-		ctrlHeightLabel=document.createElement("label");
-		ctrlHeightLabel.innerHTML="height";
-		ctrlHeightLabel.className="float_none";
-		ctrlHeightLabel.style.display="inline";
-		ctrlHeightLabel.setAttribute("for", "heightIn");
-		
-		ctrlWidthInput = document.createElement('input');
-		ctrlWidthInput.id = "widthIn";
-		ctrlWidthInput.name = "widthIn";
-		
-		ctrlHeightInput = document.createElement('input');
-		ctrlHeightInput.id = "longitudeIn";
-		ctrlHeightInput.name = "longitudeIn";
-
-		var upperBounds=rectangle.getBounds().getNorthEast();
-		var lowerBounds=rectangle.getBounds().getSouthWest();
-		ctrlWidthInput.value=upperBounds.lng()-lowerBounds.lng();
-		ctrlHeightInput.value=upperBounds.lat()-lowerBounds.lat();
+		// I wish I didn't have to create two different variables for this, 
+	//	   but it's the only way to have it so that way it can show up under the two parents (that i know of)
+		var decimal=createHeightWidthInputs();
+		ctrlWidthLabel=decimal.ctrlWidthLabel;
+		ctrlHeightLabel=decimal.ctrlHeightLabel;
+		ctrlWidthInput=decimal.ctrlWidthInput;
+		ctrlHeightInput=decimal.ctrlHeightInput;
+		var DMS=createHeightWidthInputs();
+		DMSWidthLabel=DMS.ctrlWidthLabel;
+		DMSHeightLabel=DMS.ctrlHeightLabel;
+		DMSWidthInput=DMS.ctrlWidthInput;
+		// We want the DMS inputs to have different id's.
+		DMSWidthInput.id="DMSWidth";
+		DMSHeightInput=DMS.ctrlHeightInput;
+		DMSHeightInput.id="DMSHeight";
 	}
 
 	var ctrlDecimalOrDMSSelect = document.createElement('select');
@@ -218,6 +213,14 @@ function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 	layoutDMSBox.appendChild(ctrlLongNS);
 	layoutDMSBox.appendChild(ctrlLongDegrees);
 	layoutDMSBox.appendChild(ctrlLongMinutes);
+	if(isRectangle){
+		layoutDMSBox.appendChild(document.createElement("br"));
+		layoutDMSBox.appendChild(DMSWidthLabel);
+		layoutDMSBox.appendChild(DMSWidthInput);
+		layoutDMSBox.appendChild(document.createElement("br"));
+		layoutDMSBox.appendChild(DMSHeightLabel);
+		layoutDMSBox.appendChild(DMSHeightInput);
+	}
 
 	var ctrlBtn = document.createElement('a');
 	ctrlBtn.innerHTML = "Take me there!";
@@ -306,8 +309,8 @@ function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 			
 			var latDec = toDecimal(latDirection, ctrlLatDegrees.value, ctrlLatMinutes.value);
 			var lngDec = toDecimal(longDirection, ctrlLongDegrees.value, ctrlLongMinutes.value);
-
-			updateLatLng(new google.maps.LatLng(latDec, lngDec));
+			// If width and height DMS values exist, set width and height to them.  otherwise set them to null.
+			updateLatLngBox(new google.maps.LatLng(latDec, lngDec), isRectangle);
 		}
 	});
 	// Index is the order in which controls are rendered, all before default controls
@@ -316,7 +319,126 @@ function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 	map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(ctrlDiv);
 }
 
-function updateLatLng(location) {
+function createHeightWidthInputs(){
+	ctrlWidthLabel=document.createElement("label");
+	ctrlWidthLabel.innerHTML="Width";
+	ctrlWidthLabel.className="float_none";
+	ctrlWidthLabel.style.display="inline";
+	ctrlWidthLabel.setAttribute("for", "widthIn");
+	
+	ctrlHeightLabel=document.createElement("label");
+	ctrlHeightLabel.innerHTML="height";
+	ctrlHeightLabel.className="float_none";
+	ctrlHeightLabel.style.display="inline";
+	ctrlHeightLabel.setAttribute("for", "heightIn");
+	
+	ctrlWidthInput = document.createElement('input');
+	ctrlWidthInput.id = "widthIn";
+	ctrlWidthInput.name = "widthIn";
+	
+	ctrlHeightInput = document.createElement('input');
+	ctrlHeightInput.id = "heightIn";
+	ctrlHeightInput.name = "heightIn";
+
+	var upperBounds=rectangle.getBounds().getNorthEast();
+	var lowerBounds=rectangle.getBounds().getSouthWest();
+	ctrlWidthInput.value=upperBounds.lng()-lowerBounds.lng();
+	ctrlHeightInput.value=upperBounds.lat()-lowerBounds.lat();
+	return {
+		ctrlWidthLabel:ctrlWidthLabel,
+		ctrlHeightLabel: ctrlHeightLabel,
+		ctrlWidthInput: ctrlWidthInput,
+		ctrlHeightInput: ctrlHeightInput
+	};
+}
+
+// Updates the GoToControlBox from decimal to DMS.
+function updateLatLngDMS(location) {
+	latDMS = toDMS("lat", location.lat());
+	longDMS = toDMS("long", location.lng());
+	
+	if (latDMS.compass == "N") { document.getElementById('latNSSelect').selectedIndex = 0; }
+	else { document.getElementById('latNSSelect').selectedIndex = 1; }
+	if (longDMS.compass == "W") { document.getElementById('longNSSelect').selectedIndex = 0; }
+	else { document.getElementById('longNSSelect').selectedIndex = 1; }
+
+	document.getElementById('latDegrees').value = latDMS.degrees;
+	document.getElementById('latMinutes').value = latDMS.minutes;
+	
+	document.getElementById('longDegrees').value = longDMS.degrees;
+	document.getElementById('longMinutes').value = longDMS.minutes;
+	
+	document.getElementById("DMSWidth").value=document.getElementById("widthIn").value;
+	document.getElementById("DMSHeight").value=document.getElementById("heightIn").value;
+}
+
+// Updates the GoToControlBox when going to Decimals.
+function updateLatLngBox(location, isRectangle) {
 	document.getElementById('latitudeIn').value = location.lat().toFixed(5);
 	document.getElementById('longitudeIn').value = location.lng().toFixed(5);
+	if(isRectangle){
+		document.getElementById("widthIn").value=document.getElementById("DMSWidth").value;
+		document.getElementById("heightIn").value=document.getElementById("DMSHeight").value;
+	}
+}
+
+// Is called when the bounds of the rectangle are changed.
+// Updates the latLng box to show the new width, height, lat, and lng.
+function updateWidthHeight(bounds){
+	// Sets up the width and height for both of the boxes.
+	var width=bounds.getNorthEast().lat()-bounds.getSouthWest().lat();
+	var height=bounds.getNorthEast().lng()-bounds.getSouthWest().lng();
+	document.getElementById("widthIn").value=width;
+	document.getElementById("DMSWidth").value=width;
+	document.getElementById("heightIn").value=height;
+	document.getElementById("DMSHeight").value=height;
+	// Set up the lat/lng for the decimal box.
+	document.getElementById("latitudeIn").value=bounds.getCenter().lat();
+	document.getElementById("longitudeIn").value=bounds.getCenter().lng();
+	// This fancy code is needed to set up the lat/lng for the DMS boxes.
+	var lat=toDMS("lat", bounds.getCenter().lat());
+	var lng=toDMS("long", bounds.getCenter().lng());
+	document.getElementById("latNSSelect").value=(lat.compass=="N")? 0:1;
+	document.getElementById("latDegrees").value=lat.degrees;
+	document.getElementById("latMinutes").value=lat.minutes;
+	document.getElementById("longNSSelect").value=(lng.compass=="E")? 0:1;
+	document.getElementById("longDegrees").value=lng.degrees;
+	document.getElementById("longMinutes").value=lng.minutes;
+}
+
+// Converts the coordinates to DMS.
+function toDMS(direction, deg) {
+	var compass;
+	if ((direction == "lat") && (deg < 0)) {
+		compass = "S";
+	}
+	else if ((direction == "lat") && (deg > 0)) {
+		compass = "N";
+	}
+	else if ((direction == "long") && (deg < 0)) {
+		compass = "W";
+	}
+	else if ((direction == "long") && (deg > 0)) {
+		compass = "E";
+	}
+	
+	var degrees;
+
+	if (deg < 0) {
+		deg = deg * -1;
+	}
+	degrees = Math.floor(deg);
+	degrees = degrees.toFixed();
+	
+	var minutes_seconds = (deg % 1) * 60;
+	var minutes = Math.floor(minutes_seconds);
+	minutes = minutes.toFixed();
+	var seconds = Math.round((minutes_seconds % 1) * 60 * 100);
+	seconds = seconds.toFixed();
+	
+	return {
+		'compass': compass,
+		'degrees': degrees,
+		'minutes': minutes + "." + seconds
+	};
 }

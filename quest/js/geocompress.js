@@ -142,7 +142,7 @@ function instantiateGoogleMap() {
 		map: map
 	});
 
-	var gotoControl = createGotoControl(map, bounds.getCenter(), GoToControlOnSubmit, myMarker, true);
+	var gotoControl = createGotoControl(map, bounds.getCenter(), GoToControlOnSubmit, myMarker, false);
 
 	google.maps.event.addListener(map, 'click', function(e) {
 		alert("You can only select a location within the hunt area.\n")
@@ -212,41 +212,6 @@ function GoToControlOnSubmit(event) {
 		document.getElementById("googlemap").style.height="0px";
 	}
 
-function toDMS(direction, deg) {
-	var compass;
-	if ((direction == "lat") && (deg < 0)) {
-		compass = "S";
-	}
-	else if ((direction == "lat") && (deg > 0)) {
-		compass = "N";
-	}
-	else if ((direction == "long") && (deg < 0)) {
-		compass = "W";
-	}
-	else if ((direction == "long") && (deg > 0)) {
-		compass = "E";
-	}
-	
-	var degrees;
-
-	if (deg < 0) {
-		deg = deg * -1;
-	}
-	degrees = Math.floor(deg);
-	degrees = degrees.toFixed();
-	
-	var minutes_seconds = (deg % 1) * 60;
-	var minutes = Math.floor(minutes_seconds);
-	minutes = minutes.toFixed();
-	var seconds = Math.round((minutes_seconds % 1) * 60 * 100);
-	seconds = seconds.toFixed();
-	
-	return {
-		'compass': compass,
-		'degrees': degrees,
-		'minutes': minutes + "." + seconds
-	};
-}
 
 function toDecimal(direction, deg, minutes) {
 	minutes = parseFloat(minutes);
@@ -270,21 +235,6 @@ function updateLatLngFollow(marker, location) {
 	marker.setVisible(true);
 }
 
-function updateLatLngDMS(location) {
-	latDMS = toDMS("lat", location.lat());
-	longDMS = toDMS("long", location.lng());
-	
-	if (latDMS.compass == "N") { document.getElementById('latNSSelect').selectedIndex = 0; }
-	else { document.getElementById('latNSSelect').selectedIndex = 1; }
-	if (longDMS.compass == "W") { document.getElementById('longNSSelect').selectedIndex = 0; }
-	else { document.getElementById('longNSSelect').selectedIndex = 1; }
-
-	document.getElementById('latDegrees').value = latDMS.degrees;
-	document.getElementById('latMinutes').value = latDMS.minutes;
-	
-	document.getElementById('longDegrees').value = longDMS.degrees;
-	document.getElementById('longMinutes').value = longDMS.minutes;
-}
 
 // Called when the user clicks the "Take me there!" button
 function placeMarker(marker, location) {
