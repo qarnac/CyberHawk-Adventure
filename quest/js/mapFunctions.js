@@ -403,7 +403,7 @@ function updateWidthHeight(bounds){
 	document.getElementById("latNSSelect").value=(lat.compass=="N")? 0:1;
 	document.getElementById("latDegrees").value=lat.degrees;
 	document.getElementById("latMinutes").value=lat.minutes;
-	document.getElementById("longNSSelect").value=(lng.compass=="E")? 0:1;
+	document.getElementById("longNSSelect").value=(lng.compass=="E")? 1:0;
 	document.getElementById("longDegrees").value=lng.degrees;
 	document.getElementById("longMinutes").value=lng.minutes;
 }
@@ -452,12 +452,13 @@ function updateRectangle(rectangle){
 	var southwestBounds;
 	// Make sure that we read the currently showing lat/lng.
 	if(document.getElementById("decimalDMSSelect").value==0){
+	// TODO:  Catch the error thrown if the string can not be parsed into a float.
 		southwestBounds=new google.maps.LatLng(
-							document.getElementById("latitudeIn").value-document.getElementById("heightIn").value/2,
-							document.getElementById("longitudeIn").value-document.getElementById("widthIn").value/2);
+							parseFloat(document.getElementById("latitudeIn").value)-parseFloat(document.getElementById("heightIn").value)/2.0,
+							parseFloat(document.getElementById("longitudeIn").value)-parseFloat(document.getElementById("widthIn").value)/2.0);
 		northeastBounds=new google.maps.LatLng(
-							document.getElementById("latitudeIn").value+document.getElementById("heightIn").value/2,
-							document.getElementById("longitudeIn").value+document.getElementById("widthIn").value/2);
+							parseFloat(document.getElementById("latitudeIn").value)+parseFloat(document.getElementById("heightIn").value)/2.0,
+							parseFloat(document.getElementById("longitudeIn").value)+parseFloat(document.getElementById("widthIn").value)/2.0);
 	} else{
 		var direction=(document.getElementById("latNSSelect").value==0) ? "N" : "S";
 		var lat=toDecimal(direction, document.getElementById("latDegrees").value,
