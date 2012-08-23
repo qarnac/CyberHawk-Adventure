@@ -12,13 +12,7 @@ function createStudentActivityList(){
 		PHP_FOLDER_LOCATION + "getStudentActivities.php", studentActivityList);  // Gives filename to post to and callback function.
 }
 
-// This function is called in order to create a new activity as a student.
-// Shows the createActivity.html file.
-/*
-function createNewActivity(){
-	ajax("GET", "../quest/html/createActivity.html", displayPage);
-}
-*/
+
 function displayPage(serverResponse){
 	var activityDiv=document.getElementById("activity");
 	activityDiv.innerHTML=serverResponse;

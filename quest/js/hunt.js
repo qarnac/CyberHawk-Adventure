@@ -35,16 +35,45 @@ function newHuntMap(map){
 	var bounds=new google.maps.LatLngBounds(southwest, northeast);
 	rectangle=createRectangleOverlay(map, bounds);
 	rectangle.setEditable(true);
-	createGotoControl(map, rectangle.getBounds().getCenter(), newHuntSubmit, rectangle, true)
+	createGotoControl(map, rectangle.getBounds().getCenter(), newHuntMapSubmit, rectangle, true)
 	google.maps.event.addListener(rectangle, "bounds_changed", function(event){
 		updateWidthHeight(rectangle.getBounds());
 	});
 }
 
 // This is the function for the submit button in the GoToControl Box.
-// Currently, does nothing.
-function newHuntSubmit(){
-
+function newHuntMapSubmit(){
+	ajax("GET", "../quest/html/createHunt.html", displayHuntForm);
 }
 
+// This is the callback function for the ajax call for the createHunt.html.
+function displayHuntForm(serverResponse){
+	var bounds=rectangle.getBounds();
+	$('activity').innerHTML=serverResponse;
+	document.getElementById("minLat").innerHTML=bounds.getSouthWest().lat();
+	document.getElementById("minLng").innerHTML=bounds.getSouthWest().lng();
+	document.getElementById("maxLat").innerHTML=bounds.getNorthEast().lat();
+	document.getElementById("maxLng").innerHTML=bounds.getNorthEast().lng();
+	var today=new Date();
+	document.getElementById("endDate").innerHTML=(today.getMonth()+1) + "/" + today.getDate() +"/" + today.getFullYear();
+}
 
+//Is called when the submit button is clicked on the newHunt.html form.
+function submitNewHunt(){
+	var date=Date.parse(document.getElementById("endDate").value);
+	date=new Date(date);
+	var dateString=date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
+	ajax("title=" + document.getElementById("huntTitle").value +
+		"&endDate=" + dateString +
+		"&minLat=" + document.getElementById("minLat").value +
+		"&minLng=" + document.getElementById("minLng").value +
+		"&maxLat=" + document.getElementById("maxLat").value +
+		"&maxLng=" + document.getElementById("maxLng").value,
+		PHP_FOLDER_LOCATION + "createHunt.php", huntSubmitted);
+		return false;
+}
+
+function huntSubmitted(serverResponse){
+	if(serverResponse=="success") console.log("hooray!");
+	else console.log(serverResponse);
+}

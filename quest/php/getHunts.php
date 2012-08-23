@@ -16,7 +16,6 @@ else {
 // Why does this also grab the create activity form?  Could we do that once the user clicks new activity instead?
 function getHuntsStudent()
 {
-//	$metah=mysql_query("SELECT * FROM meta" ) or die(mysql_error());
 	$createActivityForm = file_get_contents("http://ouyangdev.cs.csusm.edu/cyberhawk/quest/html/createActivity.html");
 	$availableHunts = array();
 	$result = mysql_query("
