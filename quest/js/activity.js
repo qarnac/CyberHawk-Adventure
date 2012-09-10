@@ -96,26 +96,22 @@ function listbox() {
 // Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
 function generateActivityView(activity, isStudent) {
 	// Add the Edit activity button first, so that it displays just to the right of the Activity View
-	if (isStudent == true) {
-		var editButton = document.createElement("input");
-		editButton.setAttribute("type", "button");
-		editButton.setAttribute("value", "Edit Activity");
-		// Use this ugly syntax because it's the only way I know of passing the parameter to an onclick function.
-		editButton.onclick = function() {
-			editActivity(activity);
-		}
-		$('activity').appendChild(editButton);
-	}
-	else {
-		// feedback code goes here.
-	}
-
+	var editButton = document.createElement("input");
+	editButton.setAttribute("type", "button");
+	editButton.setAttribute("value", "Edit Activity");
+	// Use this ugly syntax because it's the only way I know of passing the parameter to an onclick function.
+	if(isStudent) editButton.onclick = function() {editActivityAsStudent(activity);};
+	else editButton.onclick=function(){addTeacherComments();};
+	
+	$('activity').appendChild(editButton);
+	
 	var activityTable = document.createElement('table');
 	activityTable.className = "activityTable";
 	activityTable.cellPadding = "5px";
 
 	var activityTableRow1 = document.createElement('tr');
 	var activityTableRow2 = document.createElement('tr');
+	var activityTableRow3 = document.createElement('tr');
 	
 	var activityPhoto = document.createElement('img');
 	activityPhoto.src = PHP_FOLDER_LOCATION + "image.php?id=" + activity['media_id'];
@@ -165,6 +161,27 @@ function generateActivityView(activity, isStudent) {
 		furtherQuestionText.className = "unansweredQuestion";
 	}
 	
+	/*
+	THIS SECTION IS COMMENTED OUT DUE TO FORMATTING ISSUES.
+	THIS SECTION ADDS THE TEACHER COMMENTS AND THE ACTIVITY STATUS VIEW.
+	NEEDS TO BE FIXED ASAP.
+	ALL COMMENTS AFTER THIS SECTION IN THIS FUNCTION ARE RELATED TO THIS.
+	
+	var commentLabel = document.createElement('div');
+	aboutLabel.innerHTML = "Teacher comments:";
+	aboutLabel.className = "questionLabel";
+	
+	var teacherCommentText=document.createElement("div");
+	teacherCommentText.innerHTML=activity["comments"];
+	
+	var activityStatusLabel = document.createElement('div');
+	aboutLabel.innerHTML = "Activity Status:";
+	aboutLabel.className = "questionLabel";
+	
+	var activityStatus=document.createElement("div");
+	activityStatus.innerHTML=activity["status"];
+
+	*/
 	var aboutPhotoCell = document.createElement('td');
 	aboutPhotoCell.className = "aboutPhotoCell";
 	aboutPhotoCell.appendChild(aboutLabel);
@@ -183,12 +200,21 @@ function generateActivityView(activity, isStudent) {
 
 	activityTableRow2.appendChild(multipleChoiceCell);
 	
+	/*
+	activityTableRow3.appendChild(commentLabel);
+	activityTableRow3.appendChild(teacherCommentText);
+	activityTableRow3.appendChild(activityStatusLabel);
+	activityTableRow3.appendChild(activityStatus);
+	*/
+	
 	activityTable.appendChild(activityTableRow1);
 	activityTable.appendChild(activityTableRow2);
+//	activityTable.appendChild(activityTableRow3);
 	
 	var tableItem = document.createElement('li');
 	tableItem.className = "activityItem";
 	tableItem.appendChild(activityTable);
+	
 	
 	return tableItem;
 }
@@ -235,7 +261,12 @@ function generateMultipleChoiceList(question, answerList) {
 }
 
 var huntboundary;
-function editActivity(activity) {
+// This is the function that is going to be called when a teacher clicks on the edit button for an activity.
+// Changes the view of that specific activity to the teacher edit view.
+function addTeacherComments(){
+
+}
+function editActivityAsStudent(activity) {
 	// multiple gets initialized in wscript_init.  It's supposed to be multiple.htm.
 	$('activity').innerHTML = multiple;
 	choices = JSON.parse(activity.choices);
@@ -269,7 +300,7 @@ function editActivity(activity) {
 		}
 	}
 
-	huntboundary = new georect(new google.maps.LatLng(hunt['minlat'],hunt['minlng']),new google.maps.LatLng(hunt['maxlat'],hunt['maxlng']));
+	huntboundary = new google.maps.LatLngBounds(new google.maps.LatLng(hunt['minlat'],hunt['minlng']),new google.maps.LatLng(hunt['maxlat'],hunt['maxlng']));
 	
 	// Fill the multiple choice questions with the correct answers.
 	document.getElementsByName("a")[0].value = choices[0].content;

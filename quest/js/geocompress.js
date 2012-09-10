@@ -74,21 +74,6 @@ function compress(file, type) {
 	return x;
 }
 
-
-//constructor for a rectangle object
-function georect(dim1, dim2) {
-	this.topleft = dim1;
-	this.bottomright = dim2;
-}
-
-// uses a latlng object
-// this function can be replaced with calls to google.maps.LatLngBounds.contains(LatLng)
-//checks whether a latlng point is inside a rectangle
-// Only called within this file
-function checkloc(rect, loc) {
-	return rect.topleft.lat() < loc.lat() && rect.bottomright.lat() > loc.lat() && rect.topleft.lng() < loc.lng() && rect.bottomright.lng() > loc.lng();
-}
-
 // If gps coords not embedded, will start google map UI for manual user GPS entry
 function gpsverify(file) {
 	var loc = new Object();
@@ -99,7 +84,7 @@ function gpsverify(file) {
 		var jpeg = new JpegMeta.JpegFile(e.target.result, file.name);
 		if (jpeg.gps && jpeg.gps.longitude) {
 			var x = new google.maps.LatLng(jpeg.gps.latitude.value, jpeg.gps.longitude.value);
-			if (checkloc(huntboundary, x)) {
+			if (huntboundary.contains(x)) {
 //			var gps_loc = new google.maps.LatLng(jpeg.gps.latitude.value, jpeg.gps.longitude.value);
 //			if (huntboundary.contains(gps_loc)) { //  <- currently doing nothing.
 				loc.latlng = new google.maps.LatLng(jpeg.gps.latitude.value, jpeg.gps.longitude.value);
@@ -120,27 +105,22 @@ function gpsverify(file) {
 // This function builds the map interface with the proper locations, bounds, etc.
 function instantiateGoogleMap() {
 	var x = new Object();
-
-	//boundary
-	var southWestBound = new google.maps.LatLng(huntboundary.topleft.lat(), huntboundary.topleft.lng());
-	var northEastBound = new google.maps.LatLng(huntboundary.bottomright.lat(), huntboundary.bottomright.lng());
-	var bounds = new google.maps.LatLngBounds(southWestBound, northEastBound);
 	
-	var map = initializeMap(bounds.getCenter().lat(), bounds.getCenter().lng(), document.getElementById("main"));
+	var map = initializeMap(huntboundary.getCenter().lat(), huntboundary.getCenter().lng(), document.getElementById("main"));
 
-	map.fitBounds(bounds);
+	map.fitBounds(huntboundary);
 
 	// Creates the Rectangle overlay on the map.
-	createRectangleOverlay(map, bounds);
+	createRectangleOverlay(map, huntboundary);
 	
 	var myMarker = new google.maps.Marker(
 	{
-		position: bounds.getCenter(),
+		position: huntboundary.getCenter(),
 		draggable: true,
 		map: map
 	});
 
-	var gotoControl = createGotoControl(map, bounds.getCenter(), GoToControlOnSubmit, myMarker, false);
+	var gotoControl = createGotoControl(map, huntboundary.getCenter(), GoToControlOnSubmit, myMarker, false);
 
 	google.maps.event.addListener(map, 'click', function(e) {
 		alert("You can only select a location within the hunt area.\n")
@@ -153,12 +133,11 @@ function instantiateGoogleMap() {
 		else {
 			updateLatLngDMS(event.latLng);
 		}
-//		updateLatLngFollow(myFollowMarker, dropPrecision(event.latLng, bounds));
 	});
 	
 	// TODO could do bounds checking here?
 	google.maps.event.addListener(myMarker, 'dragend', function(event) {
-		var location = enforceBounds(bounds, event.latLng);
+		var location = enforceBounds(huntboundary, event.latLng);
 		placeMarker(myMarker, location);
 // 		updateLatLng(location);
 // 		updateLatLngDMS(location);
