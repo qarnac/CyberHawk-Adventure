@@ -9,8 +9,6 @@
 
  // Nice global variable up here...
  // Wanted to move the string to an easy to find spot in case it ever needs to be changed in the future.
- var NEW_ACTIVITY_MAP_INSTRUCTIONS="Please enter the latitude and longitude for the place in your photo. Click <strong>'Take me there!'</strong> to find this place on the map.  If the map takes you to the right place, click <strong>'Submit!'</strong>"
-
  
 // geocompress is the main point of entry into this file.
 // As of Aug 8, 2012, only called from dragdrop.js
@@ -232,6 +230,7 @@ function placeMarker(marker, location) {
 
 
 // Currently unused, but will be rolled out soon.
+// Bill Sanders 8/2012.
 // We use this to reduce precision of LatLng's in order to 'clump' near locations together.
 // The gist is: Take each coord.
 //	Multiply by 1000 and use Math.floor() to drop the decimals.

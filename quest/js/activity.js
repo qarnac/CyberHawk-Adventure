@@ -11,7 +11,6 @@ var activities = new Array();
 var feed = {};
 // Has the status of each activity like its id,comment and status.
 
-var EMPTY_QUESTION_RESPONSE = "This question has not been responded to.";
 
 
 //Instantiates the array activities with student activitivities
@@ -141,28 +140,28 @@ function generateActivityView(activity, isStudent) {
 	var aboutPhotoText = document.createElement('div');
 	aboutPhotoText.innerHTML = activity['aboutmedia'];
 	if (activity['aboutmedia'] == "") {
-		aboutPhotoText.innerHTML = EMPTY_QUESTION_RESPONSE;
+		aboutPhotoText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
 		aboutPhotoText.className = "unansweredQuestion";
 	}
 
 	var whyThisPhotoText = document.createElement('div');
 	whyThisPhotoText.innerHTML = activity['whythis'];
 	if (activity['whythis'] == "") {
-		whyThisPhotoText.innerHTML = EMPTY_QUESTION_RESPONSE;
+		whyThisPhotoText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
 		whyThisPhotoText.className = "unansweredQuestion";
 	}
 
 	var howHelpfulText = document.createElement('div');
 	howHelpfulText.innerHTML = activity['howhelpfull'];
 	if (activity['howhelpfull'] == "") {
-		howHelpfulText.innerHTML = EMPTY_QUESTION_RESPONSE;
+		howHelpfulText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
 		howHelpfulText.className = "unansweredQuestion";
 	}
 
 	var furtherQuestionText = document.createElement('div');
 	furtherQuestionText.innerHTML = activity['yourdoubt'];
 	if (activity['yourdoubt'] == "") {
-		furtherQuestionText.innerHTML = EMPTY_QUESTION_RESPONSE;
+		furtherQuestionText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
 		furtherQuestionText.className = "unansweredQuestion";
 	}
 	
@@ -208,7 +207,7 @@ function generateMultipleChoiceList(question, answerList) {
 		questionText.innerHTML = question;
 	}
 	else {
-		questionText.innerHTML = EMPTY_QUESTION_RESPONSE;
+		questionText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
 		questionText.className = "unansweredQuestion";
 	}
 	

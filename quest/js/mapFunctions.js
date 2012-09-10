@@ -66,7 +66,7 @@ function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 	welcomeMsgDiv.id = "welcomeTxt";
 	welcomeMsgDiv.name = "welcomeTxt";
 	welcomeMsgDiv.style.textAlign = 'left';
-	welcomeMsgDiv.innerHTML = NEW_ACTIVITY_MAP_INSTRUCTIONS;
+	welcomeMsgDiv.innerHTML = GLOBALS.NEW_ACTIVITY_MAP_INSTRUCTIONS;
 
 	var ctrlLatInput = document.createElement('input');
 	ctrlLatInput.id = "latitudeIn";

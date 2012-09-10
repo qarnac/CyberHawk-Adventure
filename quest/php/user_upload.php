@@ -3,9 +3,8 @@
  * gets data from javascript and updates datbase and images
  */
 include '../php/credentials.php';
+include '../php/getConstants';
 session_start();
-
-$PHP_MEDIA_PATH = "../uploads/";
 
 //scripts starts its execution from here by verifying the post request it received and also the session of the user
 if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
@@ -19,7 +18,7 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 	$img_filename = $m . ".jpeg";
 
 	// writes the image data to a file on disk
-	writeImage($content->media->file->dataurl, $PHP_MEDIA_PATH . $img_filename);
+	writeImage($content->media->file->dataurl, $GLOBALS->PHP_MEDIA_PATH . $img_filename);
 	query("UPDATE image SET images='" . $img_filename . "' WHERE id=$m");
 
 	query("INSERT INTO stud_activity (student_id,hunt_id,media,media_id,created,status,lat,lng,aboutmedia,whythis,howhelpfull,yourdoubt,mquestion,choices) VALUES ($studentid,".esc($content->huntid).",'image.php',".$m.",'".date('Y-m-d H:i:s')."','new','".esc($content->media->loc->lat)."','".esc($content->media->loc->lng)."','".esc($content->aboutmedia)."','".esc($content->whythis)."','".esc($content->howhelpful)."','".esc($content->yourdoubt)."','".esc($content->mquestion)."','".choic($content)."')");

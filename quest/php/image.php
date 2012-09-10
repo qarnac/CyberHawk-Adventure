@@ -1,7 +1,6 @@
 <?
 include "credentials.php";	 //dbase credentials + dbase connection
-
-$PHP_MEDIA_PATH = "../uploads/";
+include 'getConstants.php';
 
 $id=$_REQUEST['id'];//pulls question id from the url 
 
@@ -13,6 +12,6 @@ $result=mysql_fetch_array($ques);
 header('Content-Type: image/jpeg');
 
 if (mysql_num_rows($ques) == 1) {
-	readfile($PHP_MEDIA_PATH . $result['images']);
+	readfile($GLOBALS->PHP_MEDIA_PATH . $result['images']);
 }
 ?>

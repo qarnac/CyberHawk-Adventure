@@ -1,5 +1,6 @@
 <?php
 	include '../php/credentials.php';
+	include '../php/getConstants.php';
 	$content=$_POST['contents'];
 	$content=json_decode($content);
 	mysql_query("UPDATE stud_activity" .
@@ -12,14 +13,13 @@
 				" WHERE  `id` = " . mysql_escape_string($content->id) . ";") or die(mysql_error());
 				
 	if(isset($content->media)){
-	$PHP_MEDIA_PATH = "../uploads/";
 	//decides media id
 	mysql_query("INSERT INTO image (images) VALUES ('temp')");
 	$m= mysql_insert_id();
 	$img_filename = $m . ".jpeg";
 
 	// writes the image data to a file on disk
-	writeImage($content->media->file->dataurl, $PHP_MEDIA_PATH . $img_filename);
+	writeImage($content->media->file->dataurl, $GLOBALS->PHP_MEDIA_PATH . $img_filename);
 	mysql_query("UPDATE image SET images='" . $img_filename . "' WHERE id=$m");
 	mysql_query("UPDATE stud_activity SET media_id=" . $m .
 				" ,lat='" . mysql_escape_string($content->media->loc->lat) .
