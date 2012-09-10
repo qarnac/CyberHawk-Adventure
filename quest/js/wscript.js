@@ -37,7 +37,7 @@ function huntselection(x)
 //		var southWestPoint = new google.maps.LatLng(hunt['minlat'], hunt['minlng']);
 //		var northEastPoint = new google.maps.LatLng(hunt['maxlat'], hunt['maxlng']);
 //		huntboundary = new google.maps.LatLngBounds(southWestPoint, northEastPoint);
-		huntboundary=new georect(new google.maps.LatLng(hunt['minlat'],hunt['minlng']),new google.maps.LatLng(hunt['maxlat'],hunt['maxlng']));
+		huntboundary=new google.maps.LatLngBounds(new google.maps.LatLng(hunt['minlat'],hunt['minlng']),new google.maps.LatLng(hunt['maxlat'],hunt['maxlng']));
 		$('activity').innerHTML=multiple;
 		starter();
 	}
