@@ -161,27 +161,21 @@ function generateActivityView(activity, isStudent) {
 		furtherQuestionText.className = "unansweredQuestion";
 	}
 	
-	/*
-	THIS SECTION IS COMMENTED OUT DUE TO FORMATTING ISSUES.
-	THIS SECTION ADDS THE TEACHER COMMENTS AND THE ACTIVITY STATUS VIEW.
-	NEEDS TO BE FIXED ASAP.
-	ALL COMMENTS AFTER THIS SECTION IN THIS FUNCTION ARE RELATED TO THIS.
-	
+
 	var commentLabel = document.createElement('div');
-	aboutLabel.innerHTML = "Teacher comments:";
-	aboutLabel.className = "questionLabel";
+	commentLabel.innerHTML = "Teacher comments:";
+	commentLabel.className = "questionLabel";
 	
 	var teacherCommentText=document.createElement("div");
 	teacherCommentText.innerHTML=activity["comments"];
 	
 	var activityStatusLabel = document.createElement('div');
-	aboutLabel.innerHTML = "Activity Status:";
-	aboutLabel.className = "questionLabel";
+	activityStatusLabel.innerHTML = "Activity Status:";
+	activityStatusLabel.className = "questionLabel";
 	
 	var activityStatus=document.createElement("div");
 	activityStatus.innerHTML=activity["status"];
 
-	*/
 	var aboutPhotoCell = document.createElement('td');
 	aboutPhotoCell.className = "aboutPhotoCell";
 	aboutPhotoCell.appendChild(aboutLabel);
@@ -200,16 +194,15 @@ function generateActivityView(activity, isStudent) {
 
 	activityTableRow2.appendChild(multipleChoiceCell);
 	
-	/*
+
 	activityTableRow3.appendChild(commentLabel);
 	activityTableRow3.appendChild(teacherCommentText);
 	activityTableRow3.appendChild(activityStatusLabel);
 	activityTableRow3.appendChild(activityStatus);
-	*/
 	
 	activityTable.appendChild(activityTableRow1);
 	activityTable.appendChild(activityTableRow2);
-//	activityTable.appendChild(activityTableRow3);
+	activityTable.appendChild(activityTableRow3);
 	
 	var tableItem = document.createElement('li');
 	tableItem.className = "activityItem";
