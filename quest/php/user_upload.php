@@ -21,7 +21,7 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 	writeImage($content->media->file->dataurl, $GLOBALS->PHP_MEDIA_PATH . $img_filename);
 	query("UPDATE image SET images='" . $img_filename . "' WHERE id=$m");
 
-	query("INSERT INTO stud_activity (student_id,hunt_id,media,media_id,created,status,lat,lng,aboutmedia,whythis,howhelpfull,yourdoubt,mquestion,choices) VALUES ($studentid,".esc($content->huntid).",'image.php',".$m.",'".date('Y-m-d H:i:s')."','new','".esc($content->media->loc->lat)."','".esc($content->media->loc->lng)."','".esc($content->aboutmedia)."','".esc($content->whythis)."','".esc($content->howhelpful)."','".esc($content->yourdoubt)."','".esc($content->mquestion)."','".choic($content)."')");
+	query("INSERT INTO stud_activity (student_id,hunt_id,media,media_id,created,status,lat,lng,aboutmedia,whythis,howhelpfull,yourdoubt,mquestion,choices) VALUES ($studentid,".esc($content->huntid).",'image.php',".$m.",'".date('Y-m-d H:i:s')."','unverified','".esc($content->media->loc->lat)."','".esc($content->media->loc->lng)."','".esc($content->aboutmedia)."','".esc($content->whythis)."','".esc($content->howhelpful)."','".esc($content->yourdoubt)."','".esc($content->mquestion)."','".choic($content)."')");
 
 	echo "true";
 }
