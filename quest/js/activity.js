@@ -100,8 +100,7 @@ function generateActivityView(activity, isStudent) {
 	editButton.setAttribute("type", "button");
 	editButton.setAttribute("value", "Edit Activity");
 	// Use this ugly syntax because it's the only way I know of passing the parameter to an onclick function.
-	if(isStudent) editButton.onclick = function() {editActivityAsStudent(activity);};
-	else editButton.onclick=function(){addTeacherComments();};
+
 	
 	$('activity').appendChild(editButton);
 	
@@ -208,6 +207,8 @@ function generateActivityView(activity, isStudent) {
 	tableItem.className = "activityItem";
 	tableItem.appendChild(activityTable);
 	
+	if(isStudent) editButton.onclick = function() {editActivityAsStudent(activity);};
+	else editButton.onclick=function(){addTeacherComments(activityTable, editButton, activity['id']);};
 	
 	return tableItem;
 }
@@ -256,9 +257,36 @@ function generateMultipleChoiceList(question, answerList) {
 var huntboundary;
 // This is the function that is going to be called when a teacher clicks on the edit button for an activity.
 // Changes the view of that specific activity to the teacher edit view.
-function addTeacherComments(){
-
+function addTeacherComments(activityTable, editButton, activity_id){
+	var textView=document.createElement("textarea");
+	textView.innerHTML=activityTable.childNodes[2].childNodes[1].innerHTML;
+	activityTable.childNodes[2].childNodes[1].innerHTML="";
+	activityTable.childNodes[2].childNodes[1].appendChild(textView);
+	var select=document.createElement("select");
+	// TODO: Move this to the constants.json file.
+	var options=["Verified", "Unverified", "Incomplete", "New"];
+	for(var i=0; i<options.length; i++){
+		select.options[i]=new Option(options[i], options[i]);
+	}
+	select.value=activityTable.childNodes[2].childNodes[3].innerHTML;
+	activityTable.childNodes[2].childNodes[3].innerHTML="";
+	activityTable.childNodes[2].childNodes[3].appendChild(select);
+	editButton.onclick=function(){submitTeacherComments(activityTable, activity_id);};
+	editButton.value="Submit Comments";
 }
+
+function submitTeacherComments(activityTable, activity_id){
+	var content="comments=" + activityTable.childNodes[2].childNodes[1].childNodes[0].value;
+	content+="&status=" + activityTable.childNodes[2].childNodes[3].childNodes[0].value;
+	content+="&id=" + activity_id;
+	ajax(content, PHP_FOLDER_LOCATION + "teacher_upload.php", successfulCommentUpdate);
+}
+
+
+function successfulCommentUpdate(serverResponse){
+	window.location.reload();
+}
+
 function editActivityAsStudent(activity) {
 	// multiple gets initialized in wscript_init.  It's supposed to be multiple.htm.
 	$('activity').innerHTML = multiple;
