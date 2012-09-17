@@ -276,15 +276,34 @@ function addTeacherComments(activityTable, editButton, activity_id){
 }
 
 function submitTeacherComments(activityTable, activity_id){
-	var content="comments=" + activityTable.childNodes[2].childNodes[1].childNodes[0].value;
-	content+="&status=" + activityTable.childNodes[2].childNodes[3].childNodes[0].value;
+	var comment=activityTable.childNodes[2].childNodes[1].childNodes[0].value;
+	var status=activityTable.childNodes[2].childNodes[3].childNodes[0].value;
+	var content="comments=" + comment;
+	content+="&status=" + status;
 	content+="&id=" + activity_id;
-	ajax(content, PHP_FOLDER_LOCATION + "teacher_upload.php", successfulCommentUpdate);
+	ajax(content, PHP_FOLDER_LOCATION + "teacher_upload.php", function(){successfulCommentUpdate(activity_id, comment, status)});
 }
 
 
-function successfulCommentUpdate(serverResponse){
-	window.location.reload();
+function successfulCommentUpdate(activity_id, comment, status){
+	sid=document.getElementById("slist").value;
+	var activitiesNumber;
+	for(var i=0; i<activities.length; i++){
+		if(activities[i].sid==sid){
+		activitiesNumber=i;
+		break;
+		}
+	}
+	document.getElementById("activity").innerHTML="";
+	for ( var i = 0; i < activities[activitiesNumber].contents.length; i++) {
+		if(activities[activitiesNumber].contents[i].id==activity_id){
+			activities[activitiesNumber].contents[i].comments=comment;
+			activities[activitiesNumber].contents[i].status=status;
+		}
+		$('activity').appendChild(generateActivityView(activities[activitiesNumber].contents[i], false));
+	}
+	activityTable.childNodes[2].childNodes[1].innerHTML=comment;
+	activityTable.childNodes[2].childNodes[3].innerHTML=status;
 }
 
 function editActivityAsStudent(activity) {
