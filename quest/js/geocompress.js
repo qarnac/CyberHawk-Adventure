@@ -128,10 +128,10 @@ function instantiateGoogleMap() {
 
 	google.maps.event.addListener(myMarker, 'drag', function(event) {
 		if (document.getElementById('decimalDMSSelect').selectedIndex == 0) {
-			updateLatLng(event.latLng);
+			updateLatLngBox(event.latLng);
 		}
 		else {
-			updateLatLngDMS(event.latLng);
+			updateLatLngDMS(event.latLng, false);
 		}
 	});
 	

@@ -355,7 +355,7 @@ function createHeightWidthInputs(){
 }
 
 // Updates the GoToControlBox from decimal to DMS.
-function updateLatLngDMS(location) {
+function updateLatLngDMS(location, isRectangle) {
 	latDMS = toDMS("lat", location.lat());
 	longDMS = toDMS("long", location.lng());
 	
@@ -369,9 +369,10 @@ function updateLatLngDMS(location) {
 	
 	document.getElementById('longDegrees').value = longDMS.degrees;
 	document.getElementById('longMinutes').value = longDMS.minutes;
-	
-	document.getElementById("DMSWidth").value=document.getElementById("widthIn").value;
-	document.getElementById("DMSHeight").value=document.getElementById("heightIn").value;
+	if(isRectangle){
+		document.getElementById("DMSWidth").value=document.getElementById("widthIn").value;
+		document.getElementById("DMSHeight").value=document.getElementById("heightIn").value;
+	}
 }
 
 // Updates the GoToControlBox when going to Decimals.
