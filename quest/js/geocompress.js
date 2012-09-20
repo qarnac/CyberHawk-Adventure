@@ -172,13 +172,13 @@ function GoToControlOnSubmit(event) {
 		var longitude;
 		
 		if (document.getElementById("decimalDMSSelect").selectedIndex == "1") {
-			if (ctrlLatNS.selectedIndex == 0) { latDirection = "N"; }
+			if (document.getElementById("latNSSelect").selectedIndex == 0) { latDirection = "N"; }
 			else { latDirection = "S"; }
-			if (ctrlLongNS.selectedIndex == 0) { longDirection = "W"; }
+			if (document.getElementById("longNSSelect").selectedIndex == 0) { longDirection = "W"; }
 			else { longDirection = "E"; }
 			
-			latitude = toDecimal(latDirection, ctrlLatDegrees.value, ctrlLatMinutes.value);
-			longitude = toDecimal(longDirection, ctrlLongDegrees.value, ctrlLongMinutes.value);
+			latitude = toDecimal(latDirection, document.getElementById("latDegrees").value, document.getElementById("latMinutes").value);
+			longitude = toDecimal(longDirection, document.getElementById("longDegrees").value, document.getElementById("longMinutes").value);
 		}
 		else {
 			latitude = document.getElementById("latitudeIn").value;

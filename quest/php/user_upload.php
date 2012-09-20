@@ -35,8 +35,6 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 		"',mquestion='" . esc($content->mquestion) . 
 		"',choices='" . choic($content) .
 		"';");
-	//VALUES ($studentid,". esc($content->huntid).",'image.php',".$m.",'".date('Y-m-d H:i:s'). esc($content->status) . esc($content->media->loc->lat)."','".esc($content->media->loc->lng)."','".esc($content->aboutmedia)."','".esc($content->whythis)."','".esc($content->howhelpful)."','".esc($content->yourdoubt)."','".esc($content->mquestion)."','".choic($content)."')");
-
 	echo "true";
 }
 //converts the choices into json format
