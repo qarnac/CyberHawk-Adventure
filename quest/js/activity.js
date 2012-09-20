@@ -371,6 +371,12 @@ function submitEdit(id) {
 		if (morc && morc.verify()) {
 			contents['media'] = morc;
 		}
+		// Checks to make sure that all of the required attribute are filled in.
+		if(contents.aboutmedia && contents.a && contents.b && contents.howhelpful && contents.mquestion && contents.whythis && contents.yourdoubt){
+			contents.status="Unverified";
+		} else{
+			contents.status="Incomplete";
+		}
 		contents=JSON.stringify(contents);
 	ajax("contents="+contents, PHP_FOLDER_LOCATION + "updateActivity.php", successfulUpload);
 }

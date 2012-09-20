@@ -3,9 +3,8 @@
  * gets data from javascript and updates datbase and images
  */
 include '../php/credentials.php';
-include '../php/getConstants';
+include 'getConstants.php';
 session_start();
-
 //scripts starts its execution from here by verifying the post request it received and also the session of the user
 if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 {
@@ -20,8 +19,23 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 	// writes the image data to a file on disk
 	writeImage($content->media->file->dataurl, $GLOBALS->PHP_MEDIA_PATH . $img_filename);
 	query("UPDATE image SET images='" . $img_filename . "' WHERE id=$m");
-
-	query("INSERT INTO stud_activity (student_id,hunt_id,media,media_id,created,status,lat,lng,aboutmedia,whythis,howhelpfull,yourdoubt,mquestion,choices) VALUES ($studentid,".esc($content->huntid).",'image.php',".$m.",'".date('Y-m-d H:i:s')."','unverified','".esc($content->media->loc->lat)."','".esc($content->media->loc->lng)."','".esc($content->aboutmedia)."','".esc($content->whythis)."','".esc($content->howhelpful)."','".esc($content->yourdoubt)."','".esc($content->mquestion)."','".choic($content)."')");
+	query("INSERT INTO stud_activity SET ".
+		"student_id='" . $studentid . 
+		"', hunt_id='" . esc($content->huntid) .
+		"', media='image.php" .
+		"', media_id='" . $m .
+		"', created='" . date('Y-m-d H:i:s') .
+		"', status='" . esc($content->status) .
+		"', lat='" . esc($content->media->loc->lat) .
+		"', lng='" . esc($content->media->loc->lng) .
+		"', aboutmedia='" . esc($content->aboutmedia) .
+		"',whythis='" . esc($content->whythis) .
+		"',howhelpfull='" . esc($content->howhelpful) .
+		"',yourdoubt='" . esc($content->yourdoubt) .
+		"',mquestion='" . esc($content->mquestion) . 
+		"',choices='" . choic($content) .
+		"';");
+	//VALUES ($studentid,". esc($content->huntid).",'image.php',".$m.",'".date('Y-m-d H:i:s'). esc($content->status) . esc($content->media->loc->lat)."','".esc($content->media->loc->lng)."','".esc($content->aboutmedia)."','".esc($content->whythis)."','".esc($content->howhelpful)."','".esc($content->yourdoubt)."','".esc($content->mquestion)."','".choic($content)."')");
 
 	echo "true";
 }
@@ -71,5 +85,4 @@ function btos($x)
 	else
 	return "false";
 	}
-
 ?>

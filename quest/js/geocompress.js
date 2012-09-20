@@ -171,7 +171,7 @@ function GoToControlOnSubmit(event) {
 		var latitude;
 		var longitude;
 		
-		if (ctrlDecimalOrDMSSelect.selectedIndex == "1") {
+		if (document.getElementById("decimalDMSSelect").selectedIndex == "1") {
 			if (ctrlLatNS.selectedIndex == 0) { latDirection = "N"; }
 			else { latDirection = "S"; }
 			if (ctrlLongNS.selectedIndex == 0) { longDirection = "W"; }
@@ -181,8 +181,8 @@ function GoToControlOnSubmit(event) {
 			longitude = toDecimal(longDirection, ctrlLongDegrees.value, ctrlLongMinutes.value);
 		}
 		else {
-			latitude = ctrlLatInput.value;
-			longitude = ctrlLongInput.value;
+			latitude = document.getElementById("latitudeIn").value;
+			longitude = document.getElementById("longitudeIn").value;
 		}
 		var location = new google.maps.LatLng(latitude, longitude);
 		submitLatLng(location);

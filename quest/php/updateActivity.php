@@ -10,6 +10,7 @@
 				" , yourdoubt=" . '"'.mysql_escape_string($content->yourdoubt) .'"'.
 				" , mquestion=" . '"'.mysql_escape_string($content->mquestion) .'"' .
 				" , choices=" . '"' . mysql_escape_string(choic($content)) .'"' .
+				" , status=" . '"' . mysql_escape_string($content->status) . '"' .
 				" WHERE  `id` = " . mysql_escape_string($content->id) . ";") or die(mysql_error());
 				
 	if(isset($content->media)){

@@ -57,18 +57,23 @@ function check(form)
 	}
 	var y=new Array("textarea","text","number");
 	for(var i = 0; i < form.length; i++) {
-		if (y.indexof(form[i].type)!=-1)
+		if (y.indexOf(form[i].type)!=-1)
 			contents[form[i].name] = form[i].value;
 	}
 	if (morc && morc.verify()) {
 		contents['media'] = morc;
 		contents['huntid'] = document.getElementById("selecthunt").value;
+		// Checks to make sure that all of the required attribute are filled in.
+		if(contents.aboutmedia && contents.a && contents.b && contents.howhelpful && contents.mquestion && contents.whythis && contents.yourdoubt){
+			contents.status="Unverified";
+		} else{
+			contents.status="Incomplete";
+		}
 		contents = JSON.stringify(contents);
 		contents = "content="+contents;
-
 		ajax(contents, PHP_FOLDER_LOCATION + "user_upload.php", function(x) {
 			if (x == "true")
-				window.location.reload();
+				console.log("success");
 			else
 				alert("An error has occured while attempting to upload your file.");
 		});
