@@ -31,7 +31,7 @@ function ajax(data, url, callback) {
 	}
 }
 
-ajax("GET", "http://ouyangdev.cs.csusm.edu/cyberhawk/quest/constants.json", createGlobalConstant);
+ajax("GET", "http://ouyangdev.cs.csusm.edu/cyberhawk/waterboxx/constants.json", createGlobalConstant);
 var GLOBALS;
 
 function createGlobalConstant(serverResponse){
