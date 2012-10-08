@@ -4,6 +4,6 @@
 "DEFAULT_LAT":33.128760,
 "DEFAULT_LNG":-117.159450,
 "DEFAULT_RECT_SIZE":0.25,
-"PHP_FOLDER_LOCATION":"http://ouyangdev.cs.csusm.edu/cyberhawk/quest/php/",
+"PHP_FOLDER_LOCATION":"http://ouyangdev.cs.csusm.edu/cyberhawk/waterboxx/php/",
 "PHP_MEDIA_PATH":"../uploads/"
 }
