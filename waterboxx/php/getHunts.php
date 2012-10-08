@@ -34,7 +34,7 @@ function getHuntsStudent()
 	else {
 		echo "sessionfail result <= 0";
 	}
-	$temp[0]= $_SESSION['firstname'];
+	$temp[0]= "student";
 	$temp[1]=$availableHunts;
 	$temp[2]=$createActivityForm;
 	echo json_encode($temp);

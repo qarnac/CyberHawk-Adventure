@@ -15,7 +15,7 @@ if(mysql_num_rows($result)>0)
 			array_push($activityList,$x);
 		}
 	} 
-$temp[0]= $_SESSION['firstname'];
+$temp[0]= "student";
 $temp[1]=$activityList;
 echo json_encode($activityList);
 ?>

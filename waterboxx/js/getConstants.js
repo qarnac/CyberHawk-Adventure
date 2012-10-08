@@ -36,4 +36,5 @@ var GLOBALS;
 
 function createGlobalConstant(serverResponse){
 	GLOBALS=JSON.parse(serverResponse);
+	PHP_FOLDER_LOCATION=GLOBALS.PHP_FOLDER_LOCATION;
 }
