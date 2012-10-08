@@ -1,0 +1,17 @@
+<script src="js/login.js"></script>
+<script src="js/main.js"></script>
+<form id="login" onsubmit="return verify();">
+    <h1>Log In</h1>
+    <fieldset id="inputs">
+        <input id="username" type="text" placeholder="Username" autofocus required>
+        <input id="password" type="password" placeholder="Password" required>
+        <select id="who">
+         <option value="students">Student</option>
+  <option value="teacher">Teacher</option>
+</select>
+    </fieldset>
+    <fieldset id="actions">
+        <input type="submit" id="submit" value="Log in">
+        <a href="">Forgot your password?</a>
+    </fieldset>
+</form>

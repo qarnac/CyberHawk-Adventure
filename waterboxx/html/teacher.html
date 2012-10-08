@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!-- Start teacher.html -->
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+
+		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+		Remove this if you use the .htaccess -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+		<title>Welcome</title>
+		<meta name="description" content="" />
+		<meta name="author" content="sabareesh kkanan subramani" />
+
+		<meta name="viewport" content="initial-scale=1.0" />
+
+	</head>
+
+	<body onload="ajax('what=hunts','../quest/php/getHunts.php',createHuntList);">
+		<div id="contents">
+		<div>
+
+		<div id="contentSection" role="main">
+				<div style="float: left;width: 200px;font-weight:bold">Welcome <span id='username'></span> <a href="php/logout.php">Log out</a></div>
+				<div style="float: left;width: 200px;">
+					<select onchange="huntsel(this.value)" id="selecthunt">
+  					<option value="null">Select</option>
+					</select>
+				</div>
+				<input type="button" value="New Hunt" id='newhunt' onclick="createhunt()"/>
+				<div class="clear"></div>
+				<div id="students"></div>
+				<ul id="activity"></ul>
+			</div>
+			</div>
+			</div>
+			<script src="../quest/js/main.js"></script>
+			<script src="../quest/js/activity.js"></script>
+			<script src="../quest/js/hunt.js"></script>
+			<script src="../quest/js/createActivityMap.js"></script>
+			<script src="../quest/js/geocompress.js"></script>
+			<script src="../quest/js/mapFunctions.js"></script>
+				 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyB9JU8fk8vwDcneDmPhbnMtp-hcUL0E_tA&sensor=false"></script>
+			</body>
+			</html>
+<!-- End teacher.html -->
