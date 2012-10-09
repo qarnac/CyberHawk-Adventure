@@ -22,7 +22,7 @@ function $(x) {
 	return document.getElementById(x);
 }
 
-var PHP_FOLDER_LOCATION="http://ouyangdev.cs.csusm.edu/cyberhawk/quest/php/";
+//var PHP_FOLDER_LOCATION="http://ouyangdev.cs.csusm.edu/cyberhawk/quest/php/";
 
 //this function is invoked when a teacher selects a hunt
 function huntsel() {

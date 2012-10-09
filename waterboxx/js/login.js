@@ -3,7 +3,7 @@
  * This script is used by index.php this helps in login the user
  */
  
- var PHP_FOLDER_LOCATION=GLOBALS.PHP_FOLDER_LOCATION;
+ var PHP_FOLDER_LOCATION;
 //passes user info to server to check credentials
 function verify()
 {
