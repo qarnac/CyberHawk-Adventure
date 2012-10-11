@@ -4,7 +4,7 @@ include '../php/credentials.php';
 
 if (isset($_POST['id'])) {
 	$studentactivities = mysql_query("
-		SELECT stud_activity.*, students.firstname, students.lastname
+		SELECT stud_activity.*
 		FROM stud_activity, students
 		WHERE stud_activity.hunt_id='" . mysql_escape_string($_POST['id']) . "'
 		AND students.id=stud_activity.student_id"

@@ -2,7 +2,7 @@
 // php file called from createKML.js
 // Returns all of the activities in a specific hunt.
 include '../php/credentials.php';
-$result=mysql_query("SELECT stud_activity.*, students.firstname, students.lastname 
+$result=mysql_query("SELECT stud_activity.*
 					FROM  `stud_activity`, students 
 					WHERE  `hunt_id` = " . $_POST['huntid'] . "
 					AND stud_activity.student_id=students.id;") or die(mysql_error());

@@ -44,7 +44,7 @@ function feedactivity(x, list_box) {
 			z.contents.push(x[m]);
 			activities.push(z);
 			// couldn't this just be replaced with .add() ?
-			list_box.addoption(x[m]['firstname'] + " " + x[m]['lastname'], x[m]['student_id']);
+			list_box.addoption("View Student Activities", x[m]['student_id']);
 		} else {
 			z = activities.hassid(x[m]['student_id']);
 			activities[z].contents.push(x[m]);
