@@ -99,9 +99,6 @@ function generateActivityView(activity, isStudent) {
 	var editButton = document.createElement("input");
 	editButton.setAttribute("type", "button");
 	editButton.setAttribute("value", "Edit Activity");
-	// Use this ugly syntax because it's the only way I know of passing the parameter to an onclick function.
-
-	
 	$('activity').appendChild(editButton);
 	
 	var activityTable = document.createElement('table');
@@ -119,46 +116,109 @@ function generateActivityView(activity, isStudent) {
 	activityPhotoCell.className = "activityPhotoCell";
 	activityPhotoCell.appendChild(activityPhoto);
 
-	var aboutLabel = document.createElement('div');
-	aboutLabel.innerHTML = "What is this picture about?";
-	aboutLabel.className = "questionLabel";
-	var whyLabel = document.createElement('div');
-	whyLabel.innerHTML = "Why did you choose this picture";
-	whyLabel.className = "questionLabel";
-	var helpfulLabel = document.createElement('div');
-	helpfulLabel.innerHTML = "How does this picture show what you've learned in class?";
-	helpfulLabel.className = "questionLabel";
-	var furtherLabel = document.createElement('div');
-	furtherLabel.innerHTML = "What is a question you have about this picture?";
-	furtherLabel.className = "questionLabel";
+	var partnersLabel = document.createElement('div');
+	partnersLabel.innerHTML = "List all the partners for this Waterboxx";
+	partnersLabel.className = "questionLabel";
+	var date_planted_label = document.createElement('div');
+	date_planted_label.innerHTML = "What date was this planted?";
+	date_planted_label.className = "questionLabel";
+	var date_observed_label = document.createElement('div');
+	date_observed_label.innerHTML = "What date did you observe it?";
+	date_observed_label.className = "questionLabel";
+	var successful_label = document.createElement('div');
+	successful_label.innerHTML = "Was the planting successful?";
+	successful_label.className = "questionLabel";
+	var height_label = document.createElement('div');
+	height_label.innerHTML = "If planting was successful, how tall was the plant?";
+	height_label.className = "questionLabel";
+	var site_description_label = document.createElement('div');
+	site_description_label.innerHTML = "Planting site description:";
+	site_description_label.className = "questionLabel";
+	var is_seed_label = document.createElement('div');
+	is_seed_label.innerHTML = "Did you plant a sprout or a seed?";
+	is_seed_label.className = "questionLabel";
+	var success_reason_label = document.createElement('div');
+	success_reason_label.innerHTML = "Why do you think you were (un)successful?";
+	success_reason_label.className = "questionLabel";
+	var waterboxx_condition_label = document.createElement('div');
+	waterboxx_condition_label.innerHTML = "Current Waterboxx condition-amount of water: ";
+	waterboxx_condition_label.className = "questionLabel";
+	var other_label = document.createElement('div');
+	other_label.innerHTML = "Other Observations:";
+	other_label.className = "questionLabel";
+	
 	
 	var aboutPhotoText = document.createElement('div');
-	aboutPhotoText.innerHTML = activity['aboutmedia'];
-	if (activity['aboutmedia'] == "") {
+	aboutPhotoText.innerHTML = activity['partner_names'];
+	if (activity['partner_names'] == "") {
 		aboutPhotoText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
 		aboutPhotoText.className = "unansweredQuestion";
 	}
 
 	var whyThisPhotoText = document.createElement('div');
-	whyThisPhotoText.innerHTML = activity['whythis'];
-	if (activity['whythis'] == "") {
+	whyThisPhotoText.innerHTML = activity['date_planted'];
+	if (activity['date_planted'] == "0000-00-00") {
 		whyThisPhotoText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
 		whyThisPhotoText.className = "unansweredQuestion";
 	}
 
 	var howHelpfulText = document.createElement('div');
-	howHelpfulText.innerHTML = activity['howhelpfull'];
-	if (activity['howhelpfull'] == "") {
+	howHelpfulText.innerHTML = activity['date_observed'];
+	if (activity['date_observed'] == "0000-00-00") {
 		howHelpfulText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
 		howHelpfulText.className = "unansweredQuestion";
 	}
 
 	var furtherQuestionText = document.createElement('div');
-	furtherQuestionText.innerHTML = activity['yourdoubt'];
-	if (activity['yourdoubt'] == "") {
+	furtherQuestionText.innerHTML = activity['successful'];
+	if (activity['successful'] == "") {
 		furtherQuestionText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
 		furtherQuestionText.className = "unansweredQuestion";
 	}
+	
+	var heightText = document.createElement('div');
+	heightText.innerHTML = activity['height'];
+	if (activity['height'] == 0) {
+		heightText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
+		heightText.className = "unansweredQuestion";
+	}
+	
+	var site_descriptionText = document.createElement('div');
+	site_descriptionText.innerHTML = activity['site_description'];
+	if (activity['site_description'] == "") {
+		site_descriptionText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
+		site_descriptionText.className = "unansweredQuestion";
+	}
+	
+	var is_seedText = document.createElement('div');
+	is_seedText.innerHTML = activity['is_seed'];
+	if (activity['is_seed'] == "") {
+		is_seedText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
+		is_seedText.className = "unansweredQuestion";
+	}
+	
+	var success_reasonsText = document.createElement('div');
+	success_reasonsText.innerHTML = activity['success_reasons'];
+	if (activity['success_reasons'] == "") {
+		success_reasonsText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
+		success_reasonsText.className = "unansweredQuestion";
+	}
+	var waterboxx_conditionText = document.createElement('div');
+	waterboxx_conditionText.innerHTML = activity['waterboxx_condition'];
+	if (activity['waterboxx_condition'] == "") {
+		waterboxx_conditionText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
+		waterboxx_conditionText.className = "unansweredQuestion";
+	}
+	
+	var other_dataText = document.createElement('div');
+	other_dataText.innerHTML = activity['other_data'];
+	if (activity['other_data'] == "") {
+		other_dataText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
+		other_dataText.className = "unansweredQuestion";
+	}
+	
+	
+	
 	
 
 	var commentLabel = document.createElement('div');
@@ -177,21 +237,34 @@ function generateActivityView(activity, isStudent) {
 
 	var aboutPhotoCell = document.createElement('td');
 	aboutPhotoCell.className = "aboutPhotoCell";
-	aboutPhotoCell.appendChild(aboutLabel);
+	aboutPhotoCell.appendChild(partnersLabel);
 	aboutPhotoCell.appendChild(aboutPhotoText);
-	aboutPhotoCell.appendChild(whyLabel);
+	aboutPhotoCell.appendChild(date_planted_label);
 	aboutPhotoCell.appendChild(whyThisPhotoText);
-	aboutPhotoCell.appendChild(helpfulLabel);
+	aboutPhotoCell.appendChild(date_observed_label);
 	aboutPhotoCell.appendChild(howHelpfulText);
-	aboutPhotoCell.appendChild(furtherLabel);
+	aboutPhotoCell.appendChild(successful_label);
 	aboutPhotoCell.appendChild(furtherQuestionText);
-
+	aboutPhotoCell.appendChild(height_label);
+	aboutPhotoCell.appendChild(heightText);
+	aboutPhotoCell.appendChild(site_description_label);
+	aboutPhotoCell.appendChild(site_descriptionText);
+	aboutPhotoCell.appendChild(is_seed_label);
+	aboutPhotoCell.appendChild(is_seedText);
+	aboutPhotoCell.appendChild(success_reason_label);
+	aboutPhotoCell.appendChild(success_reasonsText);
+	aboutPhotoCell.appendChild(waterboxx_condition_label);
+	aboutPhotoCell.appendChild(waterboxx_conditionText);
+	aboutPhotoCell.appendChild(other_label);
+	aboutPhotoCell.appendChild(other_dataText);
+	
+	
 	activityTableRow1.appendChild(activityPhotoCell);
 	activityTableRow1.appendChild(aboutPhotoCell);
 		
-	var multipleChoiceCell = generateMultipleChoiceList(activity['mquestion'], JSON.parse(activity['choices']));
+//	var multipleChoiceCell = generateMultipleChoiceList(activity['mquestion'], JSON.parse(activity['choices']));
 
-	activityTableRow2.appendChild(multipleChoiceCell);
+//	activityTableRow2.appendChild(multipleChoiceCell);
 	
 
 	activityTableRow3.appendChild(commentLabel);
