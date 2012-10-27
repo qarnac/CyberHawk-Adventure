@@ -175,6 +175,14 @@ function generateActivityView(activity, isStudent) {
 		furtherQuestionText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
 		furtherQuestionText.className = "unansweredQuestion";
 	}
+	else if (activity['successful'] == 0)
+	{
+		furtherQuestionText.innerHTML = "No";
+	}
+	else if (activity['successful'] == 1)
+	{
+		furtherQuestionText.innerHTML = "Yes";
+	}
 	
 	var heightText = document.createElement('div');
 	heightText.innerHTML = activity['height'];
@@ -195,6 +203,14 @@ function generateActivityView(activity, isStudent) {
 	if (activity['is_seed'] == "") {
 		is_seedText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
 		is_seedText.className = "unansweredQuestion";
+	}
+	else if (activity['is_seed'] == 0)
+	{
+		is_seedText.innerHTML = "No";
+	}
+	else if (activity['is_seed'] == 1)
+	{
+		is_seedText.innerHTML = "Yes";
 	}
 	
 	var success_reasonsText = document.createElement('div');
@@ -226,7 +242,14 @@ function generateActivityView(activity, isStudent) {
 	commentLabel.className = "questionLabel";
 	
 	var teacherCommentText=document.createElement("div");
-	teacherCommentText.innerHTML=activity["comments"];
+	if (activity['comments'] == "") {
+		teacherCommentText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
+		teacherCommentText.className = "unansweredQuestion";
+	}
+	else
+	{
+		teacherCommentText.innerHTML=activity["comments"];
+	}
 	
 	var activityStatusLabel = document.createElement('div');
 	activityStatusLabel.innerHTML = "Activity Status:";
