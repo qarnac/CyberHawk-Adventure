@@ -22,18 +22,17 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 	query("INSERT INTO stud_activity SET ".
 		"student_id='" . $studentid . 
 		"', hunt_id='" . esc($content->huntid) .
-		"', media='image.php" .
 		"', media_id='" . $m .
-		"', created='" . date('Y-m-d H:i:s') .
+		"', date_created='" . date('Y-m-d H:i:s') .
 		"', status='" . esc($content->status) .
-		"', lat='" . esc($content->media->loc->lat) .
-		"', lng='" . esc($content->media->loc->lng) .
-		"', aboutmedia='" . esc($content->aboutmedia) .
-		"',whythis='" . esc($content->whythis) .
-		"',howhelpfull='" . esc($content->howhelpful) .
-		"',yourdoubt='" . esc($content->yourdoubt) .
-		"',mquestion='" . esc($content->mquestion) . 
-		"',choices='" . choic($content) .
+		"', lat='" . esc($content->lat) .
+		"', lng='" . esc($content->lng) .
+		"', partner_names='" . esc($content->partner_names) .
+		"',height='" . esc($content->height) .
+		"',site_description='" . esc($content->site_description) .
+		"',success_reasons='" . esc($content->success_reasons) .
+		"',waterboxx_condition='" . esc($content->waterboxx_condition) . 
+		"',other_data='" . esc($content->other_data) .
 		"';");
 	echo "true";
 }

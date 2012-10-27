@@ -201,7 +201,7 @@ function updateLatLngFollow(marker, location) {
 
 // Called when the user clicks the "Take me there!" button
 function placeMarker(marker, location) {
-	updateLatLng(location);
+	updateLatLngBox(location,false);
 	updateLatLngDMS(location);
 	marker.setPosition(location);
 	marker.getMap().panTo(location);

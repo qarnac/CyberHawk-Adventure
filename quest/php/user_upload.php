@@ -27,7 +27,7 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 		"', created='" . date('Y-m-d H:i:s') .
 		"', status='" . esc($content->status) .
 		"', lat='" . esc($content->media->loc->lat) .
-		"', lng='" . esc($content->media->loc->lng) .
+		"', lng='" . esc($content->media->loc->lng) . 
 		"', aboutmedia='" . esc($content->aboutmedia) .
 		"',whythis='" . esc($content->whythis) .
 		"',howhelpfull='" . esc($content->howhelpful) .
