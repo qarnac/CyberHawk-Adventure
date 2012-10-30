@@ -15,8 +15,11 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 	query("INSERT INTO image (images) VALUES ('temp')");
 	$m= mysql_insert_id();
 	$img_filename = $m . ".jpeg";
+	
 
 	// writes the image data to a file on disk
+	$successful=($content->successful=="Yes")?true:false;
+	$is_seed=($content->is_seed=="Seed")?true:false;
 	writeImage($content->media->file->dataurl, $GLOBALS->PHP_MEDIA_PATH . $img_filename);
 	query("UPDATE image SET images='" . $img_filename . "' WHERE id=$m");
 	query("INSERT INTO stud_activity SET ".
@@ -33,6 +36,8 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 		"',success_reasons='" . esc($content->success_reasons) .
 		"',waterboxx_condition='" . esc($content->waterboxx_condition) . 
 		"',other_data='" . esc($content->other_data) .
+		"', successful='" . $successful .
+		"', is_seed='" . $is_seed .
 		"';");
 	echo "true";
 }

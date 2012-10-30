@@ -49,16 +49,12 @@ function check(form)
 {
 	var contents={};
 	var x = document.getElementsByName('answer');
-	for (var i = 0; i < x.length; i++) {
-		if (x[i].checked) {
-			contents['answer'] = x[i].value;
-			break;
-		}
-	}
-	var y=new Array("textarea","text","number");
+	var inputTypes=new Array("textarea","text","number", "select-one");
 	for(var i = 0; i < form.length; i++) {
-		if (y.indexOf(form[i].type)!=-1)
+		if (inputTypes.indexOf(form[i].type)!=-1)
+		{
 			contents[form[i].name] = form[i].value;
+		} 
 	}
 	if (morc && morc.verify()) {
 		contents['media'] = morc;
