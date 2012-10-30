@@ -54,7 +54,11 @@ function check(form)
 		if (inputTypes.indexOf(form[i].type)!=-1)
 		{
 			contents[form[i].name] = form[i].value;
-		} 
+		} else if(form[i].type=="date"){
+			// Javascript uses milliseconds where as unix uses whole seconds, so divide by 1000 so we can use MYSQL's build in UNIX_TIME converter.
+			// Every date I was posting was being added to the server as a day before what I set it to, so I add 86400 to seconds to add a day.
+			contents[form[i].name]=(Date.parse(form[i].value)/1000)+86400;
+		}
 	}
 	if (morc && morc.verify()) {
 		contents['media'] = morc;

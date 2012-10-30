@@ -26,7 +26,9 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 		"student_id='" . $studentid . 
 		"', hunt_id='" . esc($content->huntid) .
 		"', media_id='" . $m .
-		"', date_created='" . date('Y-m-d H:i:s') .
+		"', date_planted=FROM_UNIXTIME(" . $content->date_planted .") " .
+		", date_observed=FROM_UNIXTIME(" . $content->date_observed .") " .
+		", date_created='" . date('Y-m-d H:i:s') .
 		"', status='" . esc($content->status) .
 		"', lat='" . esc($content->lat) .
 		"', lng='" . esc($content->lng) .
