@@ -171,18 +171,9 @@ function generateActivityView(activity, isStudent) {
 
 	var furtherQuestionText = document.createElement('div');
 	furtherQuestionText.innerHTML = activity['successful'];
-	if (activity['successful'] == "") {
-		furtherQuestionText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
-		furtherQuestionText.className = "unansweredQuestion";
-	}
-	else if (activity['successful'] == 0)
-	{
-		furtherQuestionText.innerHTML = "No";
-	}
-	else if (activity['successful'] == 1)
-	{
+	if (activity['successful'] == true) {
 		furtherQuestionText.innerHTML = "Yes";
-	}
+	} else { furtherQuestionText.innerHTML= "No"; }
 	
 	var heightText = document.createElement('div');
 	heightText.innerHTML = activity['height'];
@@ -199,18 +190,13 @@ function generateActivityView(activity, isStudent) {
 	}
 	
 	var is_seedText = document.createElement('div');
-	is_seedText.innerHTML = activity['is_seed'];
-	if (activity['is_seed'] == "") {
-		is_seedText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
-		is_seedText.className = "unansweredQuestion";
-	}
-	else if (activity['is_seed'] == 0)
+	if (activity['is_seed'] == 0)
 	{
-		is_seedText.innerHTML = "No";
+		is_seedText.innerHTML = "Sprout";
 	}
 	else if (activity['is_seed'] == 1)
 	{
-		is_seedText.innerHTML = "Yes";
+		is_seedText.innerHTML = "Seed";
 	}
 	
 	var success_reasonsText = document.createElement('div');
