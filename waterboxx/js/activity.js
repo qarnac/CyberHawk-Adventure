@@ -129,7 +129,7 @@ function generateActivityView(activity, isStudent) {
 	successful_label.innerHTML = "Was the planting successful?";
 	successful_label.className = "questionLabel";
 	var height_label = document.createElement('div');
-	height_label.innerHTML = "If planting was successful, how tall was the plant?";
+	height_label.innerHTML = "If planting was successful, how tall was the plant (in cm)?";
 	height_label.className = "questionLabel";
 	var site_description_label = document.createElement('div');
 	site_description_label.innerHTML = "Planting site description:";
