@@ -63,6 +63,8 @@ function check(form)
 	if (morc && morc.verify()) {
 		contents['media'] = morc;
 		contents['huntid'] = document.getElementById("selecthunt").value;
+		contents['lat']= morc.loc.lat();
+		contents['lng']=morc.loc.lng();
 		// Checks to make sure that all of the required attribute are filled in.
 		if(contents.aboutmedia && contents.a && contents.b && contents.howhelpful && contents.mquestion && contents.whythis && contents.yourdoubt){
 			contents.status="Unverified";

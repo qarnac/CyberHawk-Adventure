@@ -26,8 +26,8 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 		"', media_id='" . $m .
 		"', created='" . date('Y-m-d H:i:s') .
 		"', status='" . esc($content->status) .
-		"', lat='" . esc($content->media->loc->lat) .
-		"', lng='" . esc($content->media->loc->lng) . 
+		"', lat='" . esc($content->lat) .
+		"', lng='" . esc($content->lng) . 
 		"', aboutmedia='" . esc($content->aboutmedia) .
 		"',whythis='" . esc($content->whythis) .
 		"',howhelpfull='" . esc($content->howhelpful) .
