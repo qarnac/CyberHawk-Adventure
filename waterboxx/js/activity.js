@@ -391,7 +391,6 @@ function successfulCommentUpdate(activity_id, comment, status){
 function editActivityAsStudent(activity) {
 	// multiple gets initialized in wscript_init.  It's supposed to be multiple.htm.
 	$('activity').innerHTML = multiple;
-	choices = JSON.parse(activity.choices);
 	// Ugly onsubmit, but only way I know of passing a parameter onsubmit.
 	document.getElementsByName("multiple")[0].onsubmit = function() {
 		submitEdit(activity['id']); return false;
@@ -399,20 +398,17 @@ function editActivityAsStudent(activity) {
 	// Adds the image that was already uploaded to the edit page.
 	document.getElementById("activityImage").src = PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
 	
-	// At some point in time, we need to redo the way choices is encoded.  There is no reason the following line should be needed.
-	choices=choices.choices;
-	// Sets up the non-multiple choice questions.
-	document.getElementsByName("aboutmedia")[0].innerHTML = activity.aboutmedia;
-	document.getElementsByName("whythis")[0].innerHTML = activity.whythis;
-	document.getElementsByName("howhelpful")[0].innerHTML = activity.howhelpfull;
-	document.getElementsByName("yourdoubt")[0].innerHTML = activity.yourdoubt;
-	document.getElementsByName("mquestion")[0].innerHTML = activity.mquestion;
-	// Selects the correct Radio Button for the multiple choice questions.
-	for(var i=0; i<choices.length; i++) {
-		if (choices[i].ans == "true") {
-			document.getElementsByName("answer")[i].checked = true;
+	//Loop through all of the nodes in activity, and if a node exists for it, set it.
+	for(var element in activity){
+		if(document.getElementsByName(element)[0]!=null){
+			if(document.getElementsByName(element)[0].type=="select-one"){
+				document.getElementsByName(element)[0].selectedIndex=activity[element];
+			} else{
+				document.getElementsByName(element)[0].value=activity[element];
+			}
 		}
 	}
+	
 	
 	// Sets up huntboundary in order so when a new image is uploaded, they can plot the location on the map.
 	var hunt;
@@ -423,42 +419,38 @@ function editActivityAsStudent(activity) {
 	}
 
 	huntboundary = new google.maps.LatLngBounds(new google.maps.LatLng(hunt['minlat'],hunt['minlng']),new google.maps.LatLng(hunt['maxlat'],hunt['maxlng']));
-	
-	// Fill the multiple choice questions with the correct answers.
-	document.getElementsByName("a")[0].value = choices[0].content;
-	document.getElementsByName("b")[0].value = choices[1].content;
-	document.getElementsByName("c")[0].value = choices[2].content;
-	document.getElementsByName("d")[0].value = choices[3].content;
-	document.getElementsByName("e")[0].value = choices[4].content;
+
 }
 
 function submitEdit(id) {
-	console.log("submit");
 	var form = document.getElementsByName('multiple')[0];
 	var x = document.getElementsByName('answer');
 	var contents = {};
-	for (var i = 0; i < x.length; i++) {
-		if (x[i].checked) {
-			contents['answer'] = x[i].value;
-			break;
+	var inputTypes=new Array("textarea","text","number", "select-one");
+	for(var i = 0; i < form.length; i++) {
+		if (inputTypes.indexOf(form[i].type)!=-1)
+		{
+			contents[form[i].name] = form[i].value;			
+			}else if(form[i].type=="date"){
+				// Javascript uses milliseconds where as unix uses whole seconds, so divide by 1000 so we can use MYSQL's build in UNIX_TIME converter.
+				// Every date I was posting was being added to the server as a day before what I set it to, so I add 86400 to seconds to add a day.
+				contents[form[i].name]=(Date.parse(form[i].value)/1000)+86400;
 			}
 		}
-		var y=new Array("textarea","text","number");
-		for (var i=0; i<form.length; i++) {
-			if (y.indexOf(form[i].type)!=-1) {
-				contents[form[i].name] = form[i].value;
-			}
-		}
-		contents['id']=id;
-		if (morc && morc.verify()) {
+		/*
+	if (morc && morc.verify()) {
 			contents['media'] = morc;
-		}
-		// Checks to make sure that all of the required attribute are filled in.
-		if(contents.aboutmedia && contents.a && contents.b && contents.howhelpful && contents.mquestion && contents.whythis && contents.yourdoubt){
-			contents.status="Unverified";
-		} else{
-			contents.status="Incomplete";
-		}
+			contents['lat']=morc.loc.lat();
+			contents['lng']=morc.loc.lng();
+		} */
+			contents['huntid'] = document.getElementById("selecthunt").value;
+			contents.id=id;
+			// Checks to make sure that all of the required attribute are filled in.
+			if(contents.aboutmedia && contents.a && contents.b && contents.howhelpful && contents.mquestion && contents.whythis && contents.yourdoubt){
+				contents.status="Unverified";
+			} else{
+				contents.status="Incomplete";
+			}
 		contents=JSON.stringify(contents);
 	ajax("contents="+contents, PHP_FOLDER_LOCATION + "updateActivity.php", successfulUpload);
 }

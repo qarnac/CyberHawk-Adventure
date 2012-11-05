@@ -3,15 +3,21 @@
 	include '../php/getConstants.php';
 	$content=$_POST['contents'];
 	$content=json_decode($content);
-	mysql_query("UPDATE stud_activity" .
-				" SET aboutmedia=" .'"'. mysql_escape_string($content->aboutmedia) .'"' .
-				" , whythis=" . '"'.mysql_escape_string($content->whythis) .'"'.
-				" , howhelpfull=" . '"'.mysql_escape_string($content->howhelpful).'"' .
-				" , yourdoubt=" . '"'.mysql_escape_string($content->yourdoubt) .'"'.
-				" , mquestion=" . '"'.mysql_escape_string($content->mquestion) .'"' .
-				" , choices=" . '"' . mysql_escape_string(choic($content)) .'"' .
-				" , status=" . '"' . mysql_escape_string($content->status) . '"' .
-				" WHERE  `id` = " . mysql_escape_string($content->id) . ";") or die(mysql_error());
+	$successful=($content->successful=="Yes")?true:false;
+	$is_seed=($content->is_seed=="Seed")?true:false;
+	mysql_query("UPDATE stud_activity SET " .
+					" `date_planted` =FROM_UNIXTIME(" . $content->date_planted .") " .
+					", `date_observed` =FROM_UNIXTIME(" . $content->date_observed .") " .
+					", `status` ='" . mysql_escape_string($content->status) .
+					"', `partner_names` ='" . mysql_escape_string($content->partner_names) .
+					"', `height` ='" . mysql_escape_string($content->height) .
+					"', `site_description` ='" . mysql_escape_string($content->site_description) .
+					"', `success_reasons` ='" . mysql_escape_string($content->success_reasons) .
+					"', `waterboxx_condition` ='" . mysql_escape_string($content->waterboxx_condition) . 
+					"', `other_data` ='" . mysql_escape_string($content->other_data) .
+					"', `successful` ='" . $successful .
+					"', `is_seed` ='" . $is_seed .
+					"' WHERE  `id` = " . mysql_escape_string($content->id) . ";") or die(mysql_error());
 				
 	if(isset($content->media)){
 	//decides media id
@@ -36,23 +42,7 @@ function writeImage($imageData,$outputfile)
 	fwrite($fp, base64_decode($imageData));
 	fclose($fp);
 }	
-				
-function choic($data)
-{
-	$choic=array("choices"=>array());
-	if($data->a!="")
-	array_push($choic['choices'],array('choice'=>'a','content'=>$data->a,'ans'=> btos($data->answer=='a')));
-	if($data->b!="")
-	array_push($choic['choices'],array('choice'=>'b','content'=>$data->b,'ans'=> btos($data->answer=='b')));
-	if($data->c!="")
-	array_push($choic['choices'],array('choice'=>'c','content'=>$data->c,'ans'=> btos($data->answer=='c')));
-	if($data->d!="")
-	array_push($choic['choices'],array('choice'=>'d','content'=>$data->d,'ans'=> btos($data->answer=='d')));
-	if($data->e!="")
-	array_push($choic['choices'],array('choice'=>'e','content'=>$data->e,'ans'=> btos($data->answer=='e')));
-	$choic=json_encode($choic);
-	return $choic;
-}
+
 
 function btos($x)
 {
