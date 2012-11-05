@@ -66,7 +66,7 @@ function check(form)
 		contents['lng']=morc.loc.lng();
 		contents['huntid'] = document.getElementById("selecthunt").value;
 		// Checks to make sure that all of the required attribute are filled in.
-		if(contents.aboutmedia && contents.a && contents.b && contents.howhelpful && contents.mquestion && contents.whythis && contents.yourdoubt){
+		if(contents.partner_names && contents.date_planted && contents.date_observed && contents.successful && contents.height && contents.site_description && contents.is_seed && contents.success_reasons && contents.waterboxx_condition && contents.other_data){
 			contents.status="Unverified";
 		} else{
 			contents.status="Incomplete";
