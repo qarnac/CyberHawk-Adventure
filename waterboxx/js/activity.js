@@ -24,37 +24,12 @@ function create_activity_obj(allActivities) {
 		activities = [];
 		activityList = JSON.parse(allActivities);
 
-		var studentList = listbox();
-		feedactivity(activityList, studentList);
-		$('students').appendChild(studentList);
-//		$('students').appendChild(updatebutton());
-		//actdisp(allActivities[m]);
+		for ( var i = 0; i < activityList.length; i++) {
+				$('activity').appendChild(generateActivityView(activityList[i], false));
+			}
 	}
 }
 
-// I wonder if it would be better to only fetch student activities
-// once the student has been selected, instead of all students at the same time.
-function feedactivity(x, list_box) {
-	for ( m = 0; m < x.length; m++) {
-		var z;
-		if (activities.hassid(x[m]['student_id']) == 'false') {
-			z = new Object();
-			z.sid = x[m]['student_id'];
-			z.contents = new Array();
-			z.contents.push(x[m]);
-			activities.push(z);
-			// couldn't this just be replaced with .add() ?
-			list_box.addoption("View Student Activities", x[m]['student_id']);
-		} else {
-			z = activities.hassid(x[m]['student_id']);
-			activities[z].contents.push(x[m]);
-		}
-		z = new Object();
-		z.grant = "true";
-		z.comment = '';
-		feed[x[m]['id']] = z;
-	}
-}
 
 function updatebutton() {
 	var temp = document.createElement('input');
@@ -63,31 +38,6 @@ function updatebutton() {
 	//When this button is clicked the feed array is sent to the server
 	temp.onclick = function() {
 		ajax('content=' + JSON.stringify(feed), PHP_FOLDER_LOCATION + 'upload.php', handleupload);
-	};
-	return temp;
-}
-
-// This is the listbox which houses each teacher's students.
-function listbox() {
-	var temp = document.createElement('select');
-	temp.id = 'slist';
-	temp.size = 20;
-	temp.multiple = 'multiple';
-	// couldn't this just be replaced with .add() ?
-	temp.addoption = function(label, value) {
-		this.options[this.options.length] = new Option(label, value);
-	};
-	temp.onchange = function() {
-		$('activity').innerHTML = "";
-		var x = activities.hassid(this.value);
-		if (x == "false") {
-			// Only happens when a user is selected, and then unselected (via shift-click)
-		}
-		else {
-			for ( var i = 0; i < activities[x].contents.length; i++) {
-				$('activity').appendChild(generateActivityView(activities[x].contents[i], false));
-			}
-		}
 	};
 	return temp;
 }
