@@ -391,7 +391,7 @@ function submitEdit(id) {
 		{
 			contents[form[i].name] = form[i].value;
 		}
-		else if(form[i].type=="text") // note that 'date' input fields are actually of type 'text'
+		else if(form[i].type=="text" || form[i].type=="date") // note that 'date' input fields are actually of type 'text'
 		{
 			// Javascript uses milliseconds where as unix uses whole seconds, so divide by 1000 so we can use MYSQL's build in UNIX_TIME converter.
 			// Every date I was posting was being added to the server as a day before what I set it to, so I add 86400 to seconds to add a day.
