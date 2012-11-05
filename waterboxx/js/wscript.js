@@ -49,15 +49,24 @@ function check(form)
 {
 	var contents={};
 	var x = document.getElementsByName('answer');
-	var inputTypes=new Array("textarea","text","number", "select-one");
+	var inputTypes=new Array("textarea","number", "select-one");
 	for(var i = 0; i < form.length; i++) {
 		if (inputTypes.indexOf(form[i].type)!=-1)
 		{
 			contents[form[i].name] = form[i].value;
-		} else if(form[i].type=="date"){
+		}
+		else if(form[i].type=="text") // note that 'date' input fields are actually of type 'text'
+		{
 			// Javascript uses milliseconds where as unix uses whole seconds, so divide by 1000 so we can use MYSQL's build in UNIX_TIME converter.
 			// Every date I was posting was being added to the server as a day before what I set it to, so I add 86400 to seconds to add a day.
-			contents[form[i].name]=(Date.parse(form[i].value)/1000)+86400;
+
+			var epoch_time_s=(Date.parse(form[i].value)/1000)+86400;
+			// if the form has null value, the above will be NaN
+			if (isNaN(epoch_time_s))
+			{
+				epoch_time_s = 0; // Note that 0 in this context == "1969-12-31"
+			}
+			contents[form[i].name]=epoch_time_s;
 		}
 	}
 	if (morc && morc.verify()) {
