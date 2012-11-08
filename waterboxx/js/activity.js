@@ -31,17 +31,6 @@ function create_activity_obj(allActivities) {
 }
 
 
-function updatebutton() {
-	var temp = document.createElement('input');
-	temp.type = 'button';
-	temp.value = "Update DB";
-	//When this button is clicked the feed array is sent to the server
-	temp.onclick = function() {
-		ajax('content=' + JSON.stringify(feed), PHP_FOLDER_LOCATION + 'upload.php', handleupload);
-	};
-	return temp;
-}
-
 // Is now also called from studentActivityList to create the list.
 // Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
 function generateActivityView(activity, isStudent) {
@@ -339,6 +328,15 @@ function successfulCommentUpdate(activity_id, comment, status){
 }
 
 function editActivityAsStudent(activity) {
+	// Before storing into the session storage, make sure that it exists.
+	if(typeof(Storage)!=="undefined"){
+		sessionStorage.activity=JSON.stringify(activity);
+		sessionStorage.isEdit=true;
+	} else{
+		// TODO:  What do we want to do if they can't store into local storage?
+	}
+	
+	
 	// multiple gets initialized in wscript_init.  It's supposed to be multiple.htm.
 	$('activity').innerHTML = multiple;
 	// Ugly onsubmit, but only way I know of passing a parameter onsubmit.
@@ -405,12 +403,15 @@ function submitEdit(id) {
 			contents[form[i].name]=epoch_time_s;
 		}
 	}
-		/*
 	if (morc && morc.verify()) {
-			contents['media'] = morc;
-			contents['lat']=morc.loc.lat();
-			contents['lng']=morc.loc.lng();
-		} */
+		var mediaContents={};
+			mediaContents.media=morc;
+			mediaContents.lat=morc.loc.lat();
+			mediaContents.lng=morc.loc.lng();
+			mediaContents.id=id;
+			mediaContents=JSON.stringify(mediaContents);
+			ajax("content="+mediaContents, PHP_FOLDER_LOCATION + "updateImage.php", function(serverResponse){ console.log(serverResponse);});
+		} 
 			contents['huntid'] = document.getElementById("selecthunt").value;
 			contents.id=id;
 			// Checks to make sure that all of the required attribute are filled in.

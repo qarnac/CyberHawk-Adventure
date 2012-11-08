@@ -6,9 +6,6 @@
  * finds geo location of image
  * If geo location is not found displays map which allows user to select a location from it.
  */
-
- // Nice global variable up here...
- // Wanted to move the string to an easy to find spot in case it ever needs to be changed in the future.
  
 // geocompress is the main point of entry into this file.
 // As of Aug 8, 2012, only called from dragdrop.js
@@ -154,7 +151,15 @@ function submitLatLng(location) {
 	morc.loc = new google.maps.LatLng(location.lat(), location.lng());
 	morc.from = "chosen";
 	removeMap();
-	document.getElementById("activity").innerHTML=multiple;
+	if(typeof(Storage)!=="undefined"){
+		if(sessionStorage.isEdit){
+			editActivityAsStudent(JSON.parse(sessionStorage.activity));
+		} else{
+			document.getElementById("activity").innerHTML=multiple;
+		}
+	} else{
+		// TODO: How to handle the user not submitting local storage?
+	}
 	var activityImageDiv = document.getElementById('activityImage').parentNode;
 	activityImageDiv.innerHTML = "";
 	var activityImage = document.createElement('img');
