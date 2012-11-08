@@ -30,6 +30,12 @@ function $(x) {return document.getElementById(x);}
 //this function invoked when student selects a hunt
 function huntselection(x)
 { 
+
+	if(typeof(Storage)!=="undefined"){
+		sessionStorage.isEdit=false;
+	} else{
+		// TODO: How to deal with user not support storage.
+	}
 	// When the user selects the null select, it will no longer even attempt to load activities.
 	if ((x = document.getElementById("selecthunt").selectedIndex-1) >= 0) {
 		var hunt=hunts[x];

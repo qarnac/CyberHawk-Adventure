@@ -307,6 +307,15 @@ function successfulCommentUpdate(activity_id, comment, status){
 }
 
 function editActivityAsStudent(activity) {
+
+	// Before storing into the session storage, make sure that it exists.
+	if(typeof(Storage)!=="undefined"){
+		sessionStorage.activity=JSON.stringify(activity);
+		sessionStorage.isEdit=true;
+	} else{
+		// TODO:  What do we want to do if they can't store into local storage?
+	}
+	
 	// multiple gets initialized in wscript_init.  It's supposed to be multiple.htm.
 	$('activity').innerHTML = multiple;
 	choices = JSON.parse(activity.choices);

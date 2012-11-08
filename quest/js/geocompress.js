@@ -154,7 +154,15 @@ function submitLatLng(location) {
 	morc.loc = new google.maps.LatLng(location.lat(), location.lng());
 	morc.from = "chosen";
 	removeMap();
-	document.getElementById("activity").innerHTML=multiple;
+	if(typeof(Storage)!=="undefined"){
+		if(sessionStorage.isEdit){
+			editActivityAsStudent(JSON.parse(sessionStorage.activity));
+		} else{
+			document.getElementById("activity").innerHTML=multiple;
+		}
+	} else{
+		// TODO: How to handle the user not submitting local storage?
+	}
 	var activityImageDiv = document.getElementById('activityImage').parentNode;
 	activityImageDiv.innerHTML = "";
 	var activityImage = document.createElement('img');
