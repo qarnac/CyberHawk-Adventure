@@ -5,7 +5,7 @@ function initializeMap(lat, lng){
 	$('activity').innerHTML="";
 		var myOptions = {
 		center :new google.maps.LatLng(lat,lng),
-		zoom : 11,
+		zoom : 14,
 		mapTypeId : google.maps.MapTypeId.SATELLITE
 	};
 	div=document.createElement("div");
@@ -66,7 +66,7 @@ function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 	welcomeMsgDiv.id = "welcomeTxt";
 	welcomeMsgDiv.name = "welcomeTxt";
 	welcomeMsgDiv.style.textAlign = 'left';
-	welcomeMsgDiv.innerHTML = GLOBALS.NEW_ACTIVITY_MAP_INSTRUCTIONS;
+	welcomeMsgDiv.innerHTML = (isRectangle)? GLOBALS.NEW_HUNT_MAP_INSTRUCTIONS : GLOBALS.NEW_ACTIVITY_MAP_INSTRUCTIONS;
 
 	var ctrlLatInput = document.createElement('input');
 	ctrlLatInput.id = "latitudeIn";

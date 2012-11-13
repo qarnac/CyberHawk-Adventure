@@ -378,8 +378,14 @@ function submitEdit(id) {
 		}
 		contents['id']=id;
 		if (morc && morc.verify()) {
-			contents['media'] = morc;
-		}
+			var mediaContents={};
+			mediaContents.media=morc;
+			mediaContents.lat=morc.loc.lat();
+			mediaContents.lng=morc.loc.lng();
+			mediaContents.id=id;
+			mediaContents=JSON.stringify(mediaContents);
+			ajax("content="+mediaContents, PHP_FOLDER_LOCATION + "updateImage.php", function(serverResponse){ console.log(serverResponse);});
+		} 
 		// Checks to make sure that all of the required attribute are filled in.
 		if(contents.aboutmedia && contents.a && contents.b && contents.howhelpful && contents.mquestion && contents.whythis && contents.yourdoubt){
 			contents.status="Unverified";
