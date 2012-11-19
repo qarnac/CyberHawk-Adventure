@@ -151,11 +151,16 @@ function instantiateGoogleMap() {
 // and switches back from the map to the form view
 // TODO: Add code for clustering markers into the same latlng position
 function submitLatLng(location) {
-	morc.loc = new google.maps.LatLng(location.lat(), location.lng());
-	morc.from = "chosen";
+	if(morc){
+		morc.loc = new google.maps.LatLng(location.lat(), location.lng());
+		morc.from = "chosen";
+	} else{
+		sessionStorage.lat=location.lat();
+		sessionStorage.lng=location.lng();
+	}
 	removeMap();
 	if(typeof(Storage)!=="undefined"){
-		if(sessionStorage.isEdit){
+		if(sessionStorage.isEdit=="true"){
 			editActivityAsStudent(JSON.parse(sessionStorage.activity));
 		} else{
 			document.getElementById("activity").innerHTML=multiple;
@@ -167,7 +172,11 @@ function submitLatLng(location) {
 	activityImageDiv.innerHTML = "";
 	var activityImage = document.createElement('img');
 	activityImage.id = 'activityImage';
-	activityImage.src = morc.file.dataurl;
+	if(morc){
+		activityImage.src = morc.file.dataurl;
+	} else if(sessionStorage.activity){
+		activityImage.src= PHP_FOLDER_LOCATION + "image.php?id=" + JSON.parse(sessionStorage.activity).media_id;
+	}
 	activityImageDiv.appendChild(activityImage);
 }
 

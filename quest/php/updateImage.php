@@ -11,6 +11,7 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 	$studentid=$_SESSION['id'];
 	$content=$_POST['content'];
 	$content=json_decode($content);
+	if(isset($content->media)){
 	//decides media id
 	mysql_query("INSERT INTO image (images) VALUES ('temp')");
 	$m= mysql_insert_id();
@@ -26,6 +27,13 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 		"', lng='" . mysql_escape_string($content->lng) .
 		"' WHERE  `id` = " . mysql_escape_string($content->id) . ";") or die(mysql_error());
 	echo "true";
+	// There is no image being sent, and only the lat and lng are being updated.
+	} else{
+		mysql_query("UPDATE stud_activity SET 
+			lat='" . mysql_escape_string($content->lat) . "', 
+			lng='" . mysql_escape_string($content->lng) . 
+			"' WHERE `id`= " . mysql_escape_string($content->id) . ";") or die(mysql_error());
+	}
 }
 
 
