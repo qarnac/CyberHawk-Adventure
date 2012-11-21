@@ -5,6 +5,7 @@
 	$content=json_decode($content);
 	mysql_query("UPDATE stud_activity" .
 				" SET aboutmedia=" .'"'. mysql_escape_string($content->aboutmedia) .'"' .
+				", partner_names=" .'"'. mysql_escape_string($content->partner_names) .'"' .
 				" , whythis=" . '"'.mysql_escape_string($content->whythis) .'"'.
 				" , howhelpfull=" . '"'.mysql_escape_string($content->howhelpful).'"' .
 				" , yourdoubt=" . '"'.mysql_escape_string($content->yourdoubt) .'"'.

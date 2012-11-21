@@ -29,6 +29,7 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 		"', lat='" . esc($content->lat) .
 		"', lng='" . esc($content->lng) . 
 		"', aboutmedia='" . esc($content->aboutmedia) .
+		"',  partner_names='" . esc($content->partner_names) .
 		"',whythis='" . esc($content->whythis) .
 		"',howhelpfull='" . esc($content->howhelpful) .
 		"',yourdoubt='" . esc($content->yourdoubt) .

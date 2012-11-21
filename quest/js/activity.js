@@ -119,6 +119,10 @@ function generateActivityView(activity, isStudent) {
 	activityPhotoCell.className = "activityPhotoCell";
 	activityPhotoCell.appendChild(activityPhoto);
 
+	var partnerLabel=document.createElement('div');
+	partnerLabel.innerHTML= "Who are the partners in this group?";
+	partnerLabel.className="questionLabel";
+	
 	var aboutLabel = document.createElement('div');
 	aboutLabel.innerHTML = "What is this picture about?";
 	aboutLabel.className = "questionLabel";
@@ -131,6 +135,15 @@ function generateActivityView(activity, isStudent) {
 	var furtherLabel = document.createElement('div');
 	furtherLabel.innerHTML = "What is a question you have about this picture?";
 	furtherLabel.className = "questionLabel";
+	
+	
+	var partnerNames = document.createElement('div');
+	partnerNames.innerHTML = activity['partner_names'];
+	if (activity['partner_names'] == "") {
+		partnerNames.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
+		partnerNames.className = "unansweredQuestion";
+	}
+
 	
 	var aboutPhotoText = document.createElement('div');
 	aboutPhotoText.innerHTML = activity['aboutmedia'];
@@ -177,6 +190,8 @@ function generateActivityView(activity, isStudent) {
 
 	var aboutPhotoCell = document.createElement('td');
 	aboutPhotoCell.className = "aboutPhotoCell";
+	aboutPhotoCell.appendChild(partnerLabel);
+	aboutPhotoCell.appendChild(partnerNames);
 	aboutPhotoCell.appendChild(aboutLabel);
 	aboutPhotoCell.appendChild(aboutPhotoText);
 	aboutPhotoCell.appendChild(whyLabel);
@@ -329,6 +344,7 @@ function editActivityAsStudent(activity) {
 	// At some point in time, we need to redo the way choices is encoded.  There is no reason the following line should be needed.
 	choices=choices.choices;
 	// Sets up the non-multiple choice questions.
+	document.getElementsByName("partner_names")[0].innerHTML = activity.partner_names;
 	document.getElementsByName("aboutmedia")[0].innerHTML = activity.aboutmedia;
 	document.getElementsByName("whythis")[0].innerHTML = activity.whythis;
 	document.getElementsByName("howhelpful")[0].innerHTML = activity.howhelpfull;
