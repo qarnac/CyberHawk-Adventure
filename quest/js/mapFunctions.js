@@ -436,7 +436,7 @@ function toDMS(direction, deg) {
 	var minutes_seconds = (deg % 1) * 60;
 	var minutes = Math.floor(minutes_seconds);
 	minutes = minutes.toFixed();
-	var seconds = Math.round((minutes_seconds % 1) * 60 * 100);
+	var seconds = Math.round((minutes_seconds % 1) * 100);
 	seconds = seconds.toFixed();
 	
 	return {
@@ -484,7 +484,7 @@ function updateRectangle(rectangle){
 function toDecimal(direction, deg, minutes) {
 	minutes = parseFloat(minutes);
 	deg = parseFloat(deg);
-	var seconds = (Math.floor(minutes) * 60) + ((minutes % 1) * 100);
+	var seconds = (Math.floor(minutes) * 60) + ((minutes % 1) *60);
 	
 	var degrees = deg + (seconds / 3600);
 	if ((direction == "W") || (direction == "S")) {
