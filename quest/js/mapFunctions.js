@@ -43,14 +43,76 @@ function createRectangleOverlay(map, bounds){
 	return rectangleOverlay;
 }
 
+function initializeLatLng(onSubmit){
+	var latDMS = toDMS("lat", sessionStorage.lat);
+	var lngDMS = toDMS("long", sessionStorage.lng);
+	document.getElementById("decimalDMSSelect").value=1;
+	document.getElementById("latNSSelect").value=(latDMS.compass=="N")? 0:1;
+	document.getElementById("latDegrees").value=latDMS.degrees;
+	document.getElementById("latMinutes").value=latDMS.minutes;
+	document.getElementById("longNSSelect").value=(lngDMS.compass=="W")?0:1;
+	document.getElementById("longDegrees").value=lngDMS.degrees;
+	document.getElementById("longMinutes").value=lngDMS.minutes;
+	google.maps.event.addDomListener(document.getElementById("decimalDMSSelect"), 'change', changeSelectedLatLngDisplay);
+	google.maps.event.addDomListener(document.getElementById("submitButton"), 'click', onSubmit);
+}
+
+// Is called when the select for Decimal or DMS is changed in the control box.
+function changeSelectedLatLngDisplay(){
+	var latValue = document.getElementById("latitudeIn").value;
+	var longValue = document.getElementById("longitudeIn").value;
+		
+		if (document.getElementById("decimalDMSSelect").selectedIndex == "1")
+		{
+			document.getElementById("DMSLatLng").style.display = "block";
+			document.getElementById("decimalLatLng").style.display = "none";
+
+			updateLatLngDMS(new google.maps.LatLng(latValue, longValue));
+		}
+		else
+		{
+			document.getElementById("DMSLatLng").style.display = "none";
+			document.getElementById("decimalLatLng").style.display = "block";
+			
+			var latDirection;
+			var longDirection;
+
+			if (document.getElementById("latNSSelect").selectedIndex == 0) { latDirection = "N"; }
+			else { latDirection = "S"; }
+			if (document.getElementById("longNSSelect").selectedIndex == 0) { longDirection = "W"; }
+			else { longDirection = "E"; }
+			
+			var latDec = toDecimal(latDirection, document.getElementById("latDegrees").value, document.getElementById("latMinutes").value);
+			var lngDec = toDecimal(longDirection, document.getElementById("longDegrees").value, document.getElementById("longMinutes").value);
+			// If width and height DMS values exist, set width and height to them.  otherwise set them to null.
+			updateLatLngBox(new google.maps.LatLng(latDec, lngDec), true);
+		}
+	
+}
+
 // This function fills an html div with the contents of the map latlng control
-// TODO: set more id's/classes here and move styling to stylesheets
-//		 Also need to eventually move marker out of the code.
+// TODO: Working on moving this to an HTML file, as all it does is create HTML.
 function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 {
 	var ctrlDiv = document.createElement('div');
 	var latDMS = toDMS("lat", center.lat());
 	var lngDMS = toDMS("long", center.lng());
+	// Right now, I've seperated out the new Hunt control box into an HTML file, and so when it's a rectangle we will just load the HTML
+	// file and then plug in the values where needed.
+	if(isRectangle){
+		ajax("GET", GLOBALS.HTML_FOLDER_LOCATION + "newHuntControl.html", function(serverResponse){
+			ctrlDiv.innerHTML=serverResponse;
+			map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(ctrlDiv);
+			// Using setTimeout enables the browser to reset the DOM before executing the code to fill it in.
+			// TODO:  Find a reliable way to handle this.
+			setTimeout(function(){initializeLatLng(onSubmit);}, 750);
+			});
+		sessionStorage.lat=center.lat();
+		sessionStorage.lng=center.lng();
+		return;
+	}
+
+
 	
 	ctrlDiv.id = "latlongctrl";
 	ctrlDiv.style.width = '300px';
@@ -142,6 +204,8 @@ function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 	layoutLatLongBox.appendChild(ctrlLongLabel);
 	layoutLatLongBox.appendChild(ctrlLongInput);
 	// If it's a rectangle, we want to add the width/height modifiers.
+		/*   Deleting this section should be able to make the width and height boxes no longer visible to the user, without having to change
+		all of the code that made the boxes work.  If it does work, I will go back and delete this section of code.
 	if(isRectangle){
 		layoutLatLongBox.appendChild(document.createElement("br"));
 		layoutLatLongBox.appendChild(ctrlWidthLabel);
@@ -149,7 +213,7 @@ function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 		layoutLatLongBox.appendChild(document.createElement("br"));
 		layoutLatLongBox.appendChild(ctrlHeightLabel);
 		layoutLatLongBox.appendChild(ctrlHeightInput);
-	}
+	} */
 	
 	var ctrlLatNS = document.createElement('select');
 	ctrlLatNS.id = "latNSSelect";
@@ -213,14 +277,17 @@ function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 	layoutDMSBox.appendChild(ctrlLongNS);
 	layoutDMSBox.appendChild(ctrlLongDegrees);
 	layoutDMSBox.appendChild(ctrlLongMinutes);
-	if(isRectangle){
+	/*   Deleting this section should be able to make the width and height boxes no longer visible to the user, without having to change
+		all of the code that made the boxes work.  If it does work, I will go back and delete this section of code.
+	if(isRectangle){ 
 		layoutDMSBox.appendChild(document.createElement("br"));
 		layoutDMSBox.appendChild(DMSWidthLabel);
 		layoutDMSBox.appendChild(DMSWidthInput);
 		layoutDMSBox.appendChild(document.createElement("br"));
 		layoutDMSBox.appendChild(DMSHeightLabel);
 		layoutDMSBox.appendChild(DMSHeightInput);
-	}
+	} */
+
 
 	var ctrlBtn = document.createElement('a');
 	ctrlBtn.innerHTML = "Take me there!";
@@ -229,7 +296,7 @@ function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 	ctrlBtn.style.padding = '1px';
 
 	var layoutBtnDiv = document.createElement('div');
-	layoutBtnDiv.appendChild(ctrlBtn);
+	if(!isRectangle) layoutBtnDiv.appendChild(ctrlBtn);
 	layoutBtnDiv.style.textAlign = 'right';
 
 	var ctrlSubmitBtn = document.createElement('a');
@@ -379,22 +446,18 @@ function updateLatLngDMS(location, isRectangle) {
 function updateLatLngBox(location, isRectangle) {
 	document.getElementById('latitudeIn').value = location.lat().toFixed(5);
 	document.getElementById('longitudeIn').value = location.lng().toFixed(5);
-	if(isRectangle){
-		document.getElementById("widthIn").value=document.getElementById("DMSWidth").value;
-		document.getElementById("heightIn").value=document.getElementById("DMSHeight").value;
-	}
 }
 
 // Is called when the bounds of the rectangle are changed.
 // Updates the latLng box to show the new width, height, lat, and lng.
 function updateWidthHeight(bounds){
 	// Sets up the width and height for both of the boxes.
-	var width=bounds.getNorthEast().lat()-bounds.getSouthWest().lat();
-	var height=bounds.getNorthEast().lng()-bounds.getSouthWest().lng();
-	document.getElementById("widthIn").value=width;
-	document.getElementById("DMSWidth").value=width;
-	document.getElementById("heightIn").value=height;
-	document.getElementById("DMSHeight").value=height;
+	//var width=bounds.getNorthEast().lat()-bounds.getSouthWest().lat();
+	//var height=bounds.getNorthEast().lng()-bounds.getSouthWest().lng();
+	//document.getElementById("widthIn").value=width;
+	//document.getElementById("DMSWidth").value=width;
+	//document.getElementById("heightIn").value=height;
+	//document.getElementById("DMSHeight").value=height;
 	// Set up the lat/lng for the decimal box.
 	document.getElementById("latitudeIn").value=bounds.getCenter().lat();
 	document.getElementById("longitudeIn").value=bounds.getCenter().lng();
@@ -408,7 +471,7 @@ function updateWidthHeight(bounds){
 	document.getElementById("longDegrees").value=lng.degrees;
 	document.getElementById("longMinutes").value=lng.minutes;
 }
-
+	
 // Converts the coordinates to DMS.
 function toDMS(direction, deg) {
 	var compass;
