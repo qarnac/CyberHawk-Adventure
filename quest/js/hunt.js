@@ -31,12 +31,12 @@ function newHuntMap(map){
 	var bounds=new google.maps.LatLngBounds(southwest, northeast);
 	rectangle=createRectangleOverlay(map, bounds);
 	rectangle.setEditable(true);
-	createGotoControl(map, rectangle.getBounds().getCenter(), newHuntMapSubmit, rectangle, true)
+	createGotoControl(map, rectangle.getBounds().getCenter(), function(){}, rectangle, true)
 	google.maps.event.addListener(rectangle, "bounds_changed", function(event){
 		updateWidthHeight(rectangle.getBounds());
 	});
 }
-
+/*
 // This is the function for the submit button in the GoToControl Box.
 function newHuntMapSubmit(){
 	ajax("GET", "../quest/html/createHunt.html", displayHuntForm);
@@ -75,3 +75,5 @@ function huntSubmitted(serverResponse){
 	}
 	else console.log(serverResponse);
 }
+
+*/

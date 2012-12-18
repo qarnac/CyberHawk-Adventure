@@ -43,7 +43,27 @@ function createRectangleOverlay(map, bounds){
 	return rectangleOverlay;
 }
 
-function initializeLatLng(onSubmit){
+
+// Is called by the submit button in the gotoControlBox submit for a new hunt.
+function submitNewHunt(toPlot){
+	var date=(Date.parse(document.getElementById("dateOfTrip").value)/1000)+86400
+	ajax("title=" + document.getElementById("title").value +
+		"&username=" + document.getElementById("huntUsername").value +
+		"&password=" + document.getElementById("password").value +
+		"&maxLat=" + toPlot.getBounds().getNorthEast().lat() +
+		"&minLat=" + toPlot.getBounds().getSouthWest().lat() +
+		"&minLng=" + toPlot.getBounds().getSouthWest().lat() +
+		"&maxLng=" + toPlot.getBounds().getNorthEast().lat() +
+		"&dateOfTrip=" + date
+		, PHP_FOLDER_LOCATION + "createHunt.php", function(serverResponse){
+			if(serverResponse=="success") window.location.reload();
+			else console.log(serverResponse);
+		});
+	
+}
+
+// Is called by createGotoControl in order to fill in the goToControlbox and set up events.
+function initializeLatLng(toPlot){
 	var latDMS = toDMS("lat", sessionStorage.lat);
 	var lngDMS = toDMS("long", sessionStorage.lng);
 	document.getElementById("decimalDMSSelect").value=1;
@@ -54,7 +74,8 @@ function initializeLatLng(onSubmit){
 	document.getElementById("longDegrees").value=lngDMS.degrees;
 	document.getElementById("longMinutes").value=lngDMS.minutes;
 	google.maps.event.addDomListener(document.getElementById("decimalDMSSelect"), 'change', changeSelectedLatLngDisplay);
-	google.maps.event.addDomListener(document.getElementById("submitButton"), 'click', onSubmit);
+	google.maps.event.addDomListener(document.getElementById("submitButton"), 'click', function(event){ submitNewHunt(toPlot); });
+	google.maps.event.addDomListener(document.getElementById("takeMeThere"), 'click', function(event) { updateRectangle(toPlot);});
 }
 
 // Is called when the select for Decimal or DMS is changed in the control box.
@@ -105,7 +126,7 @@ function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 			map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(ctrlDiv);
 			// Using setTimeout enables the browser to reset the DOM before executing the code to fill it in.
 			// TODO:  Find a reliable way to handle this.
-			setTimeout(function(){initializeLatLng(onSubmit);}, 750);
+			setTimeout(function(){initializeLatLng(toPlot);}, 750);
 			});
 		sessionStorage.lat=center.lat();
 		sessionStorage.lng=center.lng();
@@ -518,11 +539,11 @@ function updateRectangle(rectangle){
 	if(document.getElementById("decimalDMSSelect").value==0){
 	// TODO:  Catch the error thrown if the string can not be parsed into a float.
 		southwestBounds=new google.maps.LatLng(
-							parseFloat(document.getElementById("latitudeIn").value)-parseFloat(document.getElementById("heightIn").value)/2.0,
-							parseFloat(document.getElementById("longitudeIn").value)-parseFloat(document.getElementById("widthIn").value)/2.0);
+							parseFloat(document.getElementById("latitudeIn").value)-parseFloat(GLOBALS.DEFAULT_RECT_SIZE)/2.0,
+							parseFloat(document.getElementById("longitudeIn").value)-parseFloat(GLOBALS.DEFAULT_RECT_SIZE)/2.0);
 		northeastBounds=new google.maps.LatLng(
-							parseFloat(document.getElementById("latitudeIn").value)+parseFloat(document.getElementById("heightIn").value)/2.0,
-							parseFloat(document.getElementById("longitudeIn").value)+parseFloat(document.getElementById("widthIn").value)/2.0);
+							parseFloat(document.getElementById("latitudeIn").value)+parseFloat(GLOBALS.DEFAULT_RECT_SIZE)/2.0,
+							parseFloat(document.getElementById("longitudeIn").value)+parseFloat(GLOBALS.DEFAULT_RECT_SIZE)/2.0);
 	} else{
 		var direction=(document.getElementById("latNSSelect").value==0) ? "N" : "S";
 		var lat=toDecimal(direction, document.getElementById("latDegrees").value,
@@ -530,10 +551,10 @@ function updateRectangle(rectangle){
 		direction=(document.getElementById("longNSSelect").value==0) ? "W" : "E";
 		var lng=toDecimal(direction, document.getElementById("longDegrees").value,
 									document.getElementById("longMinutes").value);
-		southwestBounds=new google.maps.LatLng(lat-document.getElementById("DMSHeight").value/2,
-												lng-document.getElementById("DMSWidth").value/2);
-		northeastBounds=new google.maps.LatLng(lat+document.getElementById("DMSHeight").value/2,
-												lng+document.getElementById("DMSWidth").value/2);
+		southwestBounds=new google.maps.LatLng(lat-GLOBALS.DEFAULT_RECT_SIZE/2,
+												lng-GLOBALS.DEFAULT_RECT_SIZE/2);
+		northeastBounds=new google.maps.LatLng(lat+GLOBALS.DEFAULT_RECT_SIZE/2,
+												lng+GLOBALS.DEFAULT_RECT_SIZE/2);
 	}
 		bounds=new google.maps.LatLngBounds(southwestBounds, northeastBounds);
 	var rectOptions = {
