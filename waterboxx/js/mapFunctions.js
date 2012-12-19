@@ -43,6 +43,73 @@ function createRectangleOverlay(map, bounds){
 	return rectangleOverlay;
 }
 
+// Is called by the submit button in the gotoControlBox submit for a new hunt.
+function submitNewHunt(toPlot){
+	var date=(Date.parse(document.getElementById("dateOfTrip").value)/1000)+86400
+	ajax("title=" + document.getElementById("title").value +
+		"&username=" + document.getElementById("huntUsername").value +
+		"&password=" + document.getElementById("password").value +
+		"&maxLat=" + toPlot.getBounds().getNorthEast().lat() +
+		"&minLat=" + toPlot.getBounds().getSouthWest().lat() +
+		"&minLng=" + toPlot.getBounds().getSouthWest().lat() +
+		"&maxLng=" + toPlot.getBounds().getNorthEast().lat() +
+		"&dateOfTrip=" + date
+		, PHP_FOLDER_LOCATION + "createHunt.php", function(serverResponse){
+			if(serverResponse=="success") window.location.reload();
+			else console.log(serverResponse);
+		});
+	
+}
+
+// Is called by createGotoControl in order to fill in the goToControlbox and set up events.
+function initializeLatLng(toPlot){
+	var latDMS = toDMS("lat", sessionStorage.lat);
+	var lngDMS = toDMS("long", sessionStorage.lng);
+	document.getElementById("decimalDMSSelect").value=1;
+	document.getElementById("latNSSelect").value=(latDMS.compass=="N")? 0:1;
+	document.getElementById("latDegrees").value=latDMS.degrees;
+	document.getElementById("latMinutes").value=latDMS.minutes;
+	document.getElementById("longNSSelect").value=(lngDMS.compass=="W")?0:1;
+	document.getElementById("longDegrees").value=lngDMS.degrees;
+	document.getElementById("longMinutes").value=lngDMS.minutes;
+	google.maps.event.addDomListener(document.getElementById("decimalDMSSelect"), 'change', changeSelectedLatLngDisplay);
+	google.maps.event.addDomListener(document.getElementById("submitButton"), 'click', function(event){ submitNewHunt(toPlot); });
+	google.maps.event.addDomListener(document.getElementById("takeMeThere"), 'click', function(event) { updateRectangle(toPlot);});
+}
+
+// Is called when the select for Decimal or DMS is changed in the control box.
+function changeSelectedLatLngDisplay(){
+	var latValue = document.getElementById("latitudeIn").value;
+	var longValue = document.getElementById("longitudeIn").value;
+		
+		if (document.getElementById("decimalDMSSelect").selectedIndex == "1")
+		{
+			document.getElementById("DMSLatLng").style.display = "block";
+			document.getElementById("decimalLatLng").style.display = "none";
+
+			updateLatLngDMS(new google.maps.LatLng(latValue, longValue));
+		}
+		else
+		{
+			document.getElementById("DMSLatLng").style.display = "none";
+			document.getElementById("decimalLatLng").style.display = "block";
+			
+			var latDirection;
+			var longDirection;
+
+			if (document.getElementById("latNSSelect").selectedIndex == 0) { latDirection = "N"; }
+			else { latDirection = "S"; }
+			if (document.getElementById("longNSSelect").selectedIndex == 0) { longDirection = "W"; }
+			else { longDirection = "E"; }
+			
+			var latDec = toDecimal(latDirection, document.getElementById("latDegrees").value, document.getElementById("latMinutes").value);
+			var lngDec = toDecimal(longDirection, document.getElementById("longDegrees").value, document.getElementById("longMinutes").value);
+			// If width and height DMS values exist, set width and height to them.  otherwise set them to null.
+			updateLatLngBox(new google.maps.LatLng(latDec, lngDec), true);
+		}
+	}
+	
+
 // This function fills an html div with the contents of the map latlng control
 // TODO: set more id's/classes here and move styling to stylesheets
 //		 Also need to eventually move marker out of the code.
@@ -52,6 +119,19 @@ function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 	var latDMS = toDMS("lat", center.lat());
 	var lngDMS = toDMS("long", center.lng());
 	
+	
+		if(isRectangle){
+		ajax("GET", GLOBALS.HTML_FOLDER_LOCATION + "newHuntControl.html", function(serverResponse){
+			ctrlDiv.innerHTML=serverResponse;
+			map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(ctrlDiv);
+			// Using setTimeout enables the browser to reset the DOM before executing the code to fill it in.
+			// TODO:  Find a reliable way to handle this.
+			setTimeout(function(){initializeLatLng(toPlot);}, 750);
+			});
+		sessionStorage.lat=center.lat();
+		sessionStorage.lng=center.lng();
+		return;
+	}
 	ctrlDiv.id = "latlongctrl";
 	ctrlDiv.style.width = '300px';
 	ctrlDiv.style.backgroundColor = 'white';
