@@ -14,13 +14,19 @@ function createTeacherMap(){
 
 // Takes the response from getAllActivitiesFromHunt.php and turns it into a KML file.
 function jsonToMap(serverResponse){
+	if(document.getElementById("slist")!=null) document.getElementById("slist").style.display="none";
 	serverResponse=JSON.parse(serverResponse);
-	if(serverResponse[0].lat && serverResponse[0].lng){
-		var map=initializeMap(serverResponse[0].lat, serverResponse[0].lng);
-		} else{
-		var map=initializeMap(GLOBALS.DEFAULT_LAT, GLOBALS.DEFAULT_LNG);
+	var hunts=JSON.parse(sessionStorage.hunts);
+	var selectedHunt;
+	for(var i=0; i<hunts.length; i++){
+		if(document.getElementById("selecthunt").value==hunts[i].id){
+			selectedHunt=i;
+			break;
 		}
-	document.getElementById("slist").style.display="none";
+	}
+	var bounds=new google.maps.LatLngBounds(new google.maps.LatLng(hunts[selectedHunt].minlat, hunts[selectedHunt].minlng), new google.maps.LatLng(hunts[selectedHunt].maxlat, hunts[selectedHunt].maxlng));
+	var map=initializeMap(bounds.getCenter().lat(), bounds.getCenter().lng());
+	createRectangleOverlay(map, bounds);
 	document.getElementById("mapButton").value="List View";
 	for(var i=0; i<serverResponse.length; i++){
 		createPlacemark(serverResponse[i], map);

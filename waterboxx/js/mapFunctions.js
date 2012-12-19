@@ -469,12 +469,14 @@ function updateLatLngBox(location, isRectangle) {
 // Updates the latLng box to show the new width, height, lat, and lng.
 function updateWidthHeight(bounds){
 	// Sets up the width and height for both of the boxes.
+	/*
 	var width=bounds.getNorthEast().lat()-bounds.getSouthWest().lat();
 	var height=bounds.getNorthEast().lng()-bounds.getSouthWest().lng();
 	document.getElementById("widthIn").value=width;
 	document.getElementById("DMSWidth").value=width;
 	document.getElementById("heightIn").value=height;
 	document.getElementById("DMSHeight").value=height;
+	*/
 	// Set up the lat/lng for the decimal box.
 	document.getElementById("latitudeIn").value=bounds.getCenter().lat();
 	document.getElementById("longitudeIn").value=bounds.getCenter().lng();
@@ -535,11 +537,11 @@ function updateRectangle(rectangle){
 	if(document.getElementById("decimalDMSSelect").value==0){
 	// TODO:  Catch the error thrown if the string can not be parsed into a float.
 		southwestBounds=new google.maps.LatLng(
-							parseFloat(document.getElementById("latitudeIn").value)-parseFloat(document.getElementById("heightIn").value)/2.0,
-							parseFloat(document.getElementById("longitudeIn").value)-parseFloat(document.getElementById("widthIn").value)/2.0);
+							parseFloat(document.getElementById("latitudeIn").value)-parseFloat(GLOBALS.DEFAULT_RECT_SIZE)/2.0,
+							parseFloat(document.getElementById("longitudeIn").value)-parseFloat(GLOBALS.DEFAULT_RECT_SIZE)/2.0);
 		northeastBounds=new google.maps.LatLng(
-							parseFloat(document.getElementById("latitudeIn").value)+parseFloat(document.getElementById("heightIn").value)/2.0,
-							parseFloat(document.getElementById("longitudeIn").value)+parseFloat(document.getElementById("widthIn").value)/2.0);
+							parseFloat(document.getElementById("latitudeIn").value)+parseFloat(GLOBALS.DEFAULT_RECT_SIZE)/2.0,
+							parseFloat(document.getElementById("longitudeIn").value)+parseFloat(GLOBALS.DEFAULT_RECT_SIZE)/2.0);
 	} else{
 		var direction=(document.getElementById("latNSSelect").value==0) ? "N" : "S";
 		var lat=toDecimal(direction, document.getElementById("latDegrees").value,
@@ -547,10 +549,10 @@ function updateRectangle(rectangle){
 		direction=(document.getElementById("longNSSelect").value==0) ? "W" : "E";
 		var lng=toDecimal(direction, document.getElementById("longDegrees").value,
 									document.getElementById("longMinutes").value);
-		southwestBounds=new google.maps.LatLng(lat-document.getElementById("DMSHeight").value/2,
-												lng-document.getElementById("DMSWidth").value/2);
-		northeastBounds=new google.maps.LatLng(lat+document.getElementById("DMSHeight").value/2,
-												lng+document.getElementById("DMSWidth").value/2);
+		southwestBounds=new google.maps.LatLng(lat-GLOBALS.DEFAULT_RECT_SIZE/2,
+												lng-GLOBALS.DEFAULT_RECT_SIZE/2);
+		northeastBounds=new google.maps.LatLng(lat+GLOBALS.DEFAULT_RECT_SIZE/2,
+												lng+GLOBALS.DEFAULT_RECT_SIZE/2);
 	}
 		bounds=new google.maps.LatLngBounds(southwestBounds, northeastBounds);
 	var rectOptions = {

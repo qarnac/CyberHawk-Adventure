@@ -52,8 +52,8 @@ function submitNewHunt(toPlot){
 		"&password=" + document.getElementById("password").value +
 		"&maxLat=" + toPlot.getBounds().getNorthEast().lat() +
 		"&minLat=" + toPlot.getBounds().getSouthWest().lat() +
-		"&minLng=" + toPlot.getBounds().getSouthWest().lat() +
-		"&maxLng=" + toPlot.getBounds().getNorthEast().lat() +
+		"&minLng=" + toPlot.getBounds().getSouthWest().lng() +
+		"&maxLng=" + toPlot.getBounds().getNorthEast().lng() +
 		"&dateOfTrip=" + date
 		, PHP_FOLDER_LOCATION + "createHunt.php", function(serverResponse){
 			if(serverResponse=="success") window.location.reload();
