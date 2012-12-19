@@ -12,10 +12,18 @@ function createTeacherMap(){
 		jsonToMap);
 }
 
-// Takes the response from getAllActivitiesFromHunt.php and turns it into a KML file.
+// Takes the response from getAllActivitiesFromHunt.php and displays it on the map.
 function jsonToMap(serverResponse){
 	serverResponse=JSON.parse(serverResponse);
-	var map=initializeMap(serverResponse[0].lat, serverResponse[0].lng);
+	var hunts=JSON.parse(sessionStorage.hunts);
+	var selectedHunt;
+	for(var i=0; i<hunts.length; i++){
+		if(document.getElementById("selecthunt").value==hunts[i].id){
+			selectedHunt=i;
+			break;
+		}
+	}
+	var map=initializeMap((parseFloat(hunts[selectedHunt].maxlat)+parseFloat(hunts[selectedHunt].minlat))/2, (parseFloat(hunts[selectedHunt].maxlng)+parseFloat(hunts[selectedHunt].minlng))/2);
 	document.getElementById("slist").style.display="none";
 	document.getElementById("mapButton").value="List View";
 	for(var i=0; i<serverResponse.length; i++){

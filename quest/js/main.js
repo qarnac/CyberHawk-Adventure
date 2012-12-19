@@ -7,10 +7,12 @@
 */
 
 //invoked by ajax function but loaded when the page is finished loading. THis receives the hunts from the server and it transfers it to javascript variable hunts
+// Will also now store the hunts in sessionStorage.
 function createHuntList(x) {
 	hunts = JSON.parse(x);
 	$('username').innerHTML = hunts[0];
 	hunts = hunts[1];
+	sessionStorage.hunts=JSON.stringify(hunts);
 	for ( x = 0; x < hunts.length; x++)
 		$('selecthunt').options[$('selecthunt').options.length] = new Option(hunts[x]['title'], hunts[x]['id']);
 }
