@@ -5,7 +5,7 @@ function initializeMap(lat, lng){
 	$('activity').innerHTML="";
 		var myOptions = {
 		center :new google.maps.LatLng(lat,lng),
-		zoom : 11,
+		zoom : 14,
 		mapTypeId : google.maps.MapTypeId.SATELLITE
 	};
 	div=document.createElement("div");
