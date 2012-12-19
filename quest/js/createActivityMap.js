@@ -14,6 +14,8 @@ function createTeacherMap(){
 
 // Takes the response from getAllActivitiesFromHunt.php and displays it on the map.
 function jsonToMap(serverResponse){
+	if(document.getElementById("slist")!=null) document.getElementById("slist").style.display="none";
+	document.getElementById("mapButton").value="List View";
 	serverResponse=JSON.parse(serverResponse);
 	var hunts=JSON.parse(sessionStorage.hunts);
 	var selectedHunt;
@@ -24,8 +26,6 @@ function jsonToMap(serverResponse){
 		}
 	}
 	var map=initializeMap((parseFloat(hunts[selectedHunt].maxlat)+parseFloat(hunts[selectedHunt].minlat))/2, (parseFloat(hunts[selectedHunt].maxlng)+parseFloat(hunts[selectedHunt].minlng))/2);
-	document.getElementById("slist").style.display="none";
-	document.getElementById("mapButton").value="List View";
 	for(var i=0; i<serverResponse.length; i++){
 		createPlacemark(serverResponse[i], map);
 	}

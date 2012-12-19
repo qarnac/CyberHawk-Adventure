@@ -28,6 +28,8 @@ function create_activity_obj(allActivities) {
 				$('activity').appendChild(generateActivityView(activityList[i], false));
 			}
 	}
+	
+	
 }
 
 

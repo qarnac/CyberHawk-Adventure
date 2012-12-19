@@ -31,15 +31,16 @@ function huntsel() {
 	$('activity').innerHTML = '';
 	$('students').innerHTML = '';
 	ajax("what=activities&id=" + document.getElementById("selecthunt").value, PHP_FOLDER_LOCATION + 'getHunts.php', create_activity_obj);
+	createTeacherMap();
 	if(document.getElementById("mapButton")==null){
 		var button=document.createElement("input");
 		button.setAttribute("type", "button");
-		button.setAttribute("value", "Map View");
+		button.setAttribute("value", "List View");
 		button.setAttribute("id", "mapButton");
 		button.onclick=mapListButton;
 		document.getElementById("contentSection").insertBefore(button, document.getElementById("newhunt"));
 	}
-	mapListButton();
+	
 }
 
 //creates a dom element

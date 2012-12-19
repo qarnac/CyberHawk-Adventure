@@ -23,7 +23,6 @@ function create_activity_obj(allActivities) {
 	else {
 		activities = [];
 		activityList = JSON.parse(allActivities);
-
 		var studentList = listbox();
 		feedactivity(activityList, studentList);
 		$('students').appendChild(studentList);
@@ -72,6 +71,7 @@ function listbox() {
 	var temp = document.createElement('select');
 	temp.id = 'slist';
 	temp.size = 20;
+	temp.style.display="none";
 	temp.multiple = 'multiple';
 	// couldn't this just be replaced with .add() ?
 	temp.addoption = function(label, value) {
