@@ -25,7 +25,9 @@ function jsonToMap(serverResponse){
 			break;
 		}
 	}
-	var map=initializeMap((parseFloat(hunts[selectedHunt].maxlat)+parseFloat(hunts[selectedHunt].minlat))/2, (parseFloat(hunts[selectedHunt].maxlng)+parseFloat(hunts[selectedHunt].minlng))/2);
+	var bounds=new google.maps.LatLngBounds(new google.maps.LatLng(hunts[selectedHunt].minlat, hunts[selectedHunt].minlng), new google.maps.LatLng(hunts[selectedHunt].maxlat, hunts[selectedHunt].maxlng));
+	var map=initializeMap(bounds.getCenter().lat(), bounds.getCenter().lng());
+	createRectangleOverlay(map, bounds);
 	for(var i=0; i<serverResponse.length; i++){
 		createPlacemark(serverResponse[i], map);
 	}
