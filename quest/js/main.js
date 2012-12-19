@@ -39,6 +39,7 @@ function huntsel() {
 		button.onclick=mapListButton;
 		document.getElementById("contentSection").insertBefore(button, document.getElementById("newhunt"));
 	}
+	mapListButton();
 }
 
 //creates a dom element
