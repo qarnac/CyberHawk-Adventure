@@ -21,8 +21,7 @@ function getHuntsStudent()
 	$result = mysql_query("
 		SELECT *
 		FROM hunt
-		WHERE teacher_id='".$_SESSION['teacher_id']."'
-		AND status='open'"
+		WHERE teacher_id='".$_SESSION['teacher_id']."'"
 		) or die(mysql_error());
 
 	if(mysql_num_rows($result) > 0)
@@ -46,8 +45,7 @@ function getHuntsTeacher()
 	$result = mysql_query("
 		SELECT *
 		FROM hunt
-		WHERE teacher_id='" . $_SESSION['id'] . "'
-		AND status='open'"
+		WHERE teacher_id='" . $_SESSION['id'] . "'"
 		) or die(mysql_error());
 	if (mysql_num_rows($result) > 0) {
 		while ($x = mysql_fetch_assoc($result)) {
