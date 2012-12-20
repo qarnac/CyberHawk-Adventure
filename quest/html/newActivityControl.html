@@ -1,0 +1,50 @@
+<div id="latlongctrl" style="width:300px; background-color: white; border-style: solid; border-width: 1px;  margin:5px; text-align:right; cursor:pointer; z-index: 0; padding:15px;" >
+	<div id="welcomeTxt" style="text-align:left;" > Please adjust the four corners of the proposed quadrant for your field trip. The geo-coordinates of the center point of your quadrant will be adjusted accordingly as you stretch the corners. By default, the geo-coordinates reflect the GPS location of your computer </div>
+	
+<!-- Start newActivityControl.html -->	
+	<div>
+		<select id="decimalDMSSelect" name="decimalDMSSelect">
+			<option value="0"> Decimal </option>
+			<option value="1"> DMS </option>
+		</select>
+	</div>
+	<br />
+	<div  id="DMSLatLng" style="padding-bottom: 5px; padding-top: 5px; display:block; ">
+		<br />
+		<select id="latNSSelect" name="latNSSelect" class="short">
+			<option value="0"> North</option>
+			<option value="1"> South</option>
+		</select>
+		<input id="latDegrees" name="latDegrees" class="float_none" style="display: inline; width: 80px;" />
+		<input id="latMinutes" name="latMinutes" class="float_none" style="display: inline; width:80px;" />
+		<br />
+		<select id="longNSSelect" name="longNSSelect" class="short">
+			<option value="0"> West </option>
+			<option value="1"> East </option>
+		</select>
+		<input id="longDegrees" name="longDegrees" class="float_none" style="display: inline; width:80px;" />
+		<input id="longMinutes" name="longMinutes" class="float_none" style="display: inline; width:80px;" />
+		</div>
+	
+	<div style="padding-bottom: 5px; padding-top: 5px; display: none;" id="decimalLatLng">
+		<br />
+		<label class="float_none" style="display:inline;" for="latitudeIn"> Latitude </label>
+		<input id="latitudeIn" name="latitudeIn" />
+		<br />
+		
+		<label class="float_none" style="display:inline;" for="longitudeIn"> Longitude </label>
+		<input id="longitudeIn" name="longitudeIn" />
+		<br />
+	
+	</div>
+	
+	<div style="text-align: right;" id="takeMeThere">
+		<a style="border-style: dotted; border-width: 1px; padding:1px;"> Take me There! </a>
+	</div>
+	
+	
+	<div style="text-align: center;" id="submitButton">
+		<a style="background-color: green; border-style: dotted; border-width: 1px; padding: 1px;"> Submit! </a>
+	</div>
+</div>
+<!-- End newActivityControl.html -->

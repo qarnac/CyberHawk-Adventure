@@ -181,7 +181,7 @@ function submitLatLng(location) {
 }
 
 // The function that is called when the GoToControl Submit button is clicked.
-function GoToControlOnSubmit(event) {
+function GoToControlOnSubmit() {
 		// BUG: If you move the marker out of bounds and click submit, this function still submits
 		// TODO: bounds checking?
 

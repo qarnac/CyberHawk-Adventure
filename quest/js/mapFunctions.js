@@ -62,8 +62,32 @@ function submitNewHunt(toPlot){
 	
 }
 
+function takeMeThereActivity(toPlot){
+	var latValue;
+	var longValue;
+	
+	if (document.getElementById("decimalDMSSelect").selectedIndex == "0")
+	{
+		latValue = document.getElementById("latitudeIn").value;
+		longValue = document.getElementById("longitudeIn").value;
+	}
+	else{
+		var latDirection;
+		var longDirection;
+		if (document.getElementById("latNSSelect").selectedIndex == 0) { latDirection = "N"; }
+			else { latDirection = "S"; }
+			if (document.getElementById("longNSSelect").selectedIndex == 0) { longDirection = "W"; }
+			else { longDirection = "E"; }
+				
+			latValue = toDecimal(latDirection, document.getElementById("latDegrees").value, document.getElementById("latMinutes").value);
+			longValue = toDecimal(longDirection, document.getElementById("longDegrees").value, document.getElementById("longMinutes").value);
+			}
+		placeMarker(toPlot, new google.maps.LatLng(latValue, longValue));
+		
+	}
+
 // Is called by createGotoControl in order to fill in the goToControlbox and set up events.
-function initializeLatLng(toPlot){
+function initializeLatLng(toPlot, isRectangle){
 	var latDMS = toDMS("lat", sessionStorage.lat);
 	var lngDMS = toDMS("long", sessionStorage.lng);
 	document.getElementById("decimalDMSSelect").value=1;
@@ -74,8 +98,13 @@ function initializeLatLng(toPlot){
 	document.getElementById("longDegrees").value=lngDMS.degrees;
 	document.getElementById("longMinutes").value=lngDMS.minutes;
 	google.maps.event.addDomListener(document.getElementById("decimalDMSSelect"), 'change', changeSelectedLatLngDisplay);
-	google.maps.event.addDomListener(document.getElementById("submitButton"), 'click', function(event){ submitNewHunt(toPlot); });
-	google.maps.event.addDomListener(document.getElementById("takeMeThere"), 'click', function(event) { updateRectangle(toPlot);});
+	if(isRectangle){
+		google.maps.event.addDomListener(document.getElementById("submitButton"), 'click', function(event){ submitNewHunt(toPlot); });
+		google.maps.event.addDomListener(document.getElementById("takeMeThere"), 'click', function(event) { updateRectangle(toPlot);});
+	} else{
+		google.maps.event.addDomListener(document.getElementById("submitButton"), 'click', function(event){ GoToControlOnSubmit(); });
+		google.maps.event.addDomListener(document.getElementById("takeMeThere"), 'click', function(event) { takeMeThereActivity(toPlot);});
+	}
 }
 
 // Is called when the select for Decimal or DMS is changed in the control box.
@@ -126,287 +155,23 @@ function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 			map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(ctrlDiv);
 			// Using setTimeout enables the browser to reset the DOM before executing the code to fill it in.
 			// TODO:  Find a reliable way to handle this.
-			setTimeout(function(){initializeLatLng(toPlot);}, 750);
+			setTimeout(function(){initializeLatLng(toPlot, isRectangle);}, 750);
 			});
 		sessionStorage.lat=center.lat();
 		sessionStorage.lng=center.lng();
 		return;
-	}
-
-
-	
-	ctrlDiv.id = "latlongctrl";
-	ctrlDiv.style.width = '300px';
-	ctrlDiv.style.backgroundColor = 'white';
-	ctrlDiv.style.borderStyle = 'solid';
-	ctrlDiv.style.borderWidth = '1px';
-	ctrlDiv.style.padding = '15px';
-	ctrlDiv.style.margin = '5px';
-	ctrlDiv.style.textAlign = 'right';
-	ctrlDiv.style.cursor = 'pointer';
-
-	var welcomeMsgDiv = document.createElement('div');
-	welcomeMsgDiv.id = "welcomeTxt";
-	welcomeMsgDiv.name = "welcomeTxt";
-	welcomeMsgDiv.style.textAlign = 'left';
-	welcomeMsgDiv.innerHTML = (isRectangle)? GLOBALS.NEW_HUNT_MAP_INSTRUCTIONS : GLOBALS.NEW_ACTIVITY_MAP_INSTRUCTIONS;
-
-	var ctrlLatInput = document.createElement('input');
-	ctrlLatInput.id = "latitudeIn";
-	ctrlLatInput.name = "latitudeIn";
-	// 5 decimal places is accurate to about 1 meter
-	ctrlLatInput.value = center.lat().toFixed(5);
-	
-	var ctrlLongInput = document.createElement('input');
-	ctrlLongInput.id = "longitudeIn";
-	ctrlLongInput.name = "longitudeIn";
-	// 5 decimal places is accurate to about 1 meter
-	ctrlLongInput.value = center.lng().toFixed(5);
-	
-	var ctrlLatLabel = document.createElement('label');
-	ctrlLatLabel.innerHTML = "Latitude";
-	ctrlLatLabel.className = "float_none";
-	ctrlLatLabel.style.display = "inline";
-	ctrlLatLabel.setAttribute("for", "latitudeIn");
-	
-	var ctrlLongLabel = document.createElement('label');
-	ctrlLongLabel.innerHTML = "Longitude";
-	ctrlLongLabel.className = "float_none";
-	ctrlLongLabel.style.display = "inline";
-	ctrlLongLabel.setAttribute("for", "longitudeIn");
-	
-	// For the rectangle object, we want the option for the user to directly change the width or height.
-	var ctrlWidthLabel;
-	var ctrlHeightLabel;
-	var ctrlWidthInput;
-	var ctrlHeightInput;
-	var DMSWidthLabel;
-	var DMSHeightLabel;
-	var DMSWidthInput;
-	var DMSHeightInput;
-	if(isRectangle){
-		// I wish I didn't have to create two different variables for this, 
-	//	   but it's the only way to have it so that way it can show up under the two parents (that i know of)
-		var decimal=createHeightWidthInputs();
-		ctrlWidthLabel=decimal.ctrlWidthLabel;
-		ctrlHeightLabel=decimal.ctrlHeightLabel;
-		ctrlWidthInput=decimal.ctrlWidthInput;
-		ctrlHeightInput=decimal.ctrlHeightInput;
-		var DMS=createHeightWidthInputs();
-		DMSWidthLabel=DMS.ctrlWidthLabel;
-		DMSHeightLabel=DMS.ctrlHeightLabel;
-		DMSWidthInput=DMS.ctrlWidthInput;
-		// We want the DMS inputs to have different id's.
-		DMSWidthInput.id="DMSWidth";
-		DMSHeightInput=DMS.ctrlHeightInput;
-		DMSHeightInput.id="DMSHeight";
-	}
-
-	var ctrlDecimalOrDMSSelect = document.createElement('select');
-	ctrlDecimalOrDMSSelect.id = "decimalDMSSelect";
-	ctrlDecimalOrDMSSelect.name = "decimalDMSSelect";
-	ctrlDecimalOrDMSSelect.add(new Option("Decimal", "0"));
-	ctrlDecimalOrDMSSelect.add(new Option("DMS", "1"));
-	ctrlDecimalOrDMSSelect.style.cssfloat = "right";
-	ctrlDecimalOrDMSSelect.selectedIndex = "1";
-
-
-	var ctrlSelectDiv = document.createElement('div');
-	ctrlSelectDiv.appendChild(ctrlDecimalOrDMSSelect);
-
-	layoutLatLongBox = document.createElement('div');
-	layoutLatLongBox.style.paddingBottom = '5px';
-	layoutLatLongBox.style.paddingTop = '5px';
-	layoutLatLongBox.style.display = "none";
-	layoutLatLongBox.appendChild(document.createElement('br'));
-	layoutLatLongBox.appendChild(ctrlLatLabel);
-	layoutLatLongBox.appendChild(ctrlLatInput);
-	layoutLatLongBox.appendChild(document.createElement('br'));
-	layoutLatLongBox.appendChild(ctrlLongLabel);
-	layoutLatLongBox.appendChild(ctrlLongInput);
-	// If it's a rectangle, we want to add the width/height modifiers.
-		/*   Deleting this section should be able to make the width and height boxes no longer visible to the user, without having to change
-		all of the code that made the boxes work.  If it does work, I will go back and delete this section of code.
-	if(isRectangle){
-		layoutLatLongBox.appendChild(document.createElement("br"));
-		layoutLatLongBox.appendChild(ctrlWidthLabel);
-		layoutLatLongBox.appendChild(ctrlWidthInput);
-		layoutLatLongBox.appendChild(document.createElement("br"));
-		layoutLatLongBox.appendChild(ctrlHeightLabel);
-		layoutLatLongBox.appendChild(ctrlHeightInput);
-	} */
-	
-	var ctrlLatNS = document.createElement('select');
-	ctrlLatNS.id = "latNSSelect";
-	ctrlLatNS.name = "latNSSelect";
-	ctrlLatNS.className = "short";
-	ctrlLatNS.add(new Option("North", "0"));
-	ctrlLatNS.add(new Option("South", "1"));
-	if (latDMS.compass == "N") { ctrlLatNS.selectedIndex = 0; }
-	else { ctrlLatNS.selectedIndex = 1; }
-	
-	var ctrlLatDegrees = document.createElement('input');
-	ctrlLatDegrees.id = "latDegrees";
-	ctrlLatDegrees.name = "latDegrees";
-	ctrlLatDegrees.value = latDMS.degrees;
-	ctrlLatDegrees.className = "float_none";
-	ctrlLatDegrees.style.display = "inline";
-	ctrlLatDegrees.style.width = "80px";
-	
-	var ctrlLatMinutes = document.createElement('input');
-	ctrlLatMinutes.id = "latMinutes";
-	ctrlLatMinutes.name = "latMinutes";
-	ctrlLatMinutes.value = latDMS.minutes;
-	ctrlLatMinutes.className = "float_none";
-	ctrlLatMinutes.style.display = "inline";
-	ctrlLatMinutes.style.width = "80px";
-	
-	var ctrlLongNS = document.createElement('select');
-	ctrlLongNS.id = "longNSSelect";
-	ctrlLongNS.name = "longNSSelect";
-	ctrlLongNS.className = "short";
-	ctrlLongNS.add(new Option("West", "0"));
-	ctrlLongNS.add(new Option("East", "1"));
-	if (lngDMS.compass == "W") { ctrlLongNS.selectedIndex = 0; }
-	else { ctrlLongNS.selectedIndex = 1; }
-	
-	var ctrlLongDegrees = document.createElement('input');
-	ctrlLongDegrees.id = "longDegrees";
-	ctrlLongDegrees.name = "longDegrees";
-	ctrlLongDegrees.value = lngDMS.degrees;
-	ctrlLongDegrees.className = "float_none";
-	ctrlLongDegrees.style.display = "inline";
-	ctrlLongDegrees.style.width = "80px";
-	
-	var ctrlLongMinutes = document.createElement('input');
-	ctrlLongMinutes.id = "longMinutes";
-	ctrlLongMinutes.name = "longMinutes";
-	ctrlLongMinutes.value = lngDMS.minutes;
-	ctrlLongMinutes.className = "float_none";
-	ctrlLongMinutes.style.display = "inline";
-	ctrlLongMinutes.style.width = "80px";
-	
-	var layoutDMSBox = document.createElement('div');
-	layoutDMSBox.style.paddingBottom = '5px';
-	layoutDMSBox.style.paddingTop = '5px';
-	layoutDMSBox.style.display = "block";
-	layoutDMSBox.appendChild(document.createElement('br'));
-	layoutDMSBox.appendChild(ctrlLatNS);
-	layoutDMSBox.appendChild(ctrlLatDegrees);
-	layoutDMSBox.appendChild(ctrlLatMinutes);
-	layoutDMSBox.appendChild(document.createElement('br'));
-	layoutDMSBox.appendChild(ctrlLongNS);
-	layoutDMSBox.appendChild(ctrlLongDegrees);
-	layoutDMSBox.appendChild(ctrlLongMinutes);
-	/*   Deleting this section should be able to make the width and height boxes no longer visible to the user, without having to change
-		all of the code that made the boxes work.  If it does work, I will go back and delete this section of code.
-	if(isRectangle){ 
-		layoutDMSBox.appendChild(document.createElement("br"));
-		layoutDMSBox.appendChild(DMSWidthLabel);
-		layoutDMSBox.appendChild(DMSWidthInput);
-		layoutDMSBox.appendChild(document.createElement("br"));
-		layoutDMSBox.appendChild(DMSHeightLabel);
-		layoutDMSBox.appendChild(DMSHeightInput);
-	} */
-
-
-	var ctrlBtn = document.createElement('a');
-	ctrlBtn.innerHTML = "Take me there!";
-	ctrlBtn.style.borderStyle = 'dotted';
-	ctrlBtn.style.borderWidth = '1px';
-	ctrlBtn.style.padding = '1px';
-
-	var layoutBtnDiv = document.createElement('div');
-	if(!isRectangle) layoutBtnDiv.appendChild(ctrlBtn);
-	layoutBtnDiv.style.textAlign = 'right';
-
-	var ctrlSubmitBtn = document.createElement('a');
-	ctrlSubmitBtn.innerHTML = "Submit!";
-	ctrlSubmitBtn.style.backgroundColor = 'green';
-	ctrlSubmitBtn.style.borderStyle = 'dotted';
-	ctrlSubmitBtn.style.borderWidth = '1px';
-	ctrlSubmitBtn.style.padding = '1px';
-
-	var layoutSubmitBtnDiv = document.createElement('div');
-	layoutSubmitBtnDiv.appendChild(ctrlSubmitBtn);
-	layoutSubmitBtnDiv.style.textAlign = 'center';
-
-	// Assemble the custom control
-	ctrlDiv.appendChild(welcomeMsgDiv);
-	ctrlDiv.appendChild(ctrlSelectDiv);
-	ctrlDiv.appendChild(document.createElement('br'));
-	ctrlDiv.appendChild(layoutDMSBox);
-	ctrlDiv.appendChild(layoutLatLongBox);
-	ctrlDiv.appendChild(layoutBtnDiv);
-	ctrlDiv.appendChild(document.createElement('br'));
-	ctrlDiv.appendChild(document.createElement('hr'));
-	ctrlDiv.appendChild(layoutSubmitBtnDiv);
-
-	google.maps.event.addDomListener(ctrlBtn, 'click', function(event) {
-		if(!isRectangle){
-			var latValue;
-			var longValue;
-			
-			if (ctrlDecimalOrDMSSelect.selectedIndex == "0")
-			{
-				latValue = ctrlLatInput.value;
-				longValue = ctrlLongInput.value;
-			}
-			else if (ctrlDecimalOrDMSSelect.selectedIndex == "1")
-			{
-				var latDirection;
-				var longDirection;
-
-				if (ctrlLatNS.selectedIndex == 0) { latDirection = "N"; }
-				else { latDirection = "S"; }
-				if (ctrlLongNS.selectedIndex == 0) { longDirection = "W"; }
-				else { longDirection = "E"; }
-				
-				latValue = toDecimal(latDirection, ctrlLatDegrees.value, ctrlLatMinutes.value);
-				longValue = toDecimal(longDirection, ctrlLongDegrees.value, ctrlLongMinutes.value);
-			}
-			placeMarker(toPlot, new google.maps.LatLng(latValue, longValue));
-		} else{
-				updateRectangle(toPlot);
-			}
+	} else{
+		ajax("GET", GLOBALS.HTML_FOLDER_LOCATION + "newActivityControl.html", function(serverResponse){
+			ctrlDiv.innerHTML=serverResponse;
+			map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(ctrlDiv);
+			sessionStorage.lat=center.lat();
+			sessionStorage.lng=center.lng();
+			setTimeout(function(){initializeLatLng(toPlot, isRectangle);}, 750);
 		});
+	
+	}
 
-	google.maps.event.addDomListener(ctrlSubmitBtn, 'click', onSubmit);
 
-	google.maps.event.addDomListener(ctrlDecimalOrDMSSelect, 'change', function (event) {
-		var latValue = ctrlLatInput.value;
-		var longValue = ctrlLongInput.value;
-		
-		if (ctrlDecimalOrDMSSelect.selectedIndex == "1")
-		{
-			layoutDMSBox.style.display = "block";
-			layoutLatLongBox.style.display = "none";
-
-			updateLatLngDMS(new google.maps.LatLng(latValue, longValue));
-		}
-		else
-		{
-			layoutDMSBox.style.display = "none";
-			layoutLatLongBox.style.display = "block";
-			
-			var latDirection;
-			var longDirection;
-
-			if (ctrlLatNS.selectedIndex == 0) { latDirection = "N"; }
-			else { latDirection = "S"; }
-			if (ctrlLongNS.selectedIndex == 0) { longDirection = "W"; }
-			else { longDirection = "E"; }
-			
-			var latDec = toDecimal(latDirection, ctrlLatDegrees.value, ctrlLatMinutes.value);
-			var lngDec = toDecimal(longDirection, ctrlLongDegrees.value, ctrlLongMinutes.value);
-			// If width and height DMS values exist, set width and height to them.  otherwise set them to null.
-			updateLatLngBox(new google.maps.LatLng(latDec, lngDec), isRectangle);
-		}
-	});
-	// Index is the order in which controls are rendered, all before default controls
-	ctrlDiv.index = 1;
-	// display the control
-	map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(ctrlDiv);
 }
 
 function createHeightWidthInputs(){
