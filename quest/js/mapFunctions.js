@@ -44,6 +44,29 @@ function createRectangleOverlay(map, bounds){
 }
 
 
+// Is called when the user searches an address on the map.  Changes the coordinates to the coordinates of the address.
+function searchAddress(){
+	var address=document.getElementById("searchBar").value.replace(" ", "+");
+	ajax("GET", "http://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&sensor=true", function(event){
+		address=JSON.parse(event);
+		console.log(address);
+
+	// TODO:  Catch the error thrown if the string can not be parsed into a float.
+	var southwestBounds=new google.maps.LatLng(
+							address.results[0].geometry.location.lat-(GLOBALS.DEFAULT_RECT_SIZE/2.0),
+							address.results[0].geometry.location.lng-(GLOBALS.DEFAULT_RECT_SIZE/2.0));
+	var northeastBounds=new google.maps.LatLng(
+							address.results[0].geometry.location.lat+(GLOBALS.DEFAULT_RECT_SIZE/2.0),
+							address.results[0].geometry.location.lng+(GLOBALS.DEFAULT_RECT_SIZE/2.0));
+	var bounds=new google.maps.LatLngBounds(southwestBounds, northeastBounds);
+	var rectOptions = {
+		bounds : bounds
+	};
+	rectangle.setOptions(rectOptions);
+	rectangle.getMap().panTo(rectangle.getBounds().getCenter());
+	});
+}
+
 // Is called by the submit button in the gotoControlBox submit for a new hunt.
 function submitNewHunt(toPlot){
 	var date=(Date.parse(document.getElementById("dateOfTrip").value)/1000)+86400
