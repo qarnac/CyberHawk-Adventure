@@ -36,13 +36,19 @@ function create_activity_obj(allActivities) {
 // Is now also called from studentActivityList to create the list.
 // Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
 function generateActivityView(activity, isStudent) {
-	// Add the Edit activity button first, so that it displays just to the right of the Activity View
-	var editButton = document.createElement("input");
-	editButton.setAttribute("type", "button");
-	editButton.setAttribute("value", "Edit Activity");
-	$('activity').appendChild(editButton);
-	
+
 	var activityTable = document.createElement('table');
+	
+	if(isStudent || (activity.status!="incomplete")){
+		// Add the Edit activity button first, so that it displays just to the right of the Activity View
+		var editButton = document.createElement("input");
+		editButton.setAttribute("type", "button");
+		editButton.setAttribute("value", "Edit Activity");
+		$('activity').appendChild(editButton);
+		if(isStudent) editButton.onclick = function() {editActivityAsStudent(activity);};
+		else editButton.onclick=function(){addTeacherComments(activityTable, editButton, activity['id']);};
+	}
+
 	activityTable.className = "activityTable";
 	activityTable.cellPadding = "5px";
 
@@ -229,9 +235,6 @@ function generateActivityView(activity, isStudent) {
 	var tableItem = document.createElement('li');
 	tableItem.className = "activityItem";
 	tableItem.appendChild(activityTable);
-	
-	if(isStudent) editButton.onclick = function() {editActivityAsStudent(activity);};
-	else editButton.onclick=function(){addTeacherComments(activityTable, editButton, activity['id']);};
 	
 	return tableItem;
 }

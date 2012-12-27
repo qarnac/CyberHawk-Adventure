@@ -95,16 +95,22 @@ function listbox() {
 // Is now also called from studentActivityList to create the list.
 // Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
 function generateActivityView(activity, isStudent) {
+	var activityTable = document.createElement('table');
+	
 	// Add the Edit activity button first, so that it displays just to the right of the Activity View
+	if(isStudent || (activity.status!="incomplete")){
 	var editButton = document.createElement("input");
-	editButton.setAttribute("type", "button");
-	editButton.setAttribute("value", "Edit Activity");
-	// Use this ugly syntax because it's the only way I know of passing the parameter to an onclick function.
+		editButton.setAttribute("type", "button");
+		editButton.setAttribute("value", "Edit Activity");
+		// Use this ugly syntax because it's the only way I know of passing the parameter to an onclick function.
+		$('activity').appendChild(editButton);	
+		if(isStudent) editButton.onclick = function() {editActivityAsStudent(activity);};
+		else editButton.onclick=function(){addTeacherComments(activityTable, editButton, activity['id']);};
+	}
+	
 
 	
-	$('activity').appendChild(editButton);
-	
-	var activityTable = document.createElement('table');
+
 	activityTable.className = "activityTable";
 	activityTable.cellPadding = "5px";
 
@@ -222,8 +228,6 @@ function generateActivityView(activity, isStudent) {
 	tableItem.className = "activityItem";
 	tableItem.appendChild(activityTable);
 	
-	if(isStudent) editButton.onclick = function() {editActivityAsStudent(activity);};
-	else editButton.onclick=function(){addTeacherComments(activityTable, editButton, activity['id']);};
 	
 	return tableItem;
 }

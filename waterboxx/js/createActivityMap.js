@@ -58,7 +58,9 @@ function mapListButton(){
 	else {
 	// Currently, not a lot is done to show the list again, so it doesn't need to be wrapped into a function.
 		document.getElementById("activity").removeChild(document.getElementById("map_canvas"))
-		document.getElementById("slist").style.display="block";
+		 for ( var i = 0; i < activityList.length; i++) {
+			$('activity').appendChild(generateActivityView(activityList[i], false));
+		}
 		document.getElementById("mapButton").value="Map View";
 		}
 }
