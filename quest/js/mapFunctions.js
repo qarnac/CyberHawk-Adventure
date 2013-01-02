@@ -164,7 +164,6 @@ function changeSelectedLatLngDisplay(){
 }
 
 // This function fills an html div with the contents of the map latlng control
-// TODO: Working on moving this to an HTML file, as all it does is create HTML.
 function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 {
 	var ctrlDiv = document.createElement('div');

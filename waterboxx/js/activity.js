@@ -438,6 +438,8 @@ function successfulUpload(serverResponse){
 	}
 }
 
+/*
+Unused function.  If it remains unused at a later date, I will go ahead and remove the function.
 function feedback(x)
 {
 	var div = createElement('div','');
@@ -453,6 +455,7 @@ function feedback(x)
 	div.appendChild(activityStatus(comments,x));
 	return div;
 }
+*/
 function activityStatus(comments,x)
 {
 	if(feed[x] == undefined) return;
