@@ -11,6 +11,8 @@ var activities = new Array();
 var feed = {};
 // Has the status of each activity like its id,comment and status.
 
+// activityView is created in order to hold the HTML file activityView.html.
+var activityView;
 
 
 //Instantiates the array activities with student activitivities
@@ -21,12 +23,14 @@ function create_activity_obj(allActivities) {
 	if (allActivities == "none")//server returns false if it cannot find any activities
 		alert("No one has created an activity yet");
 	else {
-		activities = [];
-		activityList = JSON.parse(allActivities);
-
-		for ( var i = 0; i < activityList.length; i++) {
-				$('activity').appendChild(generateActivityView(activityList[i], false));
-			}
+		ajax("GET", GLOBALS.PHP_FOLDER_LOCATION + "activityView.html", function(serverResponse){
+			activityView=serverResponse;
+			activities = [];
+			activityList = JSON.parse(allActivities);		
+			for ( var i = 0; i < activityList.length; i++) {
+					$('activity').appendChild(generateActivityView(activityList[i], false));
+				}
+			});
 	}
 	
 	
