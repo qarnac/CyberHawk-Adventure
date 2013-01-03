@@ -195,40 +195,6 @@ function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 
 
 }
-
-function createHeightWidthInputs(){
-	ctrlWidthLabel=document.createElement("label");
-	ctrlWidthLabel.innerHTML="Width";
-	ctrlWidthLabel.className="float_none";
-	ctrlWidthLabel.style.display="inline";
-	ctrlWidthLabel.setAttribute("for", "widthIn");
-	
-	ctrlHeightLabel=document.createElement("label");
-	ctrlHeightLabel.innerHTML="height";
-	ctrlHeightLabel.className="float_none";
-	ctrlHeightLabel.style.display="inline";
-	ctrlHeightLabel.setAttribute("for", "heightIn");
-	
-	ctrlWidthInput = document.createElement('input');
-	ctrlWidthInput.id = "widthIn";
-	ctrlWidthInput.name = "widthIn";
-	
-	ctrlHeightInput = document.createElement('input');
-	ctrlHeightInput.id = "heightIn";
-	ctrlHeightInput.name = "heightIn";
-
-	var upperBounds=rectangle.getBounds().getNorthEast();
-	var lowerBounds=rectangle.getBounds().getSouthWest();
-	ctrlWidthInput.value=upperBounds.lng()-lowerBounds.lng();
-	ctrlHeightInput.value=upperBounds.lat()-lowerBounds.lat();
-	return {
-		ctrlWidthLabel:ctrlWidthLabel,
-		ctrlHeightLabel: ctrlHeightLabel,
-		ctrlWidthInput: ctrlWidthInput,
-		ctrlHeightInput: ctrlHeightInput
-	};
-}
-
 // Updates the GoToControlBox from decimal to DMS.
 function updateLatLngDMS(location, isRectangle) {
 	latDMS = toDMS("lat", location.lat());

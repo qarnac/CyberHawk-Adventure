@@ -44,7 +44,7 @@ function createPlacemark(activity, map){
 	google.maps.event.addListener(marker, "click", function(){
 		// This sets it up so that way an infowindow pops up and shows the text that we just created in the text variable above.
 		info=new google.maps.InfoWindow();
-		info.setContent(generateActivityView(activity, false));
+		info.setContent(generateActivityView(activity, false, document.getElementsByName("partner_names").length));
 		info.setPosition(new google.maps.LatLng(activity.lat, activity.lng));
 		info.open(map);
 	});
@@ -57,7 +57,11 @@ function mapListButton(){
 	else {
 	// Currently, not a lot is done to show the list again, so it doesn't need to be wrapped into a function.
 		document.getElementById("activity").removeChild(document.getElementById("map_canvas"))
-		document.getElementById("slist").style.display="block";
+		if(document.getElementById("slist")) document.getElementById("slist").style.display="block";
+		else{
+			document.getElement
+			
+		}
 		document.getElementById("mapButton").value="Map View";
 		}
 }

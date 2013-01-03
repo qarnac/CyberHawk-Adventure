@@ -11,9 +11,6 @@ var activities = new Array();
 var feed = {};
 // Has the status of each activity like its id,comment and status.
 
-// activityView is created in order to hold the HTML file activityView.html.
-var activityView;
-
 
 
 //Instantiates the array activities with student activitivities
@@ -75,16 +72,12 @@ function listbox(activityList) {
 			// Only happens when a user is selected, and then unselected (via shift-click)
 		}
 		else {
-			ajax("GET", GLOBALS.HTML_FOLDER_LOCATION + "activityView.html", function(serverResponse){
-				activityView=serverResponse;
-				var tableNumber=0;
-				for ( var i = 0; i < activityList.length; i++) {
-						if(activityList[i].student_id!=student_id) continue;
-						$('activity').appendChild(generateActivityView(activityList[i], false, tableNumber++));
+			var tableNumber=0;
+			for ( var i = 0; i < activityList.length; i++) {
+					if(activityList[i].student_id!=student_id) continue;
+					$('activity').appendChild(generateActivityView(activityList[i], false, tableNumber++));
 					}
-			});
-			
-		}
+			}
 	};
 	return temp;
 }
@@ -137,18 +130,18 @@ function generateActivityView(activity, isStudent, tableNumber) {
 	
 	// Add the Edit activity button first, so that it displays just to the right of the Activity View
 	if(isStudent || (activity.status!="incomplete")){
-	var editButton = document.createElement("input");
+		var editButton = document.createElement("input");
 		editButton.setAttribute("type", "button");
 		editButton.setAttribute("value", "Edit Activity");
 		// Use this ugly syntax because it's the only way I know of passing the parameter to an onclick function.
-		$('activity').appendChild(editButton);	
+		activityTable.appendChild(editButton);	
 		if(isStudent) editButton.onclick = function() {editActivityAsStudent(activity);};
 		else editButton.onclick=function(){addTeacherComments(activityTable, editButton, activity['id']);};
 	}
 	if(!isStudent){
-			activityTable.innerHTML=activityView;
-			 setTimeout(function(){createTeacherActivityTable(activity, isStudent, tableNumber);}, 0);
-			 return activityTable;
+			activityTable.innerHTML=GLOBALS.activityView;
+			setTimeout(function(){createTeacherActivityTable(activity, isStudent, tableNumber);}, 10);
+			return activityTable;
 	} 
 
 	
