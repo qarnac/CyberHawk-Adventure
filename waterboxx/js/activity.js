@@ -28,7 +28,7 @@ function create_activity_obj(allActivities) {
 			activities = [];
 			activityList = JSON.parse(allActivities);		
 			for ( var i = 0; i < activityList.length; i++) {
-					$('activity').appendChild(generateActivityView(activityList[i], false));
+					$('activity').appendChild(generateActivityView(activityList[i], false, i));
 				}
 			});
 	}
@@ -36,10 +36,17 @@ function create_activity_obj(allActivities) {
 	
 }
 
+// Is used to populate the activityView.html file.
+function createTeacherActivityTable(activity, isStudent, tableNumber){
+	for(i in activity){
+		console.log(i);
+	}
+}
+
 
 // Is now also called from studentActivityList to create the list.
 // Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
-function generateActivityView(activity, isStudent) {
+function generateActivityView(activity, isStudent, tableNumber) {
 
 	var activityTable = document.createElement('table');
 	
@@ -52,6 +59,11 @@ function generateActivityView(activity, isStudent) {
 		if(isStudent) editButton.onclick = function() {editActivityAsStudent(activity);};
 		else editButton.onclick=function(){addTeacherComments(activityTable, editButton, activity['id']);};
 	}
+	
+	if(!isStudent){
+			activityTable.innerHTML=activityView;
+			 setTimeout(function(){createTeacherActivityTable(activity, isStudent, tableNumber);}, 750);
+	} 
 
 	activityTable.className = "activityTable";
 	activityTable.cellPadding = "5px";

@@ -11,6 +11,9 @@ var activities = new Array();
 var feed = {};
 // Has the status of each activity like its id,comment and status.
 
+// activityView is created in order to hold the HTML file activityView.html.
+var activityView;
+
 
 
 //Instantiates the array activities with student activitivities
@@ -20,14 +23,12 @@ var feed = {};
 function create_activity_obj(allActivities) {
 	if (allActivities == "none")//server returns false if it cannot find any activities
 		alert("No one has created an activity yet");
-	else {
+	else{
 		activities = [];
 		activityList = JSON.parse(allActivities);
-		var studentList = listbox();
+		var studentList = listbox(activityList);
 		feedactivity(activityList, studentList);
 		$('students').appendChild(studentList);
-//		$('students').appendChild(updatebutton());
-		//actdisp(allActivities[m]);
 	}
 }
 
@@ -55,19 +56,8 @@ function feedactivity(x, list_box) {
 	}
 }
 
-function updatebutton() {
-	var temp = document.createElement('input');
-	temp.type = 'button';
-	temp.value = "Update DB";
-	//When this button is clicked the feed array is sent to the server
-	temp.onclick = function() {
-		ajax('content=' + JSON.stringify(feed), PHP_FOLDER_LOCATION + 'upload.php', handleupload);
-	};
-	return temp;
-}
-
 // This is the listbox which houses each teacher's students.
-function listbox() {
+function listbox(activityList) {
 	var temp = document.createElement('select');
 	temp.id = 'slist';
 	temp.size = 20;
@@ -79,22 +69,70 @@ function listbox() {
 	};
 	temp.onchange = function() {
 		$('activity').innerHTML = "";
-		var x = activities.hassid(this.value);
+		student_id=this.value;
+		var x = activities.hassid(student_id);
 		if (x == "false") {
 			// Only happens when a user is selected, and then unselected (via shift-click)
 		}
 		else {
-			for ( var i = 0; i < activities[x].contents.length; i++) {
-				$('activity').appendChild(generateActivityView(activities[x].contents[i], false));
-			}
+			ajax("GET", GLOBALS.HTML_FOLDER_LOCATION + "activityView.html", function(serverResponse){
+				activityView=serverResponse;
+				var tableNumber=0;
+				for ( var i = 0; i < activityList.length; i++) {
+						if(activityList[i].student_id!=student_id) continue;
+						$('activity').appendChild(generateActivityView(activityList[i], false, tableNumber++));
+					}
+			});
+			
 		}
 	};
 	return temp;
 }
 
+// Wrapped into function due to the multiple times this is done.
+function fillAnswerDiv(Dom, answer){
+	if(answer==""){
+		Dom.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
+		Dom.className = "unansweredQuestion";
+	} else{
+		Dom.innerHTML=answer;
+	}
+}
+
+// Is used to populate the activityView.html file.
+function createTeacherActivityTable(activity, isStudent, tableNumber){
+	fillAnswerDiv(document.getElementsByName("partner_names")[tableNumber], activity.partner_names);
+	fillAnswerDiv(document.getElementsByName("aboutmedia")[tableNumber],activity.aboutmedia);
+	fillAnswerDiv(document.getElementsByName("whythis")[tableNumber], activity.whythis);
+	fillAnswerDiv(document.getElementsByName("howhelpfull")[tableNumber], activity.howhelpfull);
+	fillAnswerDiv(document.getElementsByName("yourdoubt")[tableNumber], activity.yourdoubt);
+	fillAnswerDiv(document.getElementsByName("mquestion")[tableNumber], activity.mquestion);
+	document.getElementsByName("comments")[tableNumber].innerHTML=activity.comments;
+	document.getElementsByName("status")[tableNumber].innerHTML=activity.status;
+	document.getElementsByName("activityImage")[tableNumber].src= PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
+	
+	var orderedList = document.getElementsByName("manswers")[tableNumber];
+	orderedList.className = "multipleChoiceAnswers";
+	var answerList=JSON.parse(activity.choices);
+	
+	for (var i = 0; i < answerList.choices.length; i++) {
+		var answer = document.createElement('li');
+		if (answerList.choices[i].ans == "true") { // style correct answer
+			var answerSpan = document.createElement('span');
+			answerSpan.className = "correctAnswer";
+			answerSpan.innerHTML = answerList.choices[i].content;
+			answer.appendChild(answerSpan);
+		}
+		else {
+			answer.innerHTML = answerList.choices[i].content;
+		}
+		orderedList.appendChild(answer);
+	}
+}
+
 // Is now also called from studentActivityList to create the list.
 // Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
-function generateActivityView(activity, isStudent) {
+function generateActivityView(activity, isStudent, tableNumber) {
 	var activityTable = document.createElement('table');
 	
 	// Add the Edit activity button first, so that it displays just to the right of the Activity View
@@ -107,7 +145,11 @@ function generateActivityView(activity, isStudent) {
 		if(isStudent) editButton.onclick = function() {editActivityAsStudent(activity);};
 		else editButton.onclick=function(){addTeacherComments(activityTable, editButton, activity['id']);};
 	}
-	
+	if(!isStudent){
+			activityTable.innerHTML=activityView;
+			 setTimeout(function(){createTeacherActivityTable(activity, isStudent, tableNumber);}, 0);
+			 return activityTable;
+	} 
 
 	
 
