@@ -121,6 +121,13 @@ function createTeacherActivityTable(activity, isStudent, tableNumber){
 		}
 		orderedList.appendChild(answer);
 	}
+	if(activity.status!="incomplete"){
+		document.getElementsByName("editButton")[tableNumber].onclick=function(){ addTeacherComments(documents.getElementsByName("editButton")[tableNumber].parentNode,
+																									documents.getElementsByName("editButton")[tableNumber],
+																									activity.id);};
+	} else{
+		document.getElementsByName("editButton")[tableNumber].style.display="none";
+	}
 }
 
 // Is now also called from studentActivityList to create the list.
@@ -129,6 +136,7 @@ function generateActivityView(activity, isStudent, tableNumber) {
 	var activityTable = document.createElement('table');
 	
 	// Add the Edit activity button first, so that it displays just to the right of the Activity View
+	/*
 	if(isStudent || (activity.status!="incomplete")){
 		var editButton = document.createElement("input");
 		editButton.setAttribute("type", "button");
@@ -137,10 +145,10 @@ function generateActivityView(activity, isStudent, tableNumber) {
 		activityTable.appendChild(editButton);	
 		if(isStudent) editButton.onclick = function() {editActivityAsStudent(activity);};
 		else editButton.onclick=function(){addTeacherComments(activityTable, editButton, activity['id']);};
-	}
+	} */
 	if(!isStudent){
 			activityTable.innerHTML=GLOBALS.activityView;
-			setTimeout(function(){createTeacherActivityTable(activity, isStudent, tableNumber);}, 10);
+			setTimeout(function(){createTeacherActivityTable(activity, isStudent, tableNumber);}, 75);
 			return activityTable;
 	} 
 
