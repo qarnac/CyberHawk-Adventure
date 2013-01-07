@@ -93,7 +93,7 @@ function fillAnswerDiv(Dom, answer){
 }
 
 // Is used to populate the activityView.html file.
-function createTeacherActivityTable(activity, isStudent, tableNumber){
+function fillActivityTable(activity, isStudent, tableNumber){
 	fillAnswerDiv(document.getElementsByName("partner_names")[tableNumber], activity.partner_names);
 	fillAnswerDiv(document.getElementsByName("aboutmedia")[tableNumber],activity.aboutmedia);
 	fillAnswerDiv(document.getElementsByName("whythis")[tableNumber], activity.whythis);
@@ -121,9 +121,11 @@ function createTeacherActivityTable(activity, isStudent, tableNumber){
 		}
 		orderedList.appendChild(answer);
 	}
-	if(activity.status!="incomplete"){
-		document.getElementsByName("editButton")[tableNumber].onclick=function(){ addTeacherComments(documents.getElementsByName("editButton")[tableNumber].parentNode,
-																									documents.getElementsByName("editButton")[tableNumber],
+	if(isStudent){
+		document.getElementsByName("editButton")[tableNumber].onclick=function(){editActivityAsStudent(activity);};
+	}else if(activity.status!="incomplete"){
+		document.getElementsByName("editButton")[tableNumber].onclick=function(){ addTeacherComments(document.getElementsByName("editButton")[tableNumber].parentNode,
+																									document.getElementsByName("editButton")[tableNumber],
 																									activity.id);};
 	} else{
 		document.getElementsByName("editButton")[tableNumber].style.display="none";
@@ -134,145 +136,9 @@ function createTeacherActivityTable(activity, isStudent, tableNumber){
 // Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
 function generateActivityView(activity, isStudent, tableNumber) {
 	var activityTable = document.createElement('table');
-	
-	// Add the Edit activity button first, so that it displays just to the right of the Activity View
-	/*
-	if(isStudent || (activity.status!="incomplete")){
-		var editButton = document.createElement("input");
-		editButton.setAttribute("type", "button");
-		editButton.setAttribute("value", "Edit Activity");
-		// Use this ugly syntax because it's the only way I know of passing the parameter to an onclick function.
-		activityTable.appendChild(editButton);	
-		if(isStudent) editButton.onclick = function() {editActivityAsStudent(activity);};
-		else editButton.onclick=function(){addTeacherComments(activityTable, editButton, activity['id']);};
-	} */
-	if(!isStudent){
-			activityTable.innerHTML=GLOBALS.activityView;
-			setTimeout(function(){createTeacherActivityTable(activity, isStudent, tableNumber);}, 75);
-			return activityTable;
-	} 
-
-	
-
-	activityTable.className = "activityTable";
-	activityTable.cellPadding = "5px";
-
-	var activityTableRow1 = document.createElement('tr');
-	var activityTableRow2 = document.createElement('tr');
-	var activityTableRow3 = document.createElement('tr');
-	
-	var activityPhoto = document.createElement('img');
-	activityPhoto.src = PHP_FOLDER_LOCATION + "image.php?id=" + activity['media_id'];
-	
-	var activityPhotoCell = document.createElement('td');
-	activityPhotoCell.className = "activityPhotoCell";
-	activityPhotoCell.appendChild(activityPhoto);
-
-	var partnerLabel=document.createElement('div');
-	partnerLabel.innerHTML= "Who are the partners in this group?";
-	partnerLabel.className="questionLabel";
-	
-	var aboutLabel = document.createElement('div');
-	aboutLabel.innerHTML = "What is this picture about?";
-	aboutLabel.className = "questionLabel";
-	var whyLabel = document.createElement('div');
-	whyLabel.innerHTML = "Why did you choose this picture";
-	whyLabel.className = "questionLabel";
-	var helpfulLabel = document.createElement('div');
-	helpfulLabel.innerHTML = "How does this picture show what you've learned in class?";
-	helpfulLabel.className = "questionLabel";
-	var furtherLabel = document.createElement('div');
-	furtherLabel.innerHTML = "What is a question you have about this picture?";
-	furtherLabel.className = "questionLabel";
-	
-	
-	var partnerNames = document.createElement('div');
-	partnerNames.innerHTML = activity['partner_names'];
-	if (activity['partner_names'] == "") {
-		partnerNames.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
-		partnerNames.className = "unansweredQuestion";
-	}
-
-	
-	var aboutPhotoText = document.createElement('div');
-	aboutPhotoText.innerHTML = activity['aboutmedia'];
-	if (activity['aboutmedia'] == "") {
-		aboutPhotoText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
-		aboutPhotoText.className = "unansweredQuestion";
-	}
-
-	var whyThisPhotoText = document.createElement('div');
-	whyThisPhotoText.innerHTML = activity['whythis'];
-	if (activity['whythis'] == "") {
-		whyThisPhotoText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
-		whyThisPhotoText.className = "unansweredQuestion";
-	}
-
-	var howHelpfulText = document.createElement('div');
-	howHelpfulText.innerHTML = activity['howhelpfull'];
-	if (activity['howhelpfull'] == "") {
-		howHelpfulText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
-		howHelpfulText.className = "unansweredQuestion";
-	}
-
-	var furtherQuestionText = document.createElement('div');
-	furtherQuestionText.innerHTML = activity['yourdoubt'];
-	if (activity['yourdoubt'] == "") {
-		furtherQuestionText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
-		furtherQuestionText.className = "unansweredQuestion";
-	}
-	
-
-	var commentLabel = document.createElement('div');
-	commentLabel.innerHTML = "Teacher comments:";
-	commentLabel.className = "questionLabel";
-	
-	var teacherCommentText=document.createElement("div");
-	teacherCommentText.innerHTML=activity["comments"];
-	
-	var activityStatusLabel = document.createElement('div');
-	activityStatusLabel.innerHTML = "Activity Status:";
-	activityStatusLabel.className = "questionLabel";
-	
-	var activityStatus=document.createElement("div");
-	activityStatus.innerHTML=activity["status"];
-
-	var aboutPhotoCell = document.createElement('td');
-	aboutPhotoCell.className = "aboutPhotoCell";
-	aboutPhotoCell.appendChild(partnerLabel);
-	aboutPhotoCell.appendChild(partnerNames);
-	aboutPhotoCell.appendChild(aboutLabel);
-	aboutPhotoCell.appendChild(aboutPhotoText);
-	aboutPhotoCell.appendChild(whyLabel);
-	aboutPhotoCell.appendChild(whyThisPhotoText);
-	aboutPhotoCell.appendChild(helpfulLabel);
-	aboutPhotoCell.appendChild(howHelpfulText);
-	aboutPhotoCell.appendChild(furtherLabel);
-	aboutPhotoCell.appendChild(furtherQuestionText);
-
-	activityTableRow1.appendChild(activityPhotoCell);
-	activityTableRow1.appendChild(aboutPhotoCell);
-		
-	var multipleChoiceCell = generateMultipleChoiceList(activity['mquestion'], JSON.parse(activity['choices']));
-
-	activityTableRow2.appendChild(multipleChoiceCell);
-	
-
-	activityTableRow3.appendChild(commentLabel);
-	activityTableRow3.appendChild(teacherCommentText);
-	activityTableRow3.appendChild(activityStatusLabel);
-	activityTableRow3.appendChild(activityStatus);
-	
-	activityTable.appendChild(activityTableRow1);
-	activityTable.appendChild(activityTableRow2);
-	activityTable.appendChild(activityTableRow3);
-	
-	var tableItem = document.createElement('li');
-	tableItem.className = "activityItem";
-	tableItem.appendChild(activityTable);
-	
-	
-	return tableItem;
+	activityTable.innerHTML=GLOBALS.activityView;
+	setTimeout(function(){fillActivityTable(activity, isStudent, tableNumber);}, 75);
+	return activityTable;
 }
 
 // This generates the list of multiple choice answers, as well as the question

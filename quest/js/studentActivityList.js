@@ -33,6 +33,6 @@ function studentActivityList(serverResponse){
 		document.getElementById("main").insertBefore(button, document.getElementById("contents"));
 	}
 	for(var i = 0; i < activities.length; i++){
-		activitiesDiv.appendChild(generateActivityView(activities[i], true));
+		activitiesDiv.appendChild(generateActivityView(activities[i], true, i));
 	}
 }
