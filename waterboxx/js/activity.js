@@ -51,6 +51,7 @@ function fillActivityTable(activity, isStudent, tableNumber){
 	fillAnswerDiv(document.getElementsByName("success_reasons")[tableNumber], activity.success_reasons);
 	fillAnswerDiv(document.getElementsByName("waterboxx_condition")[tableNumber], activity.waterboxx_condition);
 	fillAnswerDiv(document.getElementsByName("other_data")[tableNumber], activity.other_data);
+	fillAnswerDiv(document.getElementsByName("site_description")[tableNumber], activity.site_description);
 	document.getElementsByName("activityImage")[tableNumber].src=GLOBALS.PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
 	
 }
