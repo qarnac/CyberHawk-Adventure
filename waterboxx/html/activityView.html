@@ -1,35 +1,39 @@
 <!-- Start activityView.html -->
 <table class="activityTable" cellpadding="5px">
+	<input type="button" name="editButton" value="Edit Activity" />
 	<tr>
 	<td class="activityPhotoCell">
-		<img>
-		</td>
+		<img name="activityImage" style="width:200px; height:200px;" />
+	</td>
 	<td class="aboutPhotoCell">
-		<div class="questionLabel">Who are the partners in this group?</div>
+		<div class="questionLabel">List all partners for this waterboxx:</div>
 		<div name="partner_names"></div>
-		<div ="questionLabel">What is this picture about?</div>
-		<div name="aboutmedia"></div>
-		<div class="questionLabel">Why did you choose this picture</div>
-		<div name="whythis"></div>
-		<div class="questionLabel">How does this picture show what you've learned in class?</div>
-		<div name="howhelpfull"></div>
-		<div class="questionLabel">What is a question you have about this picture?</div>
-		<div name="yourdoubt"></div>
+		<div class="questionLabel">What date was this planted?</div>
+		<div name="date_planted"></div>
+		<div class="questionLabel">What date did you observe it?</div>
+		<div name="date_observed"></div>
+		<div class="questionLabel">Was the planting successful?</div>
+		<div name="successful"></div>
+		<div class="questionLabel">If planting was successful, how tall was the plant (in cm)?</div>
+		<div name="height"></div>
+		<div class="questionLabel">Planting site description:</div>
+		<div name="site_description"></div>
+		<div class="questionLabel">Did you plant a sprout or a seed?</div>
+		<div name="is_seed"></div>
+		<div class="questionLabel">Why do you think you were (un)successful?</div>
+		<div name="success_reasons"></div>
+		<div class="questionLabel">Current Waterboxx condition-amount of water:</div>
+		<div name="waterboxx_condition"></div>
+		<div class="questionLabel">Other Observations:</div>
+		<div name="other_data"></div>
 	</td>
 	</tr>
-	<tr>
-		<td colspan="2">
-		<div class="questionLabel">Multiple choice question:</div>
-		<span class="multipleChoiceQuestionText" name="mquestion"></span>
-			<ol class="multipleChoiceAnswers" name="manswers">
-			</ol>
-			</td>
-		</tr>
+
 	<tr>
 		<div class="questionLabel">Teacher comments:</div>
 		<div name="comments"> </div>
 		<div class="questionLabel">Activity Status:</div>
-		<div name="status">Unverified</div>
+		<div name="status"></div>
 	</tr>
 </table>
 <!-- End activityView.html -->

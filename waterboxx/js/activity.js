@@ -11,9 +11,6 @@ var activities = new Array();
 var feed = {};
 // Has the status of each activity like its id,comment and status.
 
-// activityView is created in order to hold the HTML file activityView.html.
-var activityView;
-
 
 //Instantiates the array activities with student activitivities
 //This function is invoked by ajax function but this happens when the teacher selects a hunt.
@@ -23,236 +20,49 @@ function create_activity_obj(allActivities) {
 	if (allActivities == "none")//server returns false if it cannot find any activities
 		alert("No one has created an activity yet");
 	else {
-		ajax("GET", GLOBALS.PHP_FOLDER_LOCATION + "activityView.html", function(serverResponse){
-			activityView=serverResponse;
-			activities = [];
-			activityList = JSON.parse(allActivities);		
-			for ( var i = 0; i < activityList.length; i++) {
-					$('activity').appendChild(generateActivityView(activityList[i], false, i));
-				}
-			});
+		activityList = JSON.parse(allActivities);	
+		for ( var i = 0; i < activityList.length; i++) {
+				$('activity').appendChild(generateActivityView(activityList[i], false, i));
+			}
 	}
 	
 	
 }
 
-// Is used to populate the activityView.html file.
-function createTeacherActivityTable(activity, isStudent, tableNumber){
-	for(i in activity){
-		console.log(i);
+// Wrapped into function due to the multiple times this is done.
+function fillAnswerDiv(Dom, answer){
+	if(answer==""){
+		Dom.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
+		Dom.className = "unansweredQuestion";
+	} else{
+		Dom.innerHTML=answer;
 	}
+}
+
+// Is used to populate the activityView.html file.
+function fillActivityTable(activity, isStudent, tableNumber){
+	fillAnswerDiv(document.getElementsByName("partner_names")[tableNumber], activity.partner_names);
+	fillAnswerDiv(document.getElementsByName("date_planted")[tableNumber], activity.date_planted);
+	fillAnswerDiv(document.getElementsByName("date_observed")[tableNumber], activity.date_observed);
+	document.getElementsByName("successful")[tableNumber].innerHTML=(activity.successful==1)? "Yes" : "No";
+	fillAnswerDiv(document.getElementsByName("height")[tableNumber], activity.height);
+	fillAnswerDiv(document.getElementsByName("success_reasons")[tableNumber], activity.success_reasons);
+	document.getElementsByName("is_seed")[tableNumber].innerHTML=(activity.is_seed==1)? "Seed" : "Sprout";
+	fillAnswerDiv(document.getElementsByName("success_reasons")[tableNumber], activity.success_reasons);
+	fillAnswerDiv(document.getElementsByName("waterboxx_condition")[tableNumber], activity.waterboxx_condition);
+	fillAnswerDiv(document.getElementsByName("other_data")[tableNumber], activity.other_data);
+	document.getElementsByName("activityImage")[tableNumber].src=GLOBALS.PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
+	
 }
 
 
 // Is now also called from studentActivityList to create the list.
 // Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
 function generateActivityView(activity, isStudent, tableNumber) {
-
 	var activityTable = document.createElement('table');
-	
-	if(isStudent || (activity.status!="incomplete")){
-		// Add the Edit activity button first, so that it displays just to the right of the Activity View
-		var editButton = document.createElement("input");
-		editButton.setAttribute("type", "button");
-		editButton.setAttribute("value", "Edit Activity");
-		$('activity').appendChild(editButton);
-		if(isStudent) editButton.onclick = function() {editActivityAsStudent(activity);};
-		else editButton.onclick=function(){addTeacherComments(activityTable, editButton, activity['id']);};
-	}
-	
-	if(!isStudent){
-			activityTable.innerHTML=activityView;
-			 setTimeout(function(){createTeacherActivityTable(activity, isStudent, tableNumber);}, 750);
-	} 
-
-	activityTable.className = "activityTable";
-	activityTable.cellPadding = "5px";
-
-	var activityTableRow1 = document.createElement('tr');
-	var activityTableRow2 = document.createElement('tr');
-	var activityTableRow3 = document.createElement('tr');
-	
-	var activityPhoto = document.createElement('img');
-	activityPhoto.src = PHP_FOLDER_LOCATION + "image.php?id=" + activity['media_id'];
-	
-	var activityPhotoCell = document.createElement('td');
-	activityPhotoCell.className = "activityPhotoCell";
-	activityPhotoCell.appendChild(activityPhoto);
-
-	var partnersLabel = document.createElement('div');
-	partnersLabel.innerHTML = "List all the partners for this Waterboxx";
-	partnersLabel.className = "questionLabel";
-	var date_planted_label = document.createElement('div');
-	date_planted_label.innerHTML = "What date was this planted?";
-	date_planted_label.className = "questionLabel";
-	var date_observed_label = document.createElement('div');
-	date_observed_label.innerHTML = "What date did you observe it?";
-	date_observed_label.className = "questionLabel";
-	var successful_label = document.createElement('div');
-	successful_label.innerHTML = "Was the planting successful?";
-	successful_label.className = "questionLabel";
-	var height_label = document.createElement('div');
-	height_label.innerHTML = "If planting was successful, how tall was the plant (in cm)?";
-	height_label.className = "questionLabel";
-	var site_description_label = document.createElement('div');
-	site_description_label.innerHTML = "Planting site description:";
-	site_description_label.className = "questionLabel";
-	var is_seed_label = document.createElement('div');
-	is_seed_label.innerHTML = "Did you plant a sprout or a seed?";
-	is_seed_label.className = "questionLabel";
-	var success_reason_label = document.createElement('div');
-	success_reason_label.innerHTML = "Why do you think you were (un)successful?";
-	success_reason_label.className = "questionLabel";
-	var waterboxx_condition_label = document.createElement('div');
-	waterboxx_condition_label.innerHTML = "Current Waterboxx condition-amount of water: ";
-	waterboxx_condition_label.className = "questionLabel";
-	var other_label = document.createElement('div');
-	other_label.innerHTML = "Other Observations:";
-	other_label.className = "questionLabel";
-	
-	
-	var aboutPhotoText = document.createElement('div');
-	aboutPhotoText.innerHTML = activity['partner_names'];
-	if (activity['partner_names'] == "") {
-		aboutPhotoText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
-		aboutPhotoText.className = "unansweredQuestion";
-	}
-
-	var whyThisPhotoText = document.createElement('div');
-	whyThisPhotoText.innerHTML = activity['date_planted'];
-	if (activity['date_planted'] == "1969-12-31") {
-		whyThisPhotoText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
-		whyThisPhotoText.className = "unansweredQuestion";
-	}
-
-	var howHelpfulText = document.createElement('div');
-	howHelpfulText.innerHTML = activity['date_observed'];
-	if (activity['date_observed'] == "1969-12-31") {
-		howHelpfulText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
-		howHelpfulText.className = "unansweredQuestion";
-	}
-
-	var furtherQuestionText = document.createElement('div');
-	furtherQuestionText.innerHTML = activity['successful'];
-	if (activity['successful'] == true) {
-		furtherQuestionText.innerHTML = "Yes";
-	} else { furtherQuestionText.innerHTML= "No"; }
-	
-	var heightText = document.createElement('div');
-	heightText.innerHTML = activity['height'];
-	if (activity['height'] == 0) {
-		heightText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
-		heightText.className = "unansweredQuestion";
-	}
-	
-	var site_descriptionText = document.createElement('div');
-	site_descriptionText.innerHTML = activity['site_description'];
-	if (activity['site_description'] == "") {
-		site_descriptionText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
-		site_descriptionText.className = "unansweredQuestion";
-	}
-	
-	var is_seedText = document.createElement('div');
-	if (activity['is_seed'] == 0)
-	{
-		is_seedText.innerHTML = "Sprout";
-	}
-	else if (activity['is_seed'] == 1)
-	{
-		is_seedText.innerHTML = "Seed";
-	}
-	
-	var success_reasonsText = document.createElement('div');
-	success_reasonsText.innerHTML = activity['success_reasons'];
-	if (activity['success_reasons'] == "") {
-		success_reasonsText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
-		success_reasonsText.className = "unansweredQuestion";
-	}
-	var waterboxx_conditionText = document.createElement('div');
-	waterboxx_conditionText.innerHTML = activity['waterboxx_condition'];
-	if (activity['waterboxx_condition'] == "") {
-		waterboxx_conditionText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
-		waterboxx_conditionText.className = "unansweredQuestion";
-	}
-	
-	var other_dataText = document.createElement('div');
-	other_dataText.innerHTML = activity['other_data'];
-	if (activity['other_data'] == "") {
-		other_dataText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
-		other_dataText.className = "unansweredQuestion";
-	}
-	
-	
-	
-	
-
-	var commentLabel = document.createElement('div');
-	commentLabel.innerHTML = "Teacher comments:";
-	commentLabel.className = "questionLabel";
-	
-	var teacherCommentText=document.createElement("div");
-	if (activity['comments'] == "") {
-		teacherCommentText.innerHTML = GLOBALS.EMPTY_QUESTION_RESPONSE;
-		teacherCommentText.className = "unansweredQuestion";
-	}
-	else
-	{
-		teacherCommentText.innerHTML=activity["comments"];
-	}
-	
-	var activityStatusLabel = document.createElement('div');
-	activityStatusLabel.innerHTML = "Activity Status:";
-	activityStatusLabel.className = "questionLabel";
-	
-	var activityStatus=document.createElement("div");
-	activityStatus.innerHTML=activity["status"];
-
-	var aboutPhotoCell = document.createElement('td');
-	aboutPhotoCell.className = "aboutPhotoCell";
-	aboutPhotoCell.appendChild(partnersLabel);
-	aboutPhotoCell.appendChild(aboutPhotoText);
-	aboutPhotoCell.appendChild(date_planted_label);
-	aboutPhotoCell.appendChild(whyThisPhotoText);
-	aboutPhotoCell.appendChild(date_observed_label);
-	aboutPhotoCell.appendChild(howHelpfulText);
-	aboutPhotoCell.appendChild(successful_label);
-	aboutPhotoCell.appendChild(furtherQuestionText);
-	aboutPhotoCell.appendChild(height_label);
-	aboutPhotoCell.appendChild(heightText);
-	aboutPhotoCell.appendChild(site_description_label);
-	aboutPhotoCell.appendChild(site_descriptionText);
-	aboutPhotoCell.appendChild(is_seed_label);
-	aboutPhotoCell.appendChild(is_seedText);
-	aboutPhotoCell.appendChild(success_reason_label);
-	aboutPhotoCell.appendChild(success_reasonsText);
-	aboutPhotoCell.appendChild(waterboxx_condition_label);
-	aboutPhotoCell.appendChild(waterboxx_conditionText);
-	aboutPhotoCell.appendChild(other_label);
-	aboutPhotoCell.appendChild(other_dataText);
-	
-	
-	activityTableRow1.appendChild(activityPhotoCell);
-	activityTableRow1.appendChild(aboutPhotoCell);
-		
-//	var multipleChoiceCell = generateMultipleChoiceList(activity['mquestion'], JSON.parse(activity['choices']));
-
-//	activityTableRow2.appendChild(multipleChoiceCell);
-	
-
-	activityTableRow3.appendChild(commentLabel);
-	activityTableRow3.appendChild(teacherCommentText);
-	activityTableRow3.appendChild(activityStatusLabel);
-	activityTableRow3.appendChild(activityStatus);
-	
-	activityTable.appendChild(activityTableRow1);
-	activityTable.appendChild(activityTableRow2);
-	activityTable.appendChild(activityTableRow3);
-	
-	var tableItem = document.createElement('li');
-	tableItem.className = "activityItem";
-	tableItem.appendChild(activityTable);
-	
-	return tableItem;
+	activityTable.innerHTML=GLOBALS.activityView;
+	setTimeout(function(){fillActivityTable(activity, isStudent, tableNumber);}, 75);
+	return activityTable;
 }
 
 // This generates the list of multiple choice answers, as well as the question
@@ -454,24 +264,6 @@ function successfulUpload(serverResponse){
 	}
 }
 
-/*
-Unused function.  If it remains unused at a later date, I will go ahead and remove the function.
-function feedback(x)
-{
-	var div = createElement('div','');
-	var comments = createElement('div','');
-	var label = createElement('label', 'Comments');
-	label.style.width = '80px';
-	var textarea = document.createElement('textarea');
-	textarea.onchange = function() {
-		feed[x['id']].comment = this.value;
-	}
-	comments.appendChild(label);
-	comments.appendChild(textarea);
-	div.appendChild(activityStatus(comments,x));
-	return div;
-}
-*/
 function activityStatus(comments,x)
 {
 	if(feed[x] == undefined) return;
