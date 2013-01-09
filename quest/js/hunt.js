@@ -7,6 +7,8 @@
 // Checks if the browser can find out users location, if so, use that for the coords to load the google map.
 // Otherwise, we center it at the default coords.
 function createhunt () {
+	document.getElementById("selecthunt").value=0;
+	document.getElementById("slist").style.display="none";
   if (navigator.geolocation){
     navigator.geolocation.getCurrentPosition(receivedLocation, noLocation);
 	}
