@@ -104,6 +104,19 @@ function fillActivityTable(activity, isStudent, tableNumber){
 	document.getElementsByName("status")[tableNumber].innerHTML=activity.status;
 	document.getElementsByName("activityImage")[tableNumber].src= PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
 	
+	var additionalQuestions;
+	var hunt=JSON.parse(sessionStorage.hunts)[document.getElementById("selecthunt").value-1];
+	if(hunt.additionalQuestions==""){
+		document.getElementsByName("optionalQuestion1")[tableNumber].style.display="none";
+		document.getElementsByName("optionalAnswer1")[tableNumber].style.display="none";
+		document.getElementsByName("optionalQuestion2")[tableNumber].style.display="none";
+		document.getElementsByName("optionalAnswer2")[tableNumber].style.display="none";
+		document.getElementsByName("optionalQuestion3")[tableNumber].style.display="none";
+		document.getElementsByName("optionalAnswer3")[tableNumber].style.display="none";
+	} else{
+
+	}
+	
 	var orderedList = document.getElementsByName("manswers")[tableNumber];
 	orderedList.className = "multipleChoiceAnswers";
 	var answerList=JSON.parse(activity.choices);
@@ -263,6 +276,19 @@ function editActivityAsStudent(activity) {
 	document.getElementsByName("howhelpful")[0].innerHTML = activity.howhelpfull;
 	document.getElementsByName("yourdoubt")[0].innerHTML = activity.yourdoubt;
 	document.getElementsByName("mquestion")[0].innerHTML = activity.mquestion;
+	
+	var hunt=JSON.parse(sessionStorage.hunts)[document.getElementById("selecthunt").value-1];
+	if(hunt.additionalQuestions==""){
+		document.getElementsByName("optionalQuestion1")[0].style.display="none";
+		document.getElementsByName("optionalAnswer1")[0].style.display="none";
+		document.getElementsByName("optionalQuestion2")[0].style.display="none";
+		document.getElementsByName("optionalAnswer2")[0].style.display="none";
+		document.getElementsByName("optionalQuestion3")[0].style.display="none";
+		document.getElementsByName("optionalAnswer3")[0].style.display="none";
+	} else{
+	
+	}
+	
 	// Selects the correct Radio Button for the multiple choice questions.
 	for(var i=0; i<choices.length; i++) {
 		if (choices[i].ans == "true") {
