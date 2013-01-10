@@ -15,6 +15,7 @@ function wscript_init(x) {
 
 	multiple=hunts[2];
 	hunts=hunts[1];
+	sessionStorage.hunts=JSON.stringify(hunts);
 	for ( x = 0; x < hunts.length; x++)
 		$('selecthunt').options[$('selecthunt').options.length] = new Option(hunts[x]['title'], hunts[x]["id"]);
 		
