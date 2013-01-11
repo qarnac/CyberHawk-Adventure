@@ -11,8 +11,7 @@ if($_SESSION['who']=="teacher"){
 	"', eventdate=FROM_UNIXTIME(" . $_POST["dateOfTrip"] .
 	"), id='" . mysql_insert_id() .
 	"', teacher_id='" . $_SESSION['id'] .
-	"', eventcreation='" . date('Y-m-d') .
-	"', status='open';") or die(mysql_error());
+	"', eventcreation='" . date('Y-m-d') . "';") or die(mysql_error());
 	
 	mysql_query("INSERT INTO students SET ".
 		"username='" . mysql_escape_string($_POST["username"]) . 

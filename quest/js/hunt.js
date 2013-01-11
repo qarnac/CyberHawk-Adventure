@@ -8,7 +8,7 @@
 // Otherwise, we center it at the default coords.
 function createhunt () {
 	document.getElementById("selecthunt").value=0;
-	document.getElementById("slist").style.display="none";
+	if(document.getElementById("slist")) document.getElementById("slist").style.display="none";
   if (navigator.geolocation){
     navigator.geolocation.getCurrentPosition(receivedLocation, noLocation);
 	}
