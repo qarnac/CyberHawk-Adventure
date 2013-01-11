@@ -163,7 +163,14 @@ function submitLatLng(location) {
 		if(sessionStorage.isEdit=="true"){
 			editActivityAsStudent(JSON.parse(sessionStorage.activity));
 		} else{
+			// TODO: Find a way to check if additional questions exist.
 			document.getElementById("activity").innerHTML=multiple;
+				document.getElementsByName("optionalQuestion1")[0].style.display="none";
+				document.getElementsByName("optionalAnswer1")[0].style.display="none";
+				document.getElementsByName("optionalQuestion2")[0].style.display="none";
+				document.getElementsByName("optionalAnswer2")[0].style.display="none";
+				document.getElementsByName("optionalQuestion3")[0].style.display="none";
+				document.getElementsByName("optionalAnswer3")[0].style.display="none";
 		}
 	} else{
 		// TODO: How to handle the user not submitting local storage?

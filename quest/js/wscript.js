@@ -38,8 +38,7 @@ function huntselection(x)
 		var hunt=hunts[x];
 		huntboundary=new google.maps.LatLngBounds(new google.maps.LatLng(hunt['minlat'],hunt['minlng']),new google.maps.LatLng(hunt['maxlat'],hunt['maxlng']));
 		$('activity').innerHTML=multiple;
-		var hunt=JSON.parse(sessionStorage.hunts)[document.getElementById("selecthunt").value-1];
-		if(hunt.additionalQuestions=="" || hunt.additionalQuestions==undefined){
+		if(hunt.additionalQuestions==undefined || hunt.additionalQuestions==""){
 		document.getElementsByName("optionalQuestion1")[0].style.display="none";
 		document.getElementsByName("optionalAnswer1")[0].style.display="none";
 		document.getElementsByName("optionalQuestion2")[0].style.display="none";
@@ -85,7 +84,7 @@ function check(form)
 		contents = "content="+contents;
 		ajax(contents, PHP_FOLDER_LOCATION + "user_upload.php", function(x) {
 			if (x == "true")
-				console.log("success");
+				window.location.reload();
 			else
 				alert("An error has occured while attempting to upload your file.");
 		});

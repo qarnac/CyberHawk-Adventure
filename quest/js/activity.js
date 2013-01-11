@@ -105,8 +105,15 @@ function fillActivityTable(activity, isStudent, tableNumber){
 	document.getElementsByName("activityImage")[tableNumber].src= PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
 	
 	var additionalQuestions;
-	var hunt=JSON.parse(sessionStorage.hunts)[document.getElementById("selecthunt").value-1];
-	if(hunt.additionalQuestions==""){
+	var optionNumber;
+	for(var i=0; i<document.getElementById("selecthunt").options.length; i++){
+		if(document.getElementById("selecthunt").options[i].value==activity.hunt_id){
+			optionNumber=i-1;
+			break;
+		}
+	}
+	var hunt=JSON.parse(sessionStorage.hunts)[optionNumber];
+	if(hunt.additionalQuestions==undefined || hunt.additionalQuestions==""){
 		document.getElementsByName("optionalQuestion1")[tableNumber].style.display="none";
 		document.getElementsByName("optionalAnswer1")[tableNumber].style.display="none";
 		document.getElementsByName("optionalQuestion2")[tableNumber].style.display="none";
@@ -277,8 +284,14 @@ function editActivityAsStudent(activity) {
 	document.getElementsByName("yourdoubt")[0].innerHTML = activity.yourdoubt;
 	document.getElementsByName("mquestion")[0].innerHTML = activity.mquestion;
 	
-	var hunt=JSON.parse(sessionStorage.hunts)[document.getElementById("selecthunt").value-1];
-	if(hunt.additionalQuestions==""){
+	for(var i=0; i<document.getElementById("selecthunt").options.length; i++){
+		if(document.getElementById("selecthunt").options[i].value==activity.hunt_id){
+			optionNumber=i-1;
+			break;
+		}
+	}
+	var hunt=JSON.parse(sessionStorage.hunts)[optionNumber];
+	if(hunt.additionalQuestions==undefined || hunt.additionalQuestions==""){
 		document.getElementsByName("optionalQuestion1")[0].style.display="none";
 		document.getElementsByName("optionalAnswer1")[0].style.display="none";
 		document.getElementsByName("optionalQuestion2")[0].style.display="none";
