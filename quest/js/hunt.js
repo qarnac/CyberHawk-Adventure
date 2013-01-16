@@ -42,6 +42,16 @@ function newHuntMap(map){
 // Fills huntInformation.html
 function fillHuntInformation(){
 	var hunt=JSON.parse(sessionStorage.hunts)[getHuntSelectNumber(document.getElementById("selecthunt").value)];
+	ajax("id=" + document.getElementById("selecthunt").value, GLOBALS.PHP_FOLDER_LOCATION + "getStudentForHunt.php", function(serverResponse){
+		if(serverResponse=="false"){
+			document.getElementById("student_username_label").innerHTML="";
+			document.getElementById("student_password_label").innerHTML="";
+		}else{
+			var student=JSON.parse(serverResponse);
+			document.getElementById("student_username").innerHTML=student.username;
+			document.getElementById("student_password").innerHTML=student.password;
+		}
+	});
 	document.getElementById("title").innerHTML=hunt.title;
 	document.getElementById("dueDate").innerHTML=hunt.dueDate;
 }
