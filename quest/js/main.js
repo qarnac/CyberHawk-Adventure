@@ -24,6 +24,8 @@ function $(x) {
 	return document.getElementById(x);
 }
 
+// TODO:  Remove this variable.  Now that we have GLOBALS.PHP_FOLDER_LOCATION, which loads the folder location from
+// constants.json, we should NOT be using this variable anymore, and all uses of it should now use GLOBALS.PHP_FOLDER_LOCATION
 var PHP_FOLDER_LOCATION="http://ouyangdev.cs.csusm.edu/cyberhawk/quest/php/";
 
 //this function is invoked when a teacher selects a hunt
@@ -32,12 +34,22 @@ function huntsel() {
 	$('students').innerHTML = '';
 	ajax("what=activities&id=" + document.getElementById("selecthunt").value, PHP_FOLDER_LOCATION + 'getHunts.php', create_activity_obj);
 	createTeacherMap();
+	
 	if(document.getElementById("mapButton")==null){
 		var button=document.createElement("input");
 		button.setAttribute("type", "button");
 		button.setAttribute("value", "List View");
 		button.setAttribute("id", "mapButton");
 		button.onclick=mapListButton;
+		document.getElementById("contentSection").insertBefore(button, document.getElementById("newhunt"));
+	}
+	
+	if(document.getElementById("editHunt")==null){
+		var button=document.createElement("input");
+		button.setAttribute("type", "button");
+		button.setAttribute("value", "View Hunt Info");
+		button.setAttribute("id", "editHunt");
+		button.onclick=viewHuntInformation;
 		document.getElementById("contentSection").insertBefore(button, document.getElementById("newhunt"));
 	}
 	

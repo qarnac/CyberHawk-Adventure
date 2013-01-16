@@ -105,14 +105,7 @@ function fillActivityTable(activity, isStudent, tableNumber){
 	document.getElementsByName("activityImage")[tableNumber].src= PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
 	
 	var additionalQuestions;
-	var optionNumber;
-	for(var i=0; i<document.getElementById("selecthunt").options.length; i++){
-		if(document.getElementById("selecthunt").options[i].value==activity.hunt_id){
-			optionNumber=i-1;
-			break;
-		}
-	}
-	var hunt=JSON.parse(sessionStorage.hunts)[optionNumber];
+	var hunt=JSON.parse(sessionStorage.hunts)[getHuntSelectNumber(activity.id)];
 	if(hunt.additionalQuestions==undefined || hunt.additionalQuestions==""){
 		document.getElementsByName("optionalQuestion1")[tableNumber].style.display="none";
 		document.getElementsByName("optionalAnswer1")[tableNumber].style.display="none";

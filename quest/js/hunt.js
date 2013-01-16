@@ -38,44 +38,24 @@ function newHuntMap(map){
 		updateWidthHeight(rectangle.getBounds());
 	});
 }
-/*
-// This is the function for the submit button in the GoToControl Box.
-function newHuntMapSubmit(){
-	ajax("GET", "../quest/html/createHunt.html", displayHuntForm);
+
+// Fills huntInformation.html
+function fillHuntInformation(){
+	var hunt=JSON.parse(sessionStorage.hunts)[getHuntSelectNumber(document.getElementById("selecthunt").value)];
+	document.getElementById("title").innerHTML=hunt.title;
+	document.getElementById("dueDate").innerHTML=hunt.dueDate;
 }
 
-// This is the callback function for the ajax call for the createHunt.html.
-function displayHuntForm(serverResponse){
-	var bounds=rectangle.getBounds();
-	$('activity').innerHTML=serverResponse;
-	document.getElementById("minLat").innerHTML=bounds.getSouthWest().lat();
-	document.getElementById("minLng").innerHTML=bounds.getSouthWest().lng();
-	document.getElementById("maxLat").innerHTML=bounds.getNorthEast().lat();
-	document.getElementById("maxLng").innerHTML=bounds.getNorthEast().lng();
-	var today=new Date();
-	document.getElementById("endDate").innerHTML=(today.getMonth()+1) + "/" + today.getDate() +"/" + today.getFullYear();
+// Is called by the Hunt Info button from the teacher view.
+function viewHuntInformation(){
+	document.getElementById("activity").innerHTML=GLOBALS.huntInformation;
+	setTimeout(fillHuntInformation, 75);
+	
 }
 
-//Is called when the submit button is clicked on the newHunt.html form.
-function submitNewHunt(){
-	var date=Date.parse(document.getElementById("endDate").value);
-	date=new Date(date);
-	var dateString=date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
-	ajax("title=" + document.getElementById("huntTitle").value +
-		"&endDate=" + dateString +
-		"&minLat=" + document.getElementById("minLat").value +
-		"&minLng=" + document.getElementById("minLng").value +
-		"&maxLat=" + document.getElementById("maxLat").value +
-		"&maxLng=" + document.getElementById("maxLng").value,
-		PHP_FOLDER_LOCATION + "createHunt.php", huntSubmitted);
-		return false;
-}
-
-function huntSubmitted(serverResponse){
-	if(serverResponse=="success"){
-		window.location.reload();
+// Returns which option from the select is the selected hunt.
+function getHuntSelectNumber(id){
+	for(var i=0; i<document.getElementById("selecthunt").options.length; i++){
+		if(document.getElementById("selecthunt").options[i].value==id) return i-1;
 	}
-	else console.log(serverResponse);
 }
-
-*/
