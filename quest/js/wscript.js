@@ -1,4 +1,4 @@
-/*
+ /*
  * Common scripts needed
  * handles ajax
  * handles selection of a hunt activity
@@ -9,15 +9,25 @@
  
 var hunts;
 var multiple;
-function wscript_init(x) {
+function wscript_init(x) {                                                             
 	hunts = JSON.parse(x);
-	$('username').innerHTML=hunts[0];
-
+	student=JSON.parse(hunts[0]);
+	$('username').innerHTML=student.firstname;
 	multiple=hunts[2];
 	hunts=hunts[1];
-	sessionStorage.hunts=JSON.stringify(hunts);
-	for ( x = 0; x < hunts.length; x++)
-		$('selecthunt').options[$('selecthunt').options.length] = new Option(hunts[x]['title'], hunts[x]["id"]);
+	
+	if(student.parentHunt==0){
+		sessionStorage.hunts=JSON.stringify(hunts);
+		for ( x = 0; x < hunts.length; x++)
+			$('selecthunt').options[$('selecthunt').options.length] = new Option(hunts[x]['title'], hunts[x]["id"]);	
+	} else{
+		for ( x = 0; x < hunts.length; x++)
+			if(student.parentHunt==hunts[x].id){
+				$('selecthunt').options[$('selecthunt').options.length] = new Option(hunts[x]['title'], hunts[x]["id"]);
+				sessionStorage.hunts=hunts[x];
+				return;
+			}
+	}
 		
 }					
 var uniq=Math.floor((Math.random()*100)+1);

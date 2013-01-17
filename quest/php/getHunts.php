@@ -18,6 +18,8 @@ function getHuntsStudent()
 {
 	$createActivityForm = file_get_contents("http://ouyangdev.cs.csusm.edu/cyberhawk/quest/html/createActivity.html");
 	$availableHunts = array();
+	$student= mysql_query("SELECT * FROM students WHERE id=" . $_SESSION['id']);
+	$student=mysql_fetch_assoc($student);
 	$result = mysql_query("
 		SELECT *
 		FROM hunt
@@ -33,7 +35,7 @@ function getHuntsStudent()
 	else {
 		echo "sessionfail result <= 0";
 	}
-	$temp[0]= $_SESSION['firstname'];
+	$temp[0]= json_encode($student);
 	$temp[1]=$availableHunts;
 	$temp[2]=$createActivityForm;
 	echo json_encode($temp);
