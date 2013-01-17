@@ -119,6 +119,7 @@ function fillActivityTable(activity, isStudent, tableNumber){
 		else var additionalAnswers={a:"",b:"",c:""};
 		// Parse the questions from the hunt.
 		var additionalQuestions=JSON.parse(hunt.additionalQuestions);
+		
 		// Fill in the Divs with the questions and answers (only if they exist).
 		if(additionalQuestions.questiona){
 			document.getElementsByName("optionalQuestion1")[tableNumber].innerHTML=additionalQuestions.questiona;
@@ -132,7 +133,7 @@ function fillActivityTable(activity, isStudent, tableNumber){
 			document.getElementsByName("optionalQuestion3")[tableNumber].innerHTML=additionalQuestions.questionc;
 			fillAnswerDiv(document.getElementsByName("optionalAnswer3")[tableNumber], additionalAnswers.c);
 		}
-	}
+	} // end of dealing with additional questions.
 	
 	var orderedList = document.getElementsByName("manswers")[tableNumber];
 	orderedList.className = "multipleChoiceAnswers";
@@ -300,17 +301,8 @@ function editActivityAsStudent(activity) {
 			break;
 		}
 	}
-	var hunt=JSON.parse(sessionStorage.hunts)[optionNumber];
-	if(hunt.additionalQuestions==undefined || hunt.additionalQuestions==""){
-		document.getElementsByName("optionalQuestion1")[0].style.display="none";
-		document.getElementsByName("optionalAnswer1")[0].style.display="none";
-		document.getElementsByName("optionalQuestion2")[0].style.display="none";
-		document.getElementsByName("optionalAnswer2")[0].style.display="none";
-		document.getElementsByName("optionalQuestion3")[0].style.display="none";
-		document.getElementsByName("optionalAnswer3")[0].style.display="none";
-	} else{
-	
-	}
+	// Sets up whether or not to display additional questions.
+	displayAdditionalQuestions(activity.additionalQuestions);
 	
 	// Selects the correct Radio Button for the multiple choice questions.
 	for(var i=0; i<choices.length; i++) {
@@ -429,19 +421,56 @@ function activityStatus(comments,x)
 	return status;
 }
 
-function displayAdditionalQuestions(){
-	var additionalQuestions;
-	var hunt=JSON.parse(sessionStorage.hunts)[getHuntSelectNumber(activity.hunt_id)];
-	if(hunt.additionalQuestions==undefined || hunt.additionalQuestions==""){
-		document.getElementsByName("optionalQuestion1")[tableNumber].style.display="none";
-		document.getElementsByName("optionalAnswer1")[tableNumber].style.display="none";
-		document.getElementsByName("optionalQuestion2")[tableNumber].style.display="none";
-		document.getElementsByName("optionalAnswer2")[tableNumber].style.display="none";
-		document.getElementsByName("optionalQuestion3")[tableNumber].style.display="none";
-		document.getElementsByName("optionalAnswer3")[tableNumber].style.display="none";
-	} else{
 
+// This function is used to determine whether or not the additional questions from activityView.html should be displayed.
+// If the questions exist for the selected hunt, it fills it in, and fills in the answers using the parameter passed into this function.
+// If the questions do not exist, it just makes the divs that would display the additional questions and answers not displayed.
+function displayAdditionalQuestions(additionalAnswers){
+	var hunt=JSON.parse(sessionStorage.hunts)[optionNumber];
+	// If the hunt has no additional questions, go ahead and make none of the additional questions or answers display.
+	if(hunt.additionalQuestions==undefined || hunt.additionalQuestions==""){
+		document.getElementsByName("optionalQuestion1")[0].style.display="none";
+		document.getElementsByName("optionalAnswer1")[0].style.display="none";
+		document.getElementsByName("optionalQuestion2")[0].style.display="none";
+		document.getElementsByName("optionalAnswer2")[0].style.display="none";
+		document.getElementsByName("optionalQuestion3")[0].style.display="none";
+		document.getElementsByName("optionalAnswer3")[0].style.display="none";
+		// Otherwise, this means that additional questions do exist for the hunt, and so we want to fill in the divs.
+	} else{
+		// Parse the questions.
+		var additionalQuestions=JSON.parse(hunt.additionalQuestions);
+		// Make sure that additionalAnswers wasn't left blank in the database. If it was blank, just leave the answers blank, but still fill in questions..
+		if(additionalAnswers==undefined || additionalAnswers=="") additionalAnswers={answera:"",answerb:"",answerc:""};
+		else additionalAnswers=JSON.parse(additionalAnswers);
+		
+		// Check that the question exists.  If it does, fill in the question and the answer.
+		// If not, make the q/a not displayed.
+		if(additionalQuestions.questiona){
+			document.getElementsByName("optionalQuestion1")[0].innerHTML=additionalQuestions.questiona;
+			document.getElementsByName("optionalAnswer1")[0].innerHTML=additionalAnwers.answera;
+		} else{
+			document.getElementsByName("optionalQuestion1")[0].style.display="none";
+			document.getElementsByName("optionalAnswer1")[0].style.display="none"
+		}
+		// Fill in the second question.
+		if(additionalQuestions.questionb){
+			document.getElementsByName("optionalQuestion2")[0].innerHTML=additionalQuestions.questionb;
+			document.getElementsByName("optionalAnswer2")[0].innerHTML=additionalAnswers.answerb;
+		} else{
+			document.getElementsByName("optionalQuestion2")[0].style.display="none";
+			document.getElementsByName("optionalAnswer2")[0].style.display="none";
+		}
+		
+		// Fill in the third question.
+		if(additionalQuestions.questionc){
+			document.getElementsByName("optionalQuestion3")[0].innerHTML=additionalQuestions.questionc;
+			document.getElementsByName("optionalAnswer3")[0].innerHTML=additionalAnswers.answerc;
+		} else{
+			document.getElementsByName("optionalQuestion3")[0].style.display="none";
+			document.getElementsByName("optionalAnswer3")[0].style.display="none";
+		}
 	}
+	
 }
 
 
