@@ -24,7 +24,7 @@ function wscript_init(x) {
 		for ( x = 0; x < hunts.length; x++)
 			if(student.parentHunt==hunts[x].id){
 				$('selecthunt').options[$('selecthunt').options.length] = new Option(hunts[x]['title'], hunts[x]["id"]);
-				sessionStorage.hunts=hunts[x];
+				sessionStorage.hunts=JSON.stringify(new Array(hunts[x]));
 				return;
 			}
 	}

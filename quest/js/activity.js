@@ -105,7 +105,7 @@ function fillActivityTable(activity, isStudent, tableNumber){
 	document.getElementsByName("activityImage")[tableNumber].src= PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
 	
 	var additionalQuestions;
-	var hunt=JSON.parse(sessionStorage.hunts)[getHuntSelectNumber(activity.id)];
+	var hunt=JSON.parse(sessionStorage.hunts)[getHuntSelectNumber(activity.hunt_id)];
 	if(hunt.additionalQuestions==undefined || hunt.additionalQuestions==""){
 		document.getElementsByName("optionalQuestion1")[tableNumber].style.display="none";
 		document.getElementsByName("optionalAnswer1")[tableNumber].style.display="none";
