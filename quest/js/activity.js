@@ -104,7 +104,6 @@ function fillActivityTable(activity, isStudent, tableNumber){
 	document.getElementsByName("status")[tableNumber].innerHTML=activity.status;
 	document.getElementsByName("activityImage")[tableNumber].src= PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
 	
-	var additionalQuestions;
 	var hunt=JSON.parse(sessionStorage.hunts)[getHuntSelectNumber(activity.hunt_id)];
 	if(hunt.additionalQuestions==undefined || hunt.additionalQuestions==""){
 		document.getElementsByName("optionalQuestion1")[tableNumber].style.display="none";
@@ -114,7 +113,25 @@ function fillActivityTable(activity, isStudent, tableNumber){
 		document.getElementsByName("optionalQuestion3")[tableNumber].style.display="none";
 		document.getElementsByName("optionalAnswer3")[tableNumber].style.display="none";
 	} else{
-
+		// If the student answered answered the additional questions, parse the answers.
+		// Otherwise just leave the variable blank (but still initialize)
+		if(activity.additionalQuestions) var additionalAnswers=JSON.parse(activity.additionalQuestions);
+		else var additionalAnswers={a:"",b:"",c:""};
+		// Parse the questions from the hunt.
+		var additionalQuestions=JSON.parse(hunt.additionalQuestions);
+		// Fill in the Divs with the questions and answers (only if they exist).
+		if(additionalQuestions.questiona){
+			document.getElementsByName("optionalQuestion1")[tableNumber].innerHTML=additionalQuestions.questiona;
+			fillAnswerDiv(document.getElementsByName("optionalAnswer1")[tableNumber], additionalAnswers.a);
+		}
+		if(additionalQuestions.questionb){
+			document.getElementsByName("optionalQuestion2")[tableNumber].innerHTML=additionalQuestions.questionb;
+			fillAnswerDiv(document.getElementsByName("optionalAnswer2")[tableNumber], additionalAnswers.b);
+		}
+		if(additionalQuestions.questionc){
+			document.getElementsByName("optionalQuestion3")[tableNumber].innerHTML=additionalQuestions.questionc;
+			fillAnswerDiv(document.getElementsByName("optionalAnswer3")[tableNumber], additionalAnswers.c);
+		}
 	}
 	
 	var orderedList = document.getElementsByName("manswers")[tableNumber];
@@ -411,6 +428,22 @@ function activityStatus(comments,x)
 	}
 	return status;
 }
+
+function displayAdditionalQuestions(){
+	var additionalQuestions;
+	var hunt=JSON.parse(sessionStorage.hunts)[getHuntSelectNumber(activity.hunt_id)];
+	if(hunt.additionalQuestions==undefined || hunt.additionalQuestions==""){
+		document.getElementsByName("optionalQuestion1")[tableNumber].style.display="none";
+		document.getElementsByName("optionalAnswer1")[tableNumber].style.display="none";
+		document.getElementsByName("optionalQuestion2")[tableNumber].style.display="none";
+		document.getElementsByName("optionalAnswer2")[tableNumber].style.display="none";
+		document.getElementsByName("optionalQuestion3")[tableNumber].style.display="none";
+		document.getElementsByName("optionalAnswer3")[tableNumber].style.display="none";
+	} else{
+
+	}
+}
+
 
 // don't really need this as a separate function....
 function clear()
