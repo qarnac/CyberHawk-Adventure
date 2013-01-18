@@ -48,16 +48,8 @@ function huntselection(x)
 		var hunt=hunts[x];
 		huntboundary=new google.maps.LatLngBounds(new google.maps.LatLng(hunt['minlat'],hunt['minlng']),new google.maps.LatLng(hunt['maxlat'],hunt['maxlng']));
 		$('activity').innerHTML=multiple;
-		if(hunt.additionalQuestions==undefined || hunt.additionalQuestions==""){
-		document.getElementsByName("optionalQuestion1")[0].style.display="none";
-		document.getElementsByName("optionalAnswer1")[0].style.display="none";
-		document.getElementsByName("optionalQuestion2")[0].style.display="none";
-		document.getElementsByName("optionalAnswer2")[0].style.display="none";
-		document.getElementsByName("optionalQuestion3")[0].style.display="none";
-		document.getElementsByName("optionalAnswer3")[0].style.display="none";
-		} else{
-	
-		}
+		// Pass "" as parameter because there are no answers to the question.
+		displayAdditionalQuestions("");
 		starter();
 	}
 }

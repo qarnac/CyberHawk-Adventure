@@ -426,7 +426,7 @@ function activityStatus(comments,x)
 // If the questions exist for the selected hunt, it fills it in, and fills in the answers using the parameter passed into this function.
 // If the questions do not exist, it just makes the divs that would display the additional questions and answers not displayed.
 function displayAdditionalQuestions(additionalAnswers){
-	var hunt=JSON.parse(sessionStorage.hunts)[optionNumber];
+	var hunt=JSON.parse(sessionStorage.hunts)[getHuntSelectNumber(document.getElementById("selecthunt").value)];
 	// If the hunt has no additional questions, go ahead and make none of the additional questions or answers display.
 	if(hunt.additionalQuestions==undefined || hunt.additionalQuestions==""){
 		document.getElementsByName("optionalQuestion1")[0].style.display="none";
@@ -446,15 +446,16 @@ function displayAdditionalQuestions(additionalAnswers){
 		// Check that the question exists.  If it does, fill in the question and the answer.
 		// If not, make the q/a not displayed.
 		if(additionalQuestions.questiona){
-			document.getElementsByName("optionalQuestion1")[0].innerHTML=additionalQuestions.questiona;
-			document.getElementsByName("optionalAnswer1")[0].innerHTML=additionalAnwers.answera;
+			// We just want to add the string to the start of the HTML, not delete what was already there.
+			document.getElementsByName("optionalQuestion1")[0].innerHTML=additionalQuestions.questiona + document.getElementsByName("optionalQuestion1")[0].innerHTML;
+			document.getElementsByName("optionalAnswer1")[0].innerHTML=additionalAnswers.answera;
 		} else{
 			document.getElementsByName("optionalQuestion1")[0].style.display="none";
 			document.getElementsByName("optionalAnswer1")[0].style.display="none"
 		}
 		// Fill in the second question.
 		if(additionalQuestions.questionb){
-			document.getElementsByName("optionalQuestion2")[0].innerHTML=additionalQuestions.questionb;
+			document.getElementsByName("optionalQuestion2")[0].innerHTML=additionalQuestions.questionb + document.getElementsByName("optionalQuestion2")[0].innerHTML;
 			document.getElementsByName("optionalAnswer2")[0].innerHTML=additionalAnswers.answerb;
 		} else{
 			document.getElementsByName("optionalQuestion2")[0].style.display="none";
@@ -463,7 +464,7 @@ function displayAdditionalQuestions(additionalAnswers){
 		
 		// Fill in the third question.
 		if(additionalQuestions.questionc){
-			document.getElementsByName("optionalQuestion3")[0].innerHTML=additionalQuestions.questionc;
+			document.getElementsByName("optionalQuestion3")[0].innerHTML=additionalQuestions.questionc + document.getElementsByName("optionalQuestion3")[0].innerHTML;
 			document.getElementsByName("optionalAnswer3")[0].innerHTML=additionalAnswers.answerc;
 		} else{
 			document.getElementsByName("optionalQuestion3")[0].style.display="none";
