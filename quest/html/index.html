@@ -1,0 +1,13 @@
+<!-- Begin index.html -->
+	<script type="text/javascript" src="../quest/js/publicView.js"> </script>
+  <body onload="ajax('GET', '../quest/php/getAllHunts.php', initializePublicMapDisplay)">
+	<div id="container" > 
+		<div id="list" style="float: left">
+		  <table id="huntTable" borderColor=#000000 border=1>
+		  </table>
+		</div>
+		<div id="map_canvas" style="float: right"></div>
+	</div>
+	</body>
+
+<!-- End index.html -->
