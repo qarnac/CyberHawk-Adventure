@@ -1,5 +1,9 @@
 // This file is going to be respsonsible for holding all of the map functions that are used multiple places.
 
+
+
+function $(x){return document.getElementById(x);}
+
 // Initializes the map for the creation of the Activity Map.
 function initializeMap(lat, lng){
 	$('activity').innerHTML="";

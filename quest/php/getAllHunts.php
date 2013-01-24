@@ -11,5 +11,4 @@
 		}
 	}
 	echo json_encode($availableHunts);
-	
 ?>

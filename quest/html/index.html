@@ -1,9 +1,20 @@
 <!-- Begin index.html -->
+	 <style type="text/css">
+      #map_canvas { height: 100%; width: 75% }
+	  #list{height: 100%; width: 25%}
+	  #activity{height: 100%; width: 100%}
+	</style>
 	<script type="text/javascript" src="../quest/js/publicView.js"> </script>
+		<script type="text/javascript" src="../quest/js/mapFunctions.js"> </script>
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyB9JU8fk8vwDcneDmPhbnMtp-hcUL0E_tA&sensor=false"></script>
   <body onload="ajax('GET', '../quest/php/getAllHunts.php', initializePublicMapDisplay)">
-	<div id="container" > 
+	<div id="activity"> 
 		<div id="list" style="float: left">
 		  <table id="huntTable" borderColor=#000000 border=1>
+			<tr>
+				<th> Hunt Name </th>
+				<th> Teacher Name </th>
+			</tr>
 		  </table>
 		</div>
 		<div id="map_canvas" style="float: right"></div>
