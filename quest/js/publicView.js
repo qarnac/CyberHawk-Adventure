@@ -1,7 +1,7 @@
 // publicView.js
 // Created by Jeffrey Rackauckas
 
-//Dependencies:  Google API v3.
+//Dependencies:  mapFunctions.js & Google API v3.
 
 // The purpose of this file is to control the new public index page.
 
@@ -32,10 +32,20 @@ function initializePublicMapDisplay(hunts){
 	// odd name because I'm pretty sure at some point there is a global variable named map.
 	var mapInstance = new google.maps.Map(div, myOptions);
 	
+	// Loop through all of the hunts and create the overlays to display them on the map.
+	// Store all of the Rectangles in an array so we can hide/display them at later times.
+	var rectangles=new Array();
+	for(var i=0; i<hunts.length; i++){
+		// Second parameter is the condensed creation of the hunt bounds.
+		rectangles.push(createRectangleOverlay(mapInstance, new google.maps.LatLngBounds(new google.maps.LatLng(hunts[i].minlat, hunts[i].minlng), new google.maps.LatLng(hunts[i].maxlat, hunts[i].maxlng))));
+		
+
+	}
+	
 	// Now to set up the list.
 	var table=document.getElementById("huntTable");
 	// Anytime the map gets moved, we want to update what hunts the list is displaying.
-	google.maps.event.addListener(mapInstance, 'bounds_changed', function(){displayVisibleHunts(mapInstance.getBounds(), hunts, table);});
+	google.maps.event.addListener(mapInstance, 'bounds_changed', function(){displayVisibleHunts(mapInstance, hunts, table, rectangles);});
 	
 	
 }
@@ -43,7 +53,8 @@ function initializePublicMapDisplay(hunts){
 // Called from: initializePublicMapDisplay
 // The purpose of this function is to cycle through all of the hunts, and add only the visible hunts to the list view. 
 // If a hunt is not visible on the map currently, it simply is not shown on the list.
-function displayVisibleHunts(bounds, hunts, table){
+function displayVisibleHunts(map, hunts, table, rectangles){
+	bounds=map.getBounds();
 	// Deletes all rows except the header row from the table.
 	while(table.rows.length>1) table.deleteRow(1);
 	// Loop through each hunt individually.
@@ -57,13 +68,37 @@ function displayVisibleHunts(bounds, hunts, table){
 			|| bounds.contains(new google.maps.LatLng(hunts[i].maxlat, hunts[i].minlng))
 			|| bounds.contains(new google.maps.LatLng(hunts[i].maxlat, hunts[i].maxlng))
 			// Check center last since it requires the most proccessing.
-			|| bounds.contains(new google.maps.LatLngBounds(new google.maps.LatLng(hunts[i].minlat, hunts[i].minlng), new google.maps.LatLng(hunts[i].maxlat, hunts[i].maxlng)).getCenter())){
-			//If the hunt bound is within the visible map bounds, then add it to the table.
-			// For some reason, -1 is the parameter you pass to indicate you want the row inserted at the end.
-			var row=table.insertRow(-1);
-			row.insertCell(-1).innerHTML=hunts[i].title;
-			// Currently, we have no way of accessing the teachers name via the hunt.  It's starting to seem like we may want to change some structuring in the database, so I'm going to wait to add this.
-			row.insertCell(-1).innerHTML="TODO: Add teacher name"
+			|| bounds.contains(new google.maps.LatLngBounds(new google.maps.LatLng(hunts[i].minlat, hunts[i].minlng), new google.maps.LatLng(hunts[i].maxlat, hunts[i].maxlng)).getCenter()))
+		{
+				//If the hunt bound is within the visible map bounds, then add it to the table.
+				// For some reason, -1 is the parameter you pass to indicate you want the row inserted at the end.
+				var row=table.insertRow(-1);
+				row.insertCell(-1).innerHTML=hunts[i].title;
+				// Currently, we have no way of accessing the teachers name via the hunt.  It's starting to seem like we may want to change some structuring in the database, so I'm going to wait to add this.
+				row.insertCell(-1).innerHTML="TODO: Add teacher name"
+				// If the rectangles map is null, it means the user has decided to hide the rectangle on the map.
+				if(rectangles[i].map==null) row.className="hide";
+				// Each row needs it's own rectNumber stored in itself, so that way each onclick function can have it's own rectNumber.
+				row.rectNumber=i;
+				// Store it for local memory so it's usable in the onclick function.
+				var map=map;
+				// The first time a row is clicked, it selects the hunt, and then unselects all other hunts.
+				// If the row is clicked again, it'll mark the row as red, and stop displaying the hunt on the map.
+				// If a row that is not being displayed on the map is clicked, it will return the hunt to normal.
+				row.onclick=function(){
+					if(this.className==""){
+						for(var j=0; j<table.rows.length;j++){
+							if(table.rows[j].className=="highlight") table.rows[j].className="";
+						}
+						this.className="highlight";
+					} else if(this.className=="highlight"){
+						this.className="hide";
+						rectangles[this.rectNumber].setMap(null);
+					} else if(this.className=="hide"){
+						this.className="";
+						rectangles[this.rectNumber].setMap(map);
+					}
+				};
 		}
 	}
 
