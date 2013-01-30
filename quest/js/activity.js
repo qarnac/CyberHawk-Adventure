@@ -102,7 +102,7 @@ function fillActivityTable(activity, isStudent, tableNumber){
 	fillAnswerDiv(document.getElementsByName("mquestion")[tableNumber], activity.mquestion);
 	document.getElementsByName("comments")[tableNumber].innerHTML=activity.comments;
 	document.getElementsByName("status")[tableNumber].innerHTML=activity.status;
-	document.getElementsByName("activityImage")[tableNumber].src= PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
+	document.getElementsByName("activityImage")[tableNumber].src= GLOBALS.PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
 	
 	var hunt=JSON.parse(sessionStorage.hunts)[getHuntSelectNumber(activity.hunt_id)];
 	if(hunt.additionalQuestions==undefined || hunt.additionalQuestions==""){

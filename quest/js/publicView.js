@@ -1,7 +1,7 @@
 // publicView.js
 // Created by Jeffrey Rackauckas
 
-//Dependencies:  mapFunctions.js & Google API v3.
+//Dependencies:  mapFunctions.js, createActivityMap.js & Google API v3.
 
 // The purpose of this file is to control the new public index page.
 
@@ -76,27 +76,49 @@ function displayVisibleHunts(map, hunts, table, rectangles){
 				row.insertCell(-1).innerHTML=hunts[i].title;
 				// Currently, we have no way of accessing the teachers name via the hunt.  It's starting to seem like we may want to change some structuring in the database, so I'm going to wait to add this.
 				row.insertCell(-1).innerHTML="TODO: Add teacher name"
-				// If the rectangles map is null, it means the user has decided to hide the rectangle on the map.
-				if(rectangles[i].map==null) row.className="hide";
+				// This is the rectangle the user currently has selected.
+				if(rectangles[i].fillColor=="#FFFF00") row.className="highlight";
 				// Each row needs it's own rectNumber stored in itself, so that way each onclick function can have it's own rectNumber.
 				row.rectNumber=i;
-				// Store it for local memory so it's usable in the onclick function.
+				row.hunt=hunts[i];
+				// Store things in local memory so it's usable in the onclick function.
 				var map=map;
 				// The first time a row is clicked, it selects the hunt, and then unselects all other hunts.
-				// If the row is clicked again, it'll mark the row as red, and stop displaying the hunt on the map.
-				// If a row that is not being displayed on the map is clicked, it will return the hunt to normal.
+				// If the row is clicked again, it'll zoom into that hunt, and display the activities for that hunt.
 				row.onclick=function(){
 					if(this.className==""){
 						for(var j=0; j<table.rows.length;j++){
-							if(table.rows[j].className=="highlight") table.rows[j].className="";
+						// Unselect the previously selected hunt by dehighlighting it from the table, and changing the hunt on the map back to the normal color.
+							if(table.rows[j].className=="highlight"){ 
+								table.rows[j].className="";
+								var rectOptions = {
+									strokeColor : "#B7DDF2",
+									fillColor : "#B7DDF2"
+								};
+							rectangles[j].setOptions(rectOptions);
+							}
 						}
+						// Change the color of the table row, and the hunt display on the map.
 						this.className="highlight";
+						var rectOptions = {
+							strokeColor : "#FFFF00",
+							fillColor : "#FFFF00"
+						};
+						rectangles[this.rectNumber].setOptions(rectOptions);
 					} else if(this.className=="highlight"){
-						this.className="hide";
-						rectangles[this.rectNumber].setMap(null);
-					} else if(this.className=="hide"){
-						this.className="";
-						rectangles[this.rectNumber].setMap(map);
+						map.panTo(rectangles[this.rectNumber].getBounds().getCenter());
+						// Get all of the activities that correspond that hunt.
+						ajax("huntid="+this.hunt.id, GLOBALS.PHP_FOLDER_LOCATION + "getAllActivitiesFromHunt.php", function(serverResponse){
+							// Loop through all of the hunts and plot only the hunts with a status of completed.
+							activities=JSON.parse(serverResponse);
+							for(var i=0; i<activities.length; i++){
+								// TODO:  We need to create a new table display for the public view.
+								// TODO: Get rid of displaying the unverified activities.
+								if(activities[i].status=="Verified" || activities[i].status=="unverified"){
+									createPlacemark(activities[i], map);
+								}
+							}
+						});
 					}
 				};
 		}
