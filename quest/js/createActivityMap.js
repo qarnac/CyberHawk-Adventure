@@ -35,7 +35,12 @@ function jsonToMap(serverResponse){
 
 // Is called for every activity response from the server.
 // Adds a Placemark to the map.
-function createPlacemark(activity, map){
+// isStudent==0==false, teacher view.
+// isStudent==1==true, student view.
+// isStudent==2, public view.
+// TODO: Create an enum for the integer values of isStudent to help grant more clarity when checking isStudent.
+function createPlacemark(activity, map, isStudent){
+	if(isStudent==undefined) isStudent=0;
 	var marker = new google.maps.Marker({
 		position: new google.maps.LatLng(activity.lat, activity.lng),
 		title:activity.student_id
@@ -44,7 +49,7 @@ function createPlacemark(activity, map){
 	google.maps.event.addListener(marker, "click", function(){
 		// This sets it up so that way an infowindow pops up and shows the text that we just created in the text variable above.
 		info=new google.maps.InfoWindow();
-		info.setContent(generateActivityView(activity, false, document.getElementsByName("partner_names").length));
+		info.setContent(generateActivityView(activity, isStudent, document.getElementsByName("partner_names").length));
 		info.setPosition(new google.maps.LatLng(activity.lat, activity.lng));
 		info.open(map);
 	});

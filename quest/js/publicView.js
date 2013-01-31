@@ -86,18 +86,22 @@ function displayVisibleHunts(map, hunts, table, rectangles){
 				// The first time a row is clicked, it selects the hunt, and then unselects all other hunts.
 				// If the row is clicked again, it'll zoom into that hunt, and display the activities for that hunt.
 				row.onclick=function(){
-					if(this.className==""){
-						for(var j=0; j<table.rows.length;j++){
-						// Unselect the previously selected hunt by dehighlighting it from the table, and changing the hunt on the map back to the normal color.
-							if(table.rows[j].className=="highlight"){ 
-								table.rows[j].className="";
-								var rectOptions = {
-									strokeColor : "#B7DDF2",
-									fillColor : "#B7DDF2"
-								};
-							rectangles[j].setOptions(rectOptions);
-							}
+					// Loop through rectangles and unhighlight all the rectangles.
+					for(var j=0; j<rectangles.length;j++){
+						if(rectangles[j].fillColor=="#FFFF00" && j!=this.rectNumber){ 
+						var rectOptions = {
+							strokeColor : "#B7DDF2",
+							fillColor : "#B7DDF2"
+							};
+						rectangles[j].setOptions(rectOptions);
 						}
+					}
+					for(var j=0; j<table.rows.length; j++){
+						if(table.rows[j].className=="highlight" && table.rows[j]!=this)
+							table.rows[j].className="";
+					}
+					
+					if(this.className==""){
 						// Change the color of the table row, and the hunt display on the map.
 						this.className="highlight";
 						var rectOptions = {
@@ -115,7 +119,7 @@ function displayVisibleHunts(map, hunts, table, rectangles){
 								// TODO:  We need to create a new table display for the public view.
 								// TODO: Get rid of displaying the unverified activities.
 								if(activities[i].status=="Verified" || activities[i].status=="unverified"){
-									createPlacemark(activities[i], map);
+									createPlacemark(activities[i], map, 2);
 								}
 							}
 						});

@@ -93,8 +93,20 @@ function fillAnswerDiv(Dom, answer){
 }
 
 // Is used to populate the activityView.html file.
+// isStudent is now getting changed from a boolean value.  The reasoning is that with the public view,
+// we have more than two different tables we want to display with this same format.
+// Due to this, isStudent can now contain the following values:
+// isStudent==0==false, teacher view.
+// isStudent==1==true, student view.
+// isStudent==2, public view.
+// TODO: Create an enum for the integer values of isStudent to help grant more clarity when checking isStudent.
 function fillActivityTable(activity, isStudent, tableNumber){
-	fillAnswerDiv(document.getElementsByName("partner_names")[tableNumber], activity.partner_names);
+	// In the public view, we do not want to display the names of the students.
+	if(isStudent==2){
+		document.getElementsByName("partner_question")[tableNumber].style.display="none";
+	}else{
+		fillAnswerDiv(document.getElementsByName("partner_names")[tableNumber], activity.partner_names);
+	}
 	fillAnswerDiv(document.getElementsByName("aboutmedia")[tableNumber],activity.aboutmedia);
 	fillAnswerDiv(document.getElementsByName("whythis")[tableNumber], activity.whythis);
 	fillAnswerDiv(document.getElementsByName("howhelpfull")[tableNumber], activity.howhelpfull);
@@ -103,38 +115,45 @@ function fillActivityTable(activity, isStudent, tableNumber){
 	document.getElementsByName("comments")[tableNumber].innerHTML=activity.comments;
 	document.getElementsByName("status")[tableNumber].innerHTML=activity.status;
 	document.getElementsByName("activityImage")[tableNumber].src= GLOBALS.PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
-	
-	var hunt=JSON.parse(sessionStorage.hunts)[getHuntSelectNumber(activity.hunt_id)];
-	if(hunt.additionalQuestions==undefined || hunt.additionalQuestions==""){
+	if(isStudent==2){
 		document.getElementsByName("optionalQuestion1")[tableNumber].style.display="none";
 		document.getElementsByName("optionalAnswer1")[tableNumber].style.display="none";
 		document.getElementsByName("optionalQuestion2")[tableNumber].style.display="none";
 		document.getElementsByName("optionalAnswer2")[tableNumber].style.display="none";
 		document.getElementsByName("optionalQuestion3")[tableNumber].style.display="none";
 		document.getElementsByName("optionalAnswer3")[tableNumber].style.display="none";
-	} else{
-		// If the student answered answered the additional questions, parse the answers.
-		// Otherwise just leave the variable blank (but still initialize)
-		if(activity.additionalQuestions) var additionalAnswers=JSON.parse(activity.additionalQuestions);
-		else var additionalAnswers={a:"",b:"",c:""};
-		// Parse the questions from the hunt.
-		var additionalQuestions=JSON.parse(hunt.additionalQuestions);
-		
-		// Fill in the Divs with the questions and answers (only if they exist).
-		if(additionalQuestions.questiona){
-			document.getElementsByName("optionalQuestion1")[tableNumber].innerHTML=additionalQuestions.questiona;
-			fillAnswerDiv(document.getElementsByName("optionalAnswer1")[tableNumber], additionalAnswers.a);
-		}
-		if(additionalQuestions.questionb){
-			document.getElementsByName("optionalQuestion2")[tableNumber].innerHTML=additionalQuestions.questionb;
-			fillAnswerDiv(document.getElementsByName("optionalAnswer2")[tableNumber], additionalAnswers.b);
-		}
-		if(additionalQuestions.questionc){
-			document.getElementsByName("optionalQuestion3")[tableNumber].innerHTML=additionalQuestions.questionc;
-			fillAnswerDiv(document.getElementsByName("optionalAnswer3")[tableNumber], additionalAnswers.c);
-		}
-	} // end of dealing with additional questions.
-	
+	}else {
+		var hunt=JSON.parse(sessionStorage.hunts)[getHuntSelectNumber(activity.hunt_id)];
+		if(hunt.additionalQuestions==undefined || hunt.additionalQuestions==""){
+			document.getElementsByName("optionalQuestion1")[tableNumber].style.display="none";
+			document.getElementsByName("optionalAnswer1")[tableNumber].style.display="none";
+			document.getElementsByName("optionalQuestion2")[tableNumber].style.display="none";
+			document.getElementsByName("optionalAnswer2")[tableNumber].style.display="none";
+			document.getElementsByName("optionalQuestion3")[tableNumber].style.display="none";
+			document.getElementsByName("optionalAnswer3")[tableNumber].style.display="none";
+		} else{
+			// If the student answered answered the additional questions, parse the answers.
+			// Otherwise just leave the variable blank (but still initialize)
+			if(activity.additionalQuestions) var additionalAnswers=JSON.parse(activity.additionalQuestions);
+			else var additionalAnswers={a:"",b:"",c:""};
+			// Parse the questions from the hunt.
+			var additionalQuestions=JSON.parse(hunt.additionalQuestions);
+			
+			// Fill in the Divs with the questions and answers (only if they exist).
+			if(additionalQuestions.questiona){
+				document.getElementsByName("optionalQuestion1")[tableNumber].innerHTML=additionalQuestions.questiona;
+				fillAnswerDiv(document.getElementsByName("optionalAnswer1")[tableNumber], additionalAnswers.a);
+			}
+			if(additionalQuestions.questionb){
+				document.getElementsByName("optionalQuestion2")[tableNumber].innerHTML=additionalQuestions.questionb;
+				fillAnswerDiv(document.getElementsByName("optionalAnswer2")[tableNumber], additionalAnswers.b);
+			}
+			if(additionalQuestions.questionc){
+				document.getElementsByName("optionalQuestion3")[tableNumber].innerHTML=additionalQuestions.questionc;
+				fillAnswerDiv(document.getElementsByName("optionalAnswer3")[tableNumber], additionalAnswers.c);
+			}
+		} // end of dealing with additional questions.
+	}
 	var orderedList = document.getElementsByName("manswers")[tableNumber];
 	orderedList.className = "multipleChoiceAnswers";
 	var answerList=JSON.parse(activity.choices);
@@ -152,13 +171,15 @@ function fillActivityTable(activity, isStudent, tableNumber){
 		}
 		orderedList.appendChild(answer);
 	}
-	if(isStudent){
+	if(isStudent==1){
 		document.getElementsByName("editButton")[tableNumber].onclick=function(){editActivityAsStudent(activity);};
-	}else if(activity.status!="incomplete"){
+	} else if(isStudent==2){
+	document.getElementsByName("editButton")[tableNumber].style.display="none";
+	} else if(activity.status!="incomplete"){
 		document.getElementsByName("editButton")[tableNumber].onclick=function(){ addTeacherComments(document.getElementsByName("editButton")[tableNumber].parentNode,
 																									document.getElementsByName("editButton")[tableNumber],
 																									activity.id);};
-	} else{
+	}else{
 		document.getElementsByName("editButton")[tableNumber].style.display="none";
 	}
 }
