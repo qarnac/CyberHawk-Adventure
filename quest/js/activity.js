@@ -104,6 +104,10 @@ function fillActivityTable(activity, isStudent, tableNumber){
 	// In the public view, we do not want to display the names of the students.
 	if(isStudent==2){
 		document.getElementsByName("partner_question")[tableNumber].style.display="none";
+		document.getElementsByName("commentsLabel")[tableNumber].style.display="none";
+		document.getElementsByName("comments")[tableNumber].style.display="none";
+		document.getElementsByName("statusLabel")[tableNumber].style.display="none";
+		document.getElementsByName("status")[tableNumber].style.display="none";
 	}else{
 		fillAnswerDiv(document.getElementsByName("partner_names")[tableNumber], activity.partner_names);
 	}
@@ -189,7 +193,7 @@ function fillActivityTable(activity, isStudent, tableNumber){
 function generateActivityView(activity, isStudent, tableNumber) {
 	var activityTable = document.createElement('table');
 	activityTable.innerHTML=GLOBALS.activityView;
-	setTimeout(function(){fillActivityTable(activity, isStudent, tableNumber);}, 75);
+	setTimeout(function(){fillActivityTable(activity, isStudent, tableNumber);}, 500);
 	return activityTable;
 }
 
