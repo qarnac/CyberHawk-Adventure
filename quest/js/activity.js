@@ -101,23 +101,50 @@ function fillAnswerDiv(Dom, answer){
 // isStudent==2, public view.
 // TODO: Create an enum for the integer values of isStudent to help grant more clarity when checking isStudent.
 function fillActivityTable(activity, isStudent, tableNumber){
-	// In the public view, we do not want to display the names of the students.
-	if(isStudent==2){
-		document.getElementsByName("partner_question")[tableNumber].style.display="none";
-		document.getElementsByName("commentsLabel")[tableNumber].style.display="none";
-		document.getElementsByName("comments")[tableNumber].style.display="none";
-		document.getElementsByName("statusLabel")[tableNumber].style.display="none";
-		document.getElementsByName("status")[tableNumber].style.display="none";
-	}else{
+	// Take care of the special cases for the private view.
+	if(isStudent!=2){
 		fillAnswerDiv(document.getElementsByName("partner_names")[tableNumber], activity.partner_names);
+		document.getElementsByName("comments")[tableNumber].innerHTML=activity.comments;
+		document.getElementsByName("status")[tableNumber].innerHTML=activity.status;
+		// Sets up the multiple choice display.
+		var orderedList = document.getElementsByName("manswers")[tableNumber];
+		orderedList.className = "multipleChoiceAnswers";
+		var answerList=JSON.parse(activity.choices);
+		for (var i = 0; i < answerList.choices.length; i++) {
+			var answer = document.createElement('li');
+			if (answerList.choices[i].ans == "true") { // style correct answer
+				var answerSpan = document.createElement('span');
+				answerSpan.className = "correctAnswer";
+				answerSpan.innerHTML = answerList.choices[i].content;
+				answer.appendChild(answerSpan);
+			}
+			else {
+				answer.innerHTML = answerList.choices[i].content;
+			}
+			orderedList.appendChild(answer);
+		}
+		// Else we have to take care of the special cases for public view.
+	} else{
+		var choices=JSON.parse(activity.choices).choices;
+		document.getElementById("answer1").innerHTML=choices[0].content;
+		document.getElementsByName("mchoice")[tableNumber*4].onclick=function(){radioSelect(document.getElementById("answer1"), choices[0].ans!="false");};
+		document.getElementById("answer2").innerHTML=choices[1].content;
+		document.getElementsByName("mchoice")[tableNumber*4+1].onclick=function(){radioSelect(document.getElementById("answer2"),choices[1].ans!="false");};
+		if(choices[2]!=undefined){
+			document.getElementById("answer3").innerHTML=choices[2].content;
+			document.getElementsByName("mchoice")[tableNumber*4+2].onclick=function(){radioSelect(document.getElementById("answer3"),choices[2].ans!="false");};
+		}
+		if(choices[3]!=undefined){
+			document.getElementById("answer4").innerHTML=choices[3].content;
+			document.getElementsByName("mchoice")[tableNumber*4+3].onclick=function(){radioSelect(document.getElementById("answer4"),choices[3].ans!="false");};
+		}
 	}
+	// Everything else is the same for both views.
 	fillAnswerDiv(document.getElementsByName("aboutmedia")[tableNumber],activity.aboutmedia);
 	fillAnswerDiv(document.getElementsByName("whythis")[tableNumber], activity.whythis);
 	fillAnswerDiv(document.getElementsByName("howhelpfull")[tableNumber], activity.howhelpfull);
 	fillAnswerDiv(document.getElementsByName("yourdoubt")[tableNumber], activity.yourdoubt);
 	fillAnswerDiv(document.getElementsByName("mquestion")[tableNumber], activity.mquestion);
-	document.getElementsByName("comments")[tableNumber].innerHTML=activity.comments;
-	document.getElementsByName("status")[tableNumber].innerHTML=activity.status;
 	document.getElementsByName("activityImage")[tableNumber].src= GLOBALS.PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
 	if(isStudent==2){
 		document.getElementsByName("optionalQuestion1")[tableNumber].style.display="none";
@@ -158,41 +185,35 @@ function fillActivityTable(activity, isStudent, tableNumber){
 			}
 		} // end of dealing with additional questions.
 	}
-	var orderedList = document.getElementsByName("manswers")[tableNumber];
-	orderedList.className = "multipleChoiceAnswers";
-	var answerList=JSON.parse(activity.choices);
-	
-	for (var i = 0; i < answerList.choices.length; i++) {
-		var answer = document.createElement('li');
-		if (answerList.choices[i].ans == "true") { // style correct answer
-			var answerSpan = document.createElement('span');
-			answerSpan.className = "correctAnswer";
-			answerSpan.innerHTML = answerList.choices[i].content;
-			answer.appendChild(answerSpan);
-		}
-		else {
-			answer.innerHTML = answerList.choices[i].content;
-		}
-		orderedList.appendChild(answer);
-	}
+
 	if(isStudent==1){
 		document.getElementsByName("editButton")[tableNumber].onclick=function(){editActivityAsStudent(activity);};
-	} else if(isStudent==2){
-	document.getElementsByName("editButton")[tableNumber].style.display="none";
-	} else if(activity.status!="incomplete"){
+	} else if(activity.status!="incomplete" && isStudent!=2){
 		document.getElementsByName("editButton")[tableNumber].onclick=function(){ addTeacherComments(document.getElementsByName("editButton")[tableNumber].parentNode,
 																									document.getElementsByName("editButton")[tableNumber],
 																									activity.id);};
 	}else{
-		document.getElementsByName("editButton")[tableNumber].style.display="none";
+		if(isStudent!=2) document.getElementsByName("editButton")[tableNumber].style.display="none";
 	}
 }
+
+// This is the function that is called when a radio button is clicked in the public view.
+// Currently, all it will do is turn the text green if the user is correct, and red if the user is incorrect.
+function radioSelect(label, isCorrect){
+	if(isCorrect){
+		label.style.color="#0f0";
+	} else{
+		label.style.color="#f00";
+	}
+}
+
 
 // Is now also called from studentActivityList to create the list.
 // Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
 function generateActivityView(activity, isStudent, tableNumber) {
 	var activityTable = document.createElement('table');
-	activityTable.innerHTML=GLOBALS.activityView;
+	if(isStudent==2) activityTable.innerHTML=GLOBALS.publicActivityView;
+	else activityTable.innerHTML=GLOBALS.activityView;
 	setTimeout(function(){fillActivityTable(activity, isStudent, tableNumber);}, 500);
 	return activityTable;
 }
