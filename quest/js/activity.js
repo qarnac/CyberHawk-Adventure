@@ -520,6 +520,31 @@ function displayAdditionalQuestions(additionalAnswers){
 	
 }
 
+// Called by the Teacher Login and Student Login buttons.
+function createLoginDisplay(isTeacher){
+	var usernameLabel=document.createElement("label");
+	usernameLabel.innerHTML="username:"
+	var usernameText=document.createElement("input");
+	var passwordLabel=document.createElement("label");
+	passwordLabel.innerHTML="Password:"
+	var passwordText=document.createElement("input");
+	var button=document.createElement("button");
+	button.innerHTML="Submit!"
+	var who=(isTeacher)? "teacher":"students";
+	// Create the onsubmit function for the login submit button.
+	button.onclick=function(){ajax("user=" + usernameText.value + "&pwd=" + passwordText.value +"&who=" + who,
+									GLOBALS.PHP_FOLDER_LOCATION + "login.php",
+										function(serverResponse){
+											if(serverResponse=="true") window.location.reload();
+											// TODO:  What do we do if the user doesn't enter correct login information?
+											else  console.log(serverResponse);
+									});};
+	document.getElementById("loginArea").appendChild(usernameLabel);
+	document.getElementById("loginArea").appendChild(usernameText);
+	document.getElementById("loginArea").appendChild(passwordLabel);
+	document.getElementById("loginArea").appendChild(passwordText);
+	document.getElementById("loginArea").appendChild(button);
+}
 
 // don't really need this as a separate function....
 function clear()

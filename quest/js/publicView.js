@@ -88,6 +88,7 @@ function displayVisibleHunts(map, hunts, table, rectangles){
 				row.onclick=function(){
 					// Loop through rectangles and unhighlight all the rectangles.
 					for(var j=0; j<rectangles.length;j++){
+						document.getElementById("studentLogin").disabled=true;
 						if(rectangles[j].fillColor=="#FFFF00" && j!=this.rectNumber){ 
 						var rectOptions = {
 							strokeColor : "#B7DDF2",
@@ -110,6 +111,7 @@ function displayVisibleHunts(map, hunts, table, rectangles){
 						};
 						rectangles[this.rectNumber].setOptions(rectOptions);
 					} else if(this.className=="highlight"){
+						document.getElementById("studentLogin").disabled=false;
 						map.panTo(rectangles[this.rectNumber].getBounds().getCenter());
 						// Get all of the activities that correspond that hunt.
 						ajax("huntid="+this.hunt.id, GLOBALS.PHP_FOLDER_LOCATION + "getAllActivitiesFromHunt.php", function(serverResponse){
