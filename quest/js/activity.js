@@ -126,18 +126,22 @@ function fillActivityTable(activity, isStudent, tableNumber){
 		// Else we have to take care of the special cases for public view.
 	} else{
 		var choices=JSON.parse(activity.choices).choices;
-		document.getElementById("answer1").innerHTML=choices[0].content;
-		document.getElementsByName("mchoice")[tableNumber*4].onclick=function(){radioSelect(document.getElementById("answer1"), choices[0].ans!="false");};
-		document.getElementById("answer2").innerHTML=choices[1].content;
-		document.getElementsByName("mchoice")[tableNumber*4+1].onclick=function(){radioSelect(document.getElementById("answer2"),choices[1].ans!="false");};
+		if(choices[0]!= undefined){
+			document.getElementById("answer1").innerHTML=choices[0].content;
+			document.getElementsByName("mchoice")[tableNumber*4].onclick=function(){radioSelect(document.getElementById("answer1"), choices[0].ans!="false");};
+		} else{ document.getElementById("q0").style.display="none"; }
+		if(choices[1]!=undefined){
+			document.getElementById("answer2").innerHTML=choices[1].content;
+			document.getElementsByName("mchoice")[tableNumber*4+1].onclick=function(){radioSelect(document.getElementById("answer2"),choices[1].ans!="false");};
+		} else{ document.getElementById("q1").style.display="none"; }
 		if(choices[2]!=undefined){
 			document.getElementById("answer3").innerHTML=choices[2].content;
-			document.getElementsByName("mchoice")[tableNumber*4+2].onclick=function(){radioSelect(document.getElementById("answer3"),choices[2].ans!="false");};
-		}
+			document.getElementsByName("mchoice")[tableNumber*4+2].onclick=function(){radioSelect(document.getElementById("answer3"),choices[2].ans!="false")};
+		} else{ document.getElementById("q2").style.display="none"; }
 		if(choices[3]!=undefined){
 			document.getElementById("answer4").innerHTML=choices[3].content;
 			document.getElementsByName("mchoice")[tableNumber*4+3].onclick=function(){radioSelect(document.getElementById("answer4"),choices[3].ans!="false");};
-		}
+		} else{ document.getElementById("q3").style.display="none"; }
 	}
 	// Everything else is the same for both views.
 	fillAnswerDiv(document.getElementsByName("aboutmedia")[tableNumber],activity.aboutmedia);
@@ -536,7 +540,7 @@ function createLoginDisplay(isTeacher){
 									GLOBALS.PHP_FOLDER_LOCATION + "login.php",
 										function(serverResponse){
 											if(serverResponse=="true") window.location.reload();
-											// TODO:  What do we do if the user doesn't enter correct login information?
+											// TODO:  What  do we do if the user doesn't enter correct login information?
 											else  console.log(serverResponse);
 									});};
 	document.getElementById("loginArea").appendChild(usernameLabel);
