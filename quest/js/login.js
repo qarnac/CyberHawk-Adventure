@@ -10,7 +10,17 @@ function verify()
 	var user=$('username').value;
 	var pwd=$('password').value;
 	var who=$('who').value;
-	var data="user="+user+"&pwd="+pwd+"&who="+who;
+	var parentHunt=0;
+	if(document.getElementById("huntTable")!=undefined || who=="teacher"){
+		var table=document.getElementById("huntTable");
+		for(var i=0; i<table.length; i++){
+			if(table[i].className=="highlight"){
+				parentHunt=table.rows[i].hunt.id;
+				break;
+			}
+		}
+	}
+	var data="user="+user+"&pwd="+pwd+"&who="+who+"&parent=" +parentHunt;
 	ajax(data, PHP_FOLDER_LOCATION + "login.php",verifyLogin);
 	return false;
 }

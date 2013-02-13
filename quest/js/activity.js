@@ -536,7 +536,16 @@ function createLoginDisplay(isTeacher){
 	button.innerHTML="Submit!"
 	var who=(isTeacher)? "teacher":"students";
 	// Create the onsubmit function for the login submit button.
-	button.onclick=function(){ajax("user=" + usernameText.value + "&pwd=" + passwordText.value +"&who=" + who,
+	button.onclick=function(){
+								var table=document.getElementById("huntTable");
+								var parent=0;
+								for(var i=0; i<table.rows.length; i++){
+									if(table.rows[i].className=="highlight"){
+										parent=table.rows[i].hunt.id;
+										break;
+									}
+								}
+								ajax("user=" + usernameText.value + "&pwd=" + passwordText.value +"&who=" + who + "&parent=" + parent ,
 									GLOBALS.PHP_FOLDER_LOCATION + "login.php",
 										function(serverResponse){
 											if(serverResponse=="true") window.location.reload();

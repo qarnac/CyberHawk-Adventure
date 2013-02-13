@@ -25,6 +25,9 @@ function wscript_init(x) {
 			if(student.parentHunt==hunts[x].id){
 				$('selecthunt').options[$('selecthunt').options.length] = new Option(hunts[x]['title'], hunts[x]["id"]);
 				sessionStorage.hunts=JSON.stringify(new Array(hunts[x]));
+				document.getElementById("selecthunt").value=document.getElementById("selecthunt").options[1].value;
+				document.getElementById("selecthunt").style.display="none";
+				createStudentActivityList();
 				return;
 			}
 	}
