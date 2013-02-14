@@ -128,19 +128,19 @@ function fillActivityTable(activity, isStudent, tableNumber){
 		var choices=JSON.parse(activity.choices).choices;
 		if(choices[0]!= undefined){
 			document.getElementById("answer1").innerHTML=choices[0].content;
-			document.getElementsByName("mchoice")[tableNumber*4].onclick=function(){radioSelect(document.getElementById("answer1"), choices[0].ans!="false");};
+			document.getElementsByName("mchoice")[tableNumber*4].onclick=function(){radioSelect(document.getElementById("q0"), document.getElementById("answer1"), choices[0].ans!="false");};
 		} else{ document.getElementById("q0").style.display="none"; }
 		if(choices[1]!=undefined){
 			document.getElementById("answer2").innerHTML=choices[1].content;
-			document.getElementsByName("mchoice")[tableNumber*4+1].onclick=function(){radioSelect(document.getElementById("answer2"),choices[1].ans!="false");};
+			document.getElementsByName("mchoice")[tableNumber*4+1].onclick=function(){radioSelect(document.getElementById("q1"), document.getElementById("answer2"),choices[1].ans!="false");};
 		} else{ document.getElementById("q1").style.display="none"; }
 		if(choices[2]!=undefined){
 			document.getElementById("answer3").innerHTML=choices[2].content;
-			document.getElementsByName("mchoice")[tableNumber*4+2].onclick=function(){radioSelect(document.getElementById("answer3"),choices[2].ans!="false")};
+			document.getElementsByName("mchoice")[tableNumber*4+2].onclick=function(){radioSelect(document.getElementById("q2"), document.getElementById("answer3"), choices[2].ans!="false")};
 		} else{ document.getElementById("q2").style.display="none"; }
 		if(choices[3]!=undefined){
 			document.getElementById("answer4").innerHTML=choices[3].content;
-			document.getElementsByName("mchoice")[tableNumber*4+3].onclick=function(){radioSelect(document.getElementById("answer4"),choices[3].ans!="false");};
+			document.getElementsByName("mchoice")[tableNumber*4+3].onclick=function(){radioSelect(document.getElementById("q3"), document.getElementById("answer4"), choices[3].ans!="false");};
 		} else{ document.getElementById("q3").style.display="none"; }
 	}
 	// Everything else is the same for both views.
@@ -202,13 +202,16 @@ function fillActivityTable(activity, isStudent, tableNumber){
 }
 
 // This is the function that is called when a radio button is clicked in the public view.
-// Currently, all it will do is turn the text green if the user is correct, and red if the user is incorrect.
-function radioSelect(label, isCorrect){
-	if(isCorrect){
-		label.style.color="#0f0";
-	} else{
-		label.style.color="#f00";
-	}
+// Changes the view of the button and the label, changing whether they answered correctly or incorrectly.
+function radioSelect(button, label, isCorrect){
+		// Hide the original button, and then display the checkmark to indicate they answered correctly.
+		button.style.display="none";
+		var img=document.createElement("img");
+		if(isCorrect) img.src=GLOBALS.HTML_FOLDER_LOCATION + "apply.png";
+		else img.src=GLOBALS.HTML_FOLDER_LOCATION + "delete.png";
+		// We have to specify the parent div for the label that we want to insert before in.
+		document.getElementById("mcForm").insertBefore(img, label);
+
 }
 
 
