@@ -39,6 +39,7 @@ function jsonToMap(serverResponse){
 // isStudent==1==true, student view.
 // isStudent==2, public view.
 // TODO: Create an enum for the integer values of isStudent to help grant more clarity when checking isStudent.
+// Returns the placemark.
 function createPlacemark(activity, map, isStudent){
 	if(isStudent==undefined) isStudent=0;
 	var marker = new google.maps.Marker({
@@ -56,6 +57,7 @@ function createPlacemark(activity, map, isStudent){
 		map.info.open(map);
 		map.info.setPosition(new google.maps.LatLng(activity.lat, activity.lng));
 	});
+	return marker;
 }
 
 // This is the function called by the view Map button.

@@ -38,10 +38,7 @@ function initializePublicMapDisplay(hunts){
 	for(var i=0; i<hunts.length; i++){
 		// Second parameter is the condensed creation of the hunt bounds.
 		rectangles.push(createRectangleOverlay(mapInstance, new google.maps.LatLngBounds(new google.maps.LatLng(hunts[i].minlat, hunts[i].minlng), new google.maps.LatLng(hunts[i].maxlat, hunts[i].maxlng))));
-		
-
 	}
-	
 	// Now to set up the list.
 	var table=document.getElementById("huntTable");
 	// Anytime the map gets moved, we want to update what hunts the list is displaying.
@@ -86,22 +83,7 @@ function displayVisibleHunts(map, hunts, table, rectangles){
 				// The first time a row is clicked, it selects the hunt, and then unselects all other hunts.
 				// If the row is clicked again, it'll zoom into that hunt, and display the activities for that hunt.
 				row.onclick=function(){
-					// Loop through rectangles and unhighlight all the rectangles.
-					for(var j=0; j<rectangles.length;j++){
-						document.getElementById("studentLogin").disabled=true;
-						if(rectangles[j].fillColor=="#FFFF00" && j!=this.rectNumber){ 
-						var rectOptions = {
-							strokeColor : "#B7DDF2",
-							fillColor : "#B7DDF2"
-							};
-						rectangles[j].setOptions(rectOptions);
-						}
-					}
-					for(var j=0; j<table.rows.length; j++){
-						if(table.rows[j].className=="highlight" && table.rows[j]!=this)
-							table.rows[j].className="";
-					}
-					
+					deselectAllHunts(rectangles,this);			
 					if(this.className==""){
 						// Change the color of the table row, and the hunt display on the map.
 						this.className="highlight";
@@ -117,11 +99,12 @@ function displayVisibleHunts(map, hunts, table, rectangles){
 						ajax("huntid="+this.hunt.id, GLOBALS.PHP_FOLDER_LOCATION + "getAllActivitiesFromHunt.php", function(serverResponse){
 							// Loop through all of the hunts and plot only the hunts with a status of completed.
 							activities=JSON.parse(serverResponse);
+							rectangles.placemarks=new Array();
 							for(var i=0; i<activities.length; i++){
 								// TODO:  We need to create a new table display for the public view.
 								// TODO: Get rid of displaying the unverified activities.
 								if(activities[i].status=="Verified" || activities[i].status=="unverified"){
-									createPlacemark(activities[i], map, 2);
+									rectangles.placemarks.push(createPlacemark(activities[i], map, 2));
 								}
 							}
 						});
@@ -130,4 +113,39 @@ function displayVisibleHunts(map, hunts, table, rectangles){
 		}
 	}
 
+}
+
+
+// This function goes through all of the hunts and makes sure that all of them are no longer selected
+// This means that no placemarks will still be displayed on the map, all table rows will return to default class
+// and that the rectangles will go back to their default color.
+// Is called every time a row is clicked on.
+// Parameters: rectangles is the list of rectangles displayed on the map.
+// selectedHunt is the this value from the row.onclick
+function deselectAllHunts(rectangles,selectedHunt){
+	table=document.getElementById("huntTable");
+	// Loop through every row on the table.
+	for(var i=0; i<table.rows.length; i++){
+	// Unhighlight any highlighted rows (except the currently selected row).
+		if(table.rows[i].className=="highlight" && table.rows[i]!=selectedHunt)
+			table.rows[i].className="";
+	}
+	// Loop through every rectangle.
+	for(var i=0; i<rectangles.length; i++){
+		// Disable the login button.
+		document.getElementById("studentLogin").disabled=true;
+		// Return rectangle to default colors.
+		if(rectangles[i].fillColor=="#FFFF00" && i!=selectedHunt.rectNumber){ 
+			var rectOptions = {
+			strokeColor : "#B7DDF2",
+			fillColor : "#B7DDF2"
+			};
+		rectangles[i].setOptions(rectOptions);
+		// Remove placemarks from map.
+		for(var j=0; j<rectangles.placemarks.length; j++){
+			rectangles.placemarks[j].setMap(null);
+		}
+		// Remove student/teacher login textareas (if they are showing).
+		}
+	}
 }
