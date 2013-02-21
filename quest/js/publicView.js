@@ -115,6 +115,52 @@ function displayVisibleHunts(map, hunts, table, rectangles){
 
 }
 
+// Called by the Teacher Login and Student Login buttons.
+// Fills in the login Area with both the labels and the inputs for the username/password.
+// Is passed whether the user is a student or a teacher.
+function createLoginDisplay(isTeacher){
+	// Create the 4 HTML elements.
+	document.getElementById("loginArea").innerHTML="";
+	var usernameLabel=document.createElement("label");
+	usernameLabel.innerHTML="username:"
+	var usernameText=document.createElement("input");
+	var passwordLabel=document.createElement("label");
+	passwordLabel.innerHTML="Password:"
+	var passwordText=document.createElement("input");
+	passwordText.type="password";
+	var button=document.createElement("button");
+	button.innerHTML="Submit!"
+	// Because the php file uses a string for isTeacher, convert it to a string.
+	var who=(isTeacher)? "teacher":"students";
+	// Create the onsubmit function for the login submit button.
+	button.onclick=function(){
+								var table=document.getElementById("huntTable");
+								var parent=0;
+								// parentHunt parameter is only used if the user is a student, so we only check for the currently
+								// selected hunt if they're trying to log in as a student.
+								if(!isTeacher)
+									for(var i=0; i<table.rows.length; i++){
+										if(table.rows[i].className=="highlight"){
+											parent=table.rows[i].hunt.id;
+											break;
+										}
+									}
+								ajax("user=" + usernameText.value + "&pwd=" + passwordText.value +"&who=" + who + "&parent=" + parent ,
+									GLOBALS.PHP_FOLDER_LOCATION + "login.php",
+										function(serverResponse){
+											if(serverResponse=="true") window.location.reload();
+											// TODO:  What  do we do if the user doesn't enter correct login information?
+											else  console.log(serverResponse);
+									});};
+	// Append the children.
+	document.getElementById("loginArea").appendChild(usernameLabel);
+	document.getElementById("loginArea").appendChild(usernameText);
+	document.getElementById("loginArea").appendChild(passwordLabel);
+	document.getElementById("loginArea").appendChild(passwordText);
+	document.getElementById("loginArea").appendChild(button);
+}
+
+
 
 // This function goes through all of the hunts and makes sure that all of them are no longer selected
 // This means that no placemarks will still be displayed on the map, all table rows will return to default class
@@ -146,6 +192,7 @@ function deselectAllHunts(rectangles,selectedHunt){
 			rectangles.placemarks[j].setMap(null);
 		}
 		// Remove student/teacher login textareas (if they are showing).
+		document.getElementById("loginArea").innerHTML="";
 		}
 	}
 }

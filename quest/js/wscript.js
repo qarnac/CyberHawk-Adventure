@@ -80,7 +80,7 @@ function check(form)
 		contents['lat']= morc.loc.lat();
 		contents['lng']=morc.loc.lng();
 		// Checks to make sure that all of the required attribute are filled in.
-		if(contents.aboutmedia && contents.a && contents.b && contents.howhelpful && contents.mquestion && contents.whythis && contents.yourdoubt){
+		if(contents.aboutmedia && contents.a && contents.b && contents.howhelpful && contents.mquestion && contents.yourdoubt){
 			contents.status="Unverified";
 		} else{
 			contents.status="Incomplete";

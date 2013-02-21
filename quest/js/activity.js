@@ -145,7 +145,8 @@ function fillActivityTable(activity, isStudent, tableNumber){
 	}
 	// Everything else is the same for both views.
 	fillAnswerDiv(document.getElementsByName("aboutmedia")[tableNumber],activity.aboutmedia);
-	fillAnswerDiv(document.getElementsByName("whythis")[tableNumber], activity.whythis);
+	// Question removed on 2/21/2013.
+	//fillAnswerDiv(document.getElementsByName("whythis")[tableNumber], activity.whythis);
 	fillAnswerDiv(document.getElementsByName("howhelpfull")[tableNumber], activity.howhelpfull);
 	fillAnswerDiv(document.getElementsByName("yourdoubt")[tableNumber], activity.yourdoubt);
 	fillAnswerDiv(document.getElementsByName("mquestion")[tableNumber], activity.mquestion);
@@ -343,7 +344,8 @@ function editActivityAsStudent(activity) {
 	// Sets up the non-multiple choice questions.
 	document.getElementsByName("partner_names")[0].innerHTML = activity.partner_names;
 	document.getElementsByName("aboutmedia")[0].innerHTML = activity.aboutmedia;
-	document.getElementsByName("whythis")[0].innerHTML = activity.whythis;
+	// Question removed on 2/21/2013
+//	document.getElementsByName("whythis")[0].innerHTML = activity.whythis;
 	document.getElementsByName("howhelpful")[0].innerHTML = activity.howhelpfull;
 	document.getElementsByName("yourdoubt")[0].innerHTML = activity.yourdoubt;
 	document.getElementsByName("mquestion")[0].innerHTML = activity.mquestion;
@@ -417,7 +419,7 @@ function submitEdit(id) {
 			ajax("content=" + mediaContents, PHP_FOLDER_LOCATION + "updateImage.php", function(serverResponse){console.log(serverResponse);});
 		}
 		// Checks to make sure that all of the required attribute are filled in.
-		if(contents.aboutmedia && contents.a && contents.b && contents.howhelpful && contents.mquestion && contents.whythis && contents.yourdoubt){
+		if(contents.aboutmedia && contents.a && contents.b && contents.howhelpful && contents.mquestion && contents.yourdoubt){
 			contents.status="Unverified";
 		} else{
 			contents.status="Incomplete";
@@ -527,40 +529,6 @@ function displayAdditionalQuestions(additionalAnswers){
 	
 }
 
-// Called by the Teacher Login and Student Login buttons.
-function createLoginDisplay(isTeacher){
-	var usernameLabel=document.createElement("label");
-	usernameLabel.innerHTML="username:"
-	var usernameText=document.createElement("input");
-	var passwordLabel=document.createElement("label");
-	passwordLabel.innerHTML="Password:"
-	var passwordText=document.createElement("input");
-	var button=document.createElement("button");
-	button.innerHTML="Submit!"
-	var who=(isTeacher)? "teacher":"students";
-	// Create the onsubmit function for the login submit button.
-	button.onclick=function(){
-								var table=document.getElementById("huntTable");
-								var parent=0;
-								for(var i=0; i<table.rows.length; i++){
-									if(table.rows[i].className=="highlight"){
-										parent=table.rows[i].hunt.id;
-										break;
-									}
-								}
-								ajax("user=" + usernameText.value + "&pwd=" + passwordText.value +"&who=" + who + "&parent=" + parent ,
-									GLOBALS.PHP_FOLDER_LOCATION + "login.php",
-										function(serverResponse){
-											if(serverResponse=="true") window.location.reload();
-											// TODO:  What  do we do if the user doesn't enter correct login information?
-											else  console.log(serverResponse);
-									});};
-	document.getElementById("loginArea").appendChild(usernameLabel);
-	document.getElementById("loginArea").appendChild(usernameText);
-	document.getElementById("loginArea").appendChild(passwordLabel);
-	document.getElementById("loginArea").appendChild(passwordText);
-	document.getElementById("loginArea").appendChild(button);
-}
 
 // don't really need this as a separate function....
 function clear()
