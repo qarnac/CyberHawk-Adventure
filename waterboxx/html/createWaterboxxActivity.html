@@ -1,31 +1,42 @@
-	<fieldset>
+	<link rel="stylesheet" type="text/css" href= "../style/style.css"/>
+
+	<fieldset style ="border-style:solid;border-color:red;">
 		<legend>Image Uploader</legend>
 		<input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="1000000" />
 		<div>
 			<label for="fileselect">Files to upload:</label>
-			<input type="file" id="img_fselect" name="fileselect"  onChange="FileSelectHandler(event);"  accept="image/jpg,image/gif,image/jpeg,image/png"/>
-			<div class="filedrag" ondragover="FileDragHover(event)" ondragleave="FileDragHover(event)" ondrop="FileSelectHandler(event)" ><img src="" id="activityImage">or drop files here</div>
+			<input type="file" id="img_fselect" name="fileselect"  onChange="FileSelectHandler(event);"  accept="image/jpg,image/gif,image/jpeg,image/png"/> 
+			<div class="filedrag" ondragover="FileDragHover(event)" ondragleave="FileDragHover(event)" ondrop="FileSelectHandler(event)" ><img src="" id="activityImage" style= "width:100%;height:280px; padding-right:1%;">or drop files here</div>
 		</div>
 	</fieldset>
+
+
 		<form class="activ" name="multiple" onsubmit="check(this); return false;">
-		<div  class="split"><label>List all the partners for this Waterboxx<textarea name="partner_names" maxlength="100"></textarea></label></div> 
-		<div  class="split"><label>What date was this planted? (Insert in MM/DD/YYYY format)<br /><input type="date" name="date_planted" maxlength="100"></input></label></div>  
-		<div  class="split"><label>What date did you observe it? (Insert in MM/DD/YYYY format)<br /><input type="date" name="date_observed" maxlength="100"></input></label></div> 	            
-		<div  class="split"><label>Was the planting successful or not?</label><select name="successful" maxlength="100">
+			<div class="section1" style ="margin: 1% 0 1% 0;">
+		<div  class="split"><label>List all the partners for this Waterboxx </label><textarea name="partner_names" maxlength="100" style="width: 400px;"></textarea></div> 
+		<div  class="split"><label>What date was this planted? (Insert in MM/DD/YYYY format)</label><input type="date" name="date_planted" maxlength="100"></input></div>  
+		<div  class="split"><label>What date did you observe it? (Insert in MM/DD/YYYY format)</label><input type="date" name="date_observed" maxlength="100"></input></div> 	  
+	</div>
+
+		<!---->          
+		<div  class="split" ><label>Was the planting successful or not?</label><select name="successful" maxlength="100">
 																			<option> Yes </option>
 																			<option> No </option>
 																		</select></div>           
-		<div  class="split"><label>If successful- How tall is the plant? (in cm).<textarea name="height" maxlength="100"></textarea></label></div>																
-		<div  class="split" style="width: 600px"><label>Planting Site Description:<textarea  style="width: 600px" name="site_description" maxlength="100" ></textarea></label></div>  
+		<div  class="split"><label>If successful- How tall is the plant? (in cm). </label><textarea name="height" maxlength="100"style="width: 400px;"></textarea></div>																
+
+		<div  class="split" style="width: 45%;"><label>Planting Site Description: </label><textarea  style="width: 400px;" name="site_description" maxlength="100" ></textarea></div>  
 		
 		<div  class="split"><label>Did you plant a seed or a sprout?</label><select name="is_seed" maxlength="100">
 																			<option> Seed </option>
 																			<option> Sprout </option>
-																		</select></label></div>  
+																		</select></div>  
 		
-		<div  class="split"><label>Why do you think you were (un)successful<textarea name="success_reasons" maxlength="100"></textarea></label></div>
-		<div  class="split" style="width: 600px"><label>Current Waterboxx condition-amount of water:<textarea  style="width: 600px" name="waterboxx_condition" maxlength="100" ></textarea></label></div>  
-<div  class="split"><label>Any other data or observerations:<textarea name="other_data" maxlength="100"></textarea></label></div>
+		<div  class="split"><label>Why do you think you were (un)successful</label><textarea name="success_reasons" maxlength="100" style="width: 400px;"></textarea></div>
+
+		<div  class="split" style="width: 45%;"><label>Current Waterboxx condition-amount of water: </label><textarea  style="width: 400px;" name="waterboxx_condition" maxlength="100" ></textarea></div>  
+<div  class="split"><label>Any other data or observerations: </label><textarea name="other_data" style="width: 400px;" maxlength="100"></textarea></div>
+
 		<div class="clear"></div>
 
 		<div class="split"><input type="submit" value="Submit"/> </div>
