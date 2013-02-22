@@ -103,9 +103,10 @@ function displayVisibleHunts(map, hunts, table, rectangles){
 							for(var i=0; i<activities.length; i++){
 								// TODO:  We need to create a new table display for the public view.
 								// TODO: Get rid of displaying the unverified activities.
-								if(activities[i].status=="Verified" || activities[i].status=="unverified"){
+								// Currently making it so all activities are displayed.
+								// if(activities[i].status=="Verified" || activities[i].status=="unverified"){
 									rectangles.placemarks.push(createPlacemark(activities[i], map, 2));
-								}
+								//}
 							}
 						});
 					}
@@ -188,8 +189,10 @@ function deselectAllHunts(rectangles,selectedHunt){
 			};
 		rectangles[i].setOptions(rectOptions);
 		// Remove placemarks from map.
-		for(var j=0; j<rectangles.placemarks.length; j++){
-			rectangles.placemarks[j].setMap(null);
+		if(rectangles.placemarks!=undefined){
+			for(var j=0; j<rectangles.placemarks.length; j++){
+				rectangles.placemarks[j].setMap(null);
+			}
 		}
 		// Remove student/teacher login textareas (if they are showing).
 		document.getElementById("loginArea").innerHTML="";

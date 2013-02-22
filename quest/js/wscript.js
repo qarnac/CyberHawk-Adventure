@@ -27,6 +27,10 @@ function wscript_init(x) {
 				sessionStorage.hunts=JSON.stringify(new Array(hunts[x]));
 				document.getElementById("selecthunt").value=document.getElementById("selecthunt").options[1].value;
 				document.getElementById("selecthunt").style.display="none";
+				// We still want hunts to work as an array so that way teachers/students with more than one hunt still have access to all of their hunts.
+				var hunt=hunts[x]
+				hunts=new Array();
+				hunts[0]=hunt;
 				createStudentActivityList();
 				return;
 			}
