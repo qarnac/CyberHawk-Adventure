@@ -39,6 +39,7 @@ function jsonToMap(serverResponse){
 // isStudent==1==true, student view.
 // isStudent==2, public view.
 // TODO: Create an enum for the integer values of isStudent to help grant more clarity when checking isStudent.
+// Returns the placemark.
 function createPlacemark(activity, map, isStudent){
 	if(isStudent==undefined) isStudent=0;
 	var marker = new google.maps.Marker({
@@ -46,13 +47,17 @@ function createPlacemark(activity, map, isStudent){
 		title:activity.student_id
 	});
 	marker.setMap(map);
+	// By storing the infoWindows on the map itself, there can only be one active infoWindow at a time.
+	if(map.info==undefined) map.info=new google.maps.InfoWindow();
+	map.info.open(map);
+	// This sets it up so that way an infowindow pops up and shows the text that we just created in the text variable above.
 	google.maps.event.addListener(marker, "click", function(){
-		// This sets it up so that way an infowindow pops up and shows the text that we just created in the text variable above.
-		info=new google.maps.InfoWindow();
-		info.setContent(generateActivityView(activity, isStudent, document.getElementsByName("partner_names").length));
-		info.setPosition(new google.maps.LatLng(activity.lat, activity.lng));
-		info.open(map);
+		map.info.close();
+		map.info.setContent(generateActivityView(activity, isStudent, document.getElementsByName("partner_names").length));
+		map.info.open(map);
+		map.info.setPosition(new google.maps.LatLng(activity.lat, activity.lng));
 	});
+	return marker;
 }
 
 // This is the function called by the view Map button.

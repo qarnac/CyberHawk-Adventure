@@ -2,10 +2,13 @@
 include '../php/credentials.php';
 if(isset($_POST['user']))
 {
-	$usrname=mysql_escape_string($_POST['user']);
+	$username=mysql_escape_string($_POST['user']);
 	$pwd=mysql_escape_string($_POST['pwd']);
 	$who=mysql_escape_string($_POST['who']);
-	$query="SELECT * FROM $who WHERE username='$usrname' AND password='$pwd'";
+	if(isset($_POST['parent']) && $_POST['parent']!=0){
+		$parent=$_POST['parent'];
+		$query="SELECT * FROM $who WHERE username='$username' AND password='$pwd' AND parentHunt='$parent'";
+		} else $query="SELECT * FROM $who WHERE username='$username' AND password='$pwd'";
 	$result=mysql_query($query) or die(mysql_error());
 	if(mysql_num_rows($result)==1)
 	{

@@ -25,6 +25,13 @@ function wscript_init(x) {
 			if(student.parentHunt==hunts[x].id){
 				$('selecthunt').options[$('selecthunt').options.length] = new Option(hunts[x]['title'], hunts[x]["id"]);
 				sessionStorage.hunts=JSON.stringify(new Array(hunts[x]));
+				document.getElementById("selecthunt").value=document.getElementById("selecthunt").options[1].value;
+				document.getElementById("selecthunt").style.display="none";
+				// We still want hunts to work as an array so that way teachers/students with more than one hunt still have access to all of their hunts.
+				var hunt=hunts[x]
+				hunts=new Array();
+				hunts[0]=hunt;
+				createStudentActivityList();
 				return;
 			}
 	}
@@ -77,7 +84,7 @@ function check(form)
 		contents['lat']= morc.loc.lat();
 		contents['lng']=morc.loc.lng();
 		// Checks to make sure that all of the required attribute are filled in.
-		if(contents.aboutmedia && contents.a && contents.b && contents.howhelpful && contents.mquestion && contents.whythis && contents.yourdoubt){
+		if(contents.aboutmedia && contents.a && contents.b && contents.howhelpful && contents.mquestion && contents.yourdoubt){
 			contents.status="Unverified";
 		} else{
 			contents.status="Incomplete";

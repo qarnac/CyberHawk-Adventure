@@ -30,12 +30,11 @@ if(isset($_POST['content'])&&isset($_SESSION['login'])==true)
 		"', lng='" . esc($content->lng) . 
 		"', aboutmedia='" . esc($content->aboutmedia) .
 		"',  partner_names='" . esc($content->partner_names) .
-		"',whythis='" . esc($content->whythis) .
 		"',howhelpfull='" . esc($content->howhelpful) .
 		"',yourdoubt='" . esc($content->yourdoubt) .
 		"',mquestion='" . esc($content->mquestion) . 
 		"',choices='" . choic($content) .
-		"';");
+		"';") or die(mysql_error());
 	echo "true";
 }
 //converts the choices into json format

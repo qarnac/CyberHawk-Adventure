@@ -1,20 +1,17 @@
-<!-- Start activityView.html -->
+<!-- Start publicActivityView.html -->
 <table class="activityTable" cellpadding="5px">
-	<input type="button" name="editButton" value="Edit Activity" />
 	<tr>
 	<td class="activityPhotoCell">
 		<img name="activityImage" style="width:200px; height:200px;" />
 	</td>
 	<td class="aboutPhotoCell">
-		<div class="questionLabel" name="partner_question">Who are the partners in this group?</div>
-		<div name="partner_names"> <br /> </div>
 		<div class="questionLabel">What is this picture about?</div>
 		<div name="aboutmedia"> <br /> </div>
-<!--	"whythis" Question removed on 2/21/2013 due to the recommendation by Peter Ahearn.
-		Currently still exists in the database, but is never displayed to the user.
-		Can no longer be inserted into the database.
+<!--	
+		"whythis" Question removed on 2/21/2013.
 		<div class="questionLabel">Why did you choose this picture</div>
-		<div name="whythis"> <br /> </div> -->
+		<div name="whythis"> <br /> </div>
+		-->
 		<div class="questionLabel">How does this picture show what you've learned in class?</div>
 		<div name="howhelpfull"> <br /> </div>
 		<div class="questionLabel">What is a question you have about this picture?</div>
@@ -31,15 +28,13 @@
 		<td colspan="2">
 		<div class="questionLabel">Multiple choice question:</div>
 		<span class="multipleChoiceQuestionText" name="mquestion"></span>
-			<ol class="multipleChoiceAnswers" name="manswers">
-			</ol>
+			<form id="mcForm">
+				<input type="radio" name="mchoice" value="a" id="q0" /> <span class="questionLabel" for="q1" id="answer1"> </span>
+				<input type="radio" name="mchoice" value="b" id="q1" /> <span class="questionLabel" for="q2" id="answer2"> </span>
+				<input type="radio" name="mchoice" value="c" id="q2" /> <span class="questionLabel" for="q3" id="answer3"> </span> <br />
+				<input type="radio" name="mchoice" value="d" id="q3" /> <span class="questionLabel" for="q4" id="answer4"> </span>
+			</form>
 			</td>
 		</tr>
-	<tr>
-		<div class="questionLabel" name="commentsLabel">Teacher comments:</div>
-		<div name="comments"> <br /> </div>
-		<div class="questionLabel" name="statusLabel">Activity Status:</div>
-		<div name="status"> <br /> </div>
-	</tr>
 </table>
-<!-- End activityView.html -->
+<!-- End publicActivityView.html -->

@@ -101,19 +101,55 @@ function fillAnswerDiv(Dom, answer){
 // isStudent==2, public view.
 // TODO: Create an enum for the integer values of isStudent to help grant more clarity when checking isStudent.
 function fillActivityTable(activity, isStudent, tableNumber){
-	// In the public view, we do not want to display the names of the students.
-	if(isStudent==2){
-		document.getElementsByName("partner_question")[tableNumber].style.display="none";
-	}else{
+	// Take care of the special cases for the private view.
+	if(isStudent!=2){
 		fillAnswerDiv(document.getElementsByName("partner_names")[tableNumber], activity.partner_names);
+		document.getElementsByName("comments")[tableNumber].innerHTML=activity.comments;
+		document.getElementsByName("status")[tableNumber].innerHTML=activity.status;
+		// Sets up the multiple choice display.
+		var orderedList = document.getElementsByName("manswers")[tableNumber];
+		orderedList.className = "multipleChoiceAnswers";
+		var answerList=JSON.parse(activity.choices);
+		for (var i = 0; i < answerList.choices.length; i++) {
+			var answer = document.createElement('li');
+			if (answerList.choices[i].ans == "true") { // style correct answer
+				var answerSpan = document.createElement('span');
+				answerSpan.className = "correctAnswer";
+				answerSpan.innerHTML = answerList.choices[i].content;
+				answer.appendChild(answerSpan);
+			}
+			else {
+				answer.innerHTML = answerList.choices[i].content;
+			}
+			orderedList.appendChild(answer);
+		}
+		// Else we have to take care of the special cases for public view.
+	} else{
+		var choices=JSON.parse(activity.choices).choices;
+		if(choices[0]!= undefined){
+			document.getElementById("answer1").innerHTML=choices[0].content;
+			document.getElementsByName("mchoice")[tableNumber*4].onclick=function(){radioSelect(document.getElementById("q0"), document.getElementById("answer1"), choices[0].ans!="false");};
+		} else{ document.getElementById("q0").style.display="none"; }
+		if(choices[1]!=undefined){
+			document.getElementById("answer2").innerHTML=choices[1].content;
+			document.getElementsByName("mchoice")[tableNumber*4+1].onclick=function(){radioSelect(document.getElementById("q1"), document.getElementById("answer2"),choices[1].ans!="false");};
+		} else{ document.getElementById("q1").style.display="none"; }
+		if(choices[2]!=undefined){
+			document.getElementById("answer3").innerHTML=choices[2].content;
+			document.getElementsByName("mchoice")[tableNumber*4+2].onclick=function(){radioSelect(document.getElementById("q2"), document.getElementById("answer3"), choices[2].ans!="false")};
+		} else{ document.getElementById("q2").style.display="none"; }
+		if(choices[3]!=undefined){
+			document.getElementById("answer4").innerHTML=choices[3].content;
+			document.getElementsByName("mchoice")[tableNumber*4+3].onclick=function(){radioSelect(document.getElementById("q3"), document.getElementById("answer4"), choices[3].ans!="false");};
+		} else{ document.getElementById("q3").style.display="none"; }
 	}
+	// Everything else is the same for both views.
 	fillAnswerDiv(document.getElementsByName("aboutmedia")[tableNumber],activity.aboutmedia);
-	fillAnswerDiv(document.getElementsByName("whythis")[tableNumber], activity.whythis);
+	// Question removed on 2/21/2013.
+	//fillAnswerDiv(document.getElementsByName("whythis")[tableNumber], activity.whythis);
 	fillAnswerDiv(document.getElementsByName("howhelpfull")[tableNumber], activity.howhelpfull);
 	fillAnswerDiv(document.getElementsByName("yourdoubt")[tableNumber], activity.yourdoubt);
 	fillAnswerDiv(document.getElementsByName("mquestion")[tableNumber], activity.mquestion);
-	document.getElementsByName("comments")[tableNumber].innerHTML=activity.comments;
-	document.getElementsByName("status")[tableNumber].innerHTML=activity.status;
 	document.getElementsByName("activityImage")[tableNumber].src= GLOBALS.PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
 	if(isStudent==2){
 		document.getElementsByName("optionalQuestion1")[tableNumber].style.display="none";
@@ -154,42 +190,39 @@ function fillActivityTable(activity, isStudent, tableNumber){
 			}
 		} // end of dealing with additional questions.
 	}
-	var orderedList = document.getElementsByName("manswers")[tableNumber];
-	orderedList.className = "multipleChoiceAnswers";
-	var answerList=JSON.parse(activity.choices);
-	
-	for (var i = 0; i < answerList.choices.length; i++) {
-		var answer = document.createElement('li');
-		if (answerList.choices[i].ans == "true") { // style correct answer
-			var answerSpan = document.createElement('span');
-			answerSpan.className = "correctAnswer";
-			answerSpan.innerHTML = answerList.choices[i].content;
-			answer.appendChild(answerSpan);
-		}
-		else {
-			answer.innerHTML = answerList.choices[i].content;
-		}
-		orderedList.appendChild(answer);
-	}
+
 	if(isStudent==1){
 		document.getElementsByName("editButton")[tableNumber].onclick=function(){editActivityAsStudent(activity);};
-	} else if(isStudent==2){
-	document.getElementsByName("editButton")[tableNumber].style.display="none";
-	} else if(activity.status!="incomplete"){
+	} else if(activity.status!="incomplete" && isStudent!=2){
 		document.getElementsByName("editButton")[tableNumber].onclick=function(){ addTeacherComments(document.getElementsByName("editButton")[tableNumber].parentNode,
 																									document.getElementsByName("editButton")[tableNumber],
 																									activity.id);};
 	}else{
-		document.getElementsByName("editButton")[tableNumber].style.display="none";
+		if(isStudent!=2) document.getElementsByName("editButton")[tableNumber].style.display="none";
 	}
 }
+
+// This is the function that is called when a radio button is clicked in the public view.
+// Changes the view of the button and the label, changing whether they answered correctly or incorrectly.
+function radioSelect(button, label, isCorrect){
+		// Hide the original button, and then display the checkmark to indicate they answered correctly.
+		button.style.display="none";
+		var img=document.createElement("img");
+		if(isCorrect) img.src=GLOBALS.HTML_FOLDER_LOCATION + "apply.png";
+		else img.src=GLOBALS.HTML_FOLDER_LOCATION + "delete.png";
+		// We have to specify the parent div for the label that we want to insert before in.
+		document.getElementById("mcForm").insertBefore(img, label);
+
+}
+
 
 // Is now also called from studentActivityList to create the list.
 // Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
 function generateActivityView(activity, isStudent, tableNumber) {
 	var activityTable = document.createElement('table');
-	activityTable.innerHTML=GLOBALS.activityView;
-	setTimeout(function(){fillActivityTable(activity, isStudent, tableNumber);}, 75);
+	if(isStudent==2) activityTable.innerHTML=GLOBALS.publicActivityView;
+	else activityTable.innerHTML=GLOBALS.activityView;
+	setTimeout(function(){fillActivityTable(activity, isStudent, tableNumber);}, 500);
 	return activityTable;
 }
 
@@ -311,7 +344,8 @@ function editActivityAsStudent(activity) {
 	// Sets up the non-multiple choice questions.
 	document.getElementsByName("partner_names")[0].innerHTML = activity.partner_names;
 	document.getElementsByName("aboutmedia")[0].innerHTML = activity.aboutmedia;
-	document.getElementsByName("whythis")[0].innerHTML = activity.whythis;
+	// Question removed on 2/21/2013
+//	document.getElementsByName("whythis")[0].innerHTML = activity.whythis;
 	document.getElementsByName("howhelpful")[0].innerHTML = activity.howhelpfull;
 	document.getElementsByName("yourdoubt")[0].innerHTML = activity.yourdoubt;
 	document.getElementsByName("mquestion")[0].innerHTML = activity.mquestion;
@@ -385,7 +419,7 @@ function submitEdit(id) {
 			ajax("content=" + mediaContents, PHP_FOLDER_LOCATION + "updateImage.php", function(serverResponse){console.log(serverResponse);});
 		}
 		// Checks to make sure that all of the required attribute are filled in.
-		if(contents.aboutmedia && contents.a && contents.b && contents.howhelpful && contents.mquestion && contents.whythis && contents.yourdoubt){
+		if(contents.aboutmedia && contents.a && contents.b && contents.howhelpful && contents.mquestion && contents.yourdoubt){
 			contents.status="Unverified";
 		} else{
 			contents.status="Incomplete";

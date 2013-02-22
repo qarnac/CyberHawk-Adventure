@@ -38,10 +38,7 @@ function initializePublicMapDisplay(hunts){
 	for(var i=0; i<hunts.length; i++){
 		// Second parameter is the condensed creation of the hunt bounds.
 		rectangles.push(createRectangleOverlay(mapInstance, new google.maps.LatLngBounds(new google.maps.LatLng(hunts[i].minlat, hunts[i].minlng), new google.maps.LatLng(hunts[i].maxlat, hunts[i].maxlng))));
-		
-
 	}
-	
 	// Now to set up the list.
 	var table=document.getElementById("huntTable");
 	// Anytime the map gets moved, we want to update what hunts the list is displaying.
@@ -86,21 +83,7 @@ function displayVisibleHunts(map, hunts, table, rectangles){
 				// The first time a row is clicked, it selects the hunt, and then unselects all other hunts.
 				// If the row is clicked again, it'll zoom into that hunt, and display the activities for that hunt.
 				row.onclick=function(){
-					// Loop through rectangles and unhighlight all the rectangles.
-					for(var j=0; j<rectangles.length;j++){
-						if(rectangles[j].fillColor=="#FFFF00" && j!=this.rectNumber){ 
-						var rectOptions = {
-							strokeColor : "#B7DDF2",
-							fillColor : "#B7DDF2"
-							};
-						rectangles[j].setOptions(rectOptions);
-						}
-					}
-					for(var j=0; j<table.rows.length; j++){
-						if(table.rows[j].className=="highlight" && table.rows[j]!=this)
-							table.rows[j].className="";
-					}
-					
+					deselectAllHunts(rectangles,this);			
 					if(this.className==""){
 						// Change the color of the table row, and the hunt display on the map.
 						this.className="highlight";
@@ -110,17 +93,20 @@ function displayVisibleHunts(map, hunts, table, rectangles){
 						};
 						rectangles[this.rectNumber].setOptions(rectOptions);
 					} else if(this.className=="highlight"){
+						document.getElementById("studentLogin").disabled=false;
 						map.panTo(rectangles[this.rectNumber].getBounds().getCenter());
 						// Get all of the activities that correspond that hunt.
 						ajax("huntid="+this.hunt.id, GLOBALS.PHP_FOLDER_LOCATION + "getAllActivitiesFromHunt.php", function(serverResponse){
 							// Loop through all of the hunts and plot only the hunts with a status of completed.
 							activities=JSON.parse(serverResponse);
+							rectangles.placemarks=new Array();
 							for(var i=0; i<activities.length; i++){
 								// TODO:  We need to create a new table display for the public view.
 								// TODO: Get rid of displaying the unverified activities.
-								if(activities[i].status=="Verified" || activities[i].status=="unverified"){
-									createPlacemark(activities[i], map, 2);
-								}
+								// Currently making it so all activities are displayed.
+								// if(activities[i].status=="Verified" || activities[i].status=="unverified"){
+									rectangles.placemarks.push(createPlacemark(activities[i], map, 2));
+								//}
 							}
 						});
 					}
@@ -128,4 +114,88 @@ function displayVisibleHunts(map, hunts, table, rectangles){
 		}
 	}
 
+}
+
+// Called by the Teacher Login and Student Login buttons.
+// Fills in the login Area with both the labels and the inputs for the username/password.
+// Is passed whether the user is a student or a teacher.
+function createLoginDisplay(isTeacher){
+	// Create the 4 HTML elements.
+	document.getElementById("loginArea").innerHTML="";
+	var usernameLabel=document.createElement("label");
+	usernameLabel.innerHTML="username:"
+	var usernameText=document.createElement("input");
+	var passwordLabel=document.createElement("label");
+	passwordLabel.innerHTML="Password:"
+	var passwordText=document.createElement("input");
+	passwordText.type="password";
+	var button=document.createElement("button");
+	button.innerHTML="Submit!"
+	// Because the php file uses a string for isTeacher, convert it to a string.
+	var who=(isTeacher)? "teacher":"students";
+	// Create the onsubmit function for the login submit button.
+	button.onclick=function(){
+								var table=document.getElementById("huntTable");
+								var parent=0;
+								// parentHunt parameter is only used if the user is a student, so we only check for the currently
+								// selected hunt if they're trying to log in as a student.
+								if(!isTeacher)
+									for(var i=0; i<table.rows.length; i++){
+										if(table.rows[i].className=="highlight"){
+											parent=table.rows[i].hunt.id;
+											break;
+										}
+									}
+								ajax("user=" + usernameText.value + "&pwd=" + passwordText.value +"&who=" + who + "&parent=" + parent ,
+									GLOBALS.PHP_FOLDER_LOCATION + "login.php",
+										function(serverResponse){
+											if(serverResponse=="true") window.location.reload();
+											// TODO:  What  do we do if the user doesn't enter correct login information?
+											else  console.log(serverResponse);
+									});};
+	// Append the children.
+	document.getElementById("loginArea").appendChild(usernameLabel);
+	document.getElementById("loginArea").appendChild(usernameText);
+	document.getElementById("loginArea").appendChild(passwordLabel);
+	document.getElementById("loginArea").appendChild(passwordText);
+	document.getElementById("loginArea").appendChild(button);
+}
+
+
+
+// This function goes through all of the hunts and makes sure that all of them are no longer selected
+// This means that no placemarks will still be displayed on the map, all table rows will return to default class
+// and that the rectangles will go back to their default color.
+// Is called every time a row is clicked on.
+// Parameters: rectangles is the list of rectangles displayed on the map.
+// selectedHunt is the this value from the row.onclick
+function deselectAllHunts(rectangles,selectedHunt){
+	table=document.getElementById("huntTable");
+	// Loop through every row on the table.
+	for(var i=0; i<table.rows.length; i++){
+	// Unhighlight any highlighted rows (except the currently selected row).
+		if(table.rows[i].className=="highlight" && table.rows[i]!=selectedHunt)
+			table.rows[i].className="";
+	}
+	// Loop through every rectangle.
+	for(var i=0; i<rectangles.length; i++){
+		// Disable the login button.
+		document.getElementById("studentLogin").disabled=true;
+		// Return rectangle to default colors.
+		if(rectangles[i].fillColor=="#FFFF00" && i!=selectedHunt.rectNumber){ 
+			var rectOptions = {
+			strokeColor : "#B7DDF2",
+			fillColor : "#B7DDF2"
+			};
+		rectangles[i].setOptions(rectOptions);
+		// Remove placemarks from map.
+		if(rectangles.placemarks!=undefined){
+			for(var j=0; j<rectangles.placemarks.length; j++){
+				rectangles.placemarks[j].setMap(null);
+			}
+		}
+		// Remove student/teacher login textareas (if they are showing).
+		document.getElementById("loginArea").innerHTML="";
+		}
+	}
 }
