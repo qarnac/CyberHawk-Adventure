@@ -1,3 +1,5 @@
+<link rel="stylesheet" type="text/css" href= "../style/style.css"/>
+
 <div id="latlongctrl" style="width:300px; background-color: white; border-style: solid; border-width: 1px;  margin:5px; text-align:right; cursor:pointer; z-index: 0; padding:15px;" >
 	<div id="welcomeTxt" style="text-align:left;" > Please adjust the four corners of the proposed quadrant for your field trip. The geo-coordinates of the center point of your quadrant will be adjusted accordingly as you stretch the corners. By default, the geo-coordinates reflect the GPS location of your computer </div>
 	
@@ -11,24 +13,43 @@
 	<br />
 	<div  id="DMSLatLng" style="padding-bottom: 5px; padding-top: 5px; display:block; ">
 		<br />
+
+		<table>
+			<caption></caption>
+			<tr>
+				<td>
 		<select id="latNSSelect" name="latNSSelect" class="short">
 			<option value="0"> North</option>
 			<option value="1"> South</option>
 		</select>
+				</td>
+				<td>
 		<input id="latDegrees" name="latDegrees" class="float_none" style="display: inline; width: 80px;" />
+		        </td>
+		        <td>
 		<input id="latMinutes" name="latMinutes" class="float_none" style="display: inline; width:80px;" />
-		<br />
+				</td>
+			</tr>
+			<tr>
+				<td>
 		<select id="longNSSelect" name="longNSSelect" class="short">
 			<option value="0"> West </option>
 			<option value="1"> East </option>
 		</select>
+			</td>
+			<td>
 		<input id="longDegrees" name="longDegrees" class="float_none" style="display: inline; width:80px;" />
+	</td>
+	<td>
 		<input id="longMinutes" name="longMinutes" class="float_none" style="display: inline; width:80px;" />
+	</td>
+</tr>
+</table>
 		</div>
 	
 	<div style="padding-bottom: 5px; padding-top: 5px; display: none;" id="decimalLatLng">
 		<br />
-		<label class="float_none" style="display:inline;" for="latitudeIn"> Latitude </label>
+		<label class="float_none" style="display:inline;style=" for="latitudeIn"> Latitude </label>
 		<input id="latitudeIn" name="latitudeIn" />
 		<br />
 		
@@ -43,16 +64,24 @@
 	</div>
 	
 	<div style="padding-bottom: 5px; padding-top: 5px; display:block">
-		<label class="float_none" style="display:inline;" for="title"> Title: </label>
-		<input id="title" />
-		<label class="float_none" style="display:inline;" for="huntUsername"> Username: </label>
-		<input id="huntUsername" />
-		<br />
-		<label class="float_none" style="display:inline;" for="password"> Password: </label>
-		<input id="password" />
+
+		<label class="float_none" style="display:inline;vertical-align: left;" for="title"> Title: </label>
+		<input id="title" style = "vertical-align: left;">
 		<br/>
-		<label class="float_none" style="display:inline;" for="dateOfTrip"> Field Trip Date: </label>
-		<input type="date" id="dateOfTrip" />
+
+		<label class="float_none"  style="display:inline;vertical-align: left;" for="huntUsername"> Username: </label>
+		<input id="huntUsername" style = "vertical-align: left;">
+		<br/>
+		
+		<label class="float_none" style="display:inline;vertical-align: left;" for="password"> Password: </label>
+		<input id="password" style = "vertical-align: left;">
+
+		<br/>
+		
+		<label class="float_none" style="display:inline;vertical-align: left;" for="dateOfTrip"> Field Trip Date: </label>
+		<input type="date" id="dateOfTrip"  style="width = 180px;vertical-align: left;">
+		<br/>
+
 	</div>
 	
 	
