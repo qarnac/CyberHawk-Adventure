@@ -20,6 +20,9 @@
 				<th> Teacher Name </th>
 			</tr>
 		  </table>
+		  <textarea style="height:9px; width:45%" id="searchArea"></textarea>
+		  <!-- Currently the searchButton gets its onclick defined in publicView.js::initializePublicMapDisplay() --> 
+		  <button id="searchButton"> Search For Hunt </button>
 		  <button id="teacherLogin" onclick="createLoginDisplay(true)"> Teacher Login </button>
 		  <button id="studentLogin" onclick="createLoginDisplay(false)" disabled="true"> Student Login </button>
 		  <span id="loginArea" />

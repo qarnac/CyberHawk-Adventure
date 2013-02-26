@@ -43,7 +43,8 @@ function initializePublicMapDisplay(hunts){
 	var table=document.getElementById("huntTable");
 	// Anytime the map gets moved, we want to update what hunts the list is displaying.
 	google.maps.event.addListener(mapInstance, 'bounds_changed', function(){displayVisibleHunts(mapInstance, hunts, table, rectangles);});
-	
+	// Give the search button the proper parameters when clicked.
+	document.getElementById("searchButton").onclick=function(){searchHunts(document.getElementById("searchArea"), hunts, mapInstance, rectangles);};
 	
 }
 
@@ -67,17 +68,26 @@ function displayVisibleHunts(map, hunts, table, rectangles){
 			// Check center last since it requires the most proccessing.
 			|| bounds.contains(new google.maps.LatLngBounds(new google.maps.LatLng(hunts[i].minlat, hunts[i].minlng), new google.maps.LatLng(hunts[i].maxlat, hunts[i].maxlng)).getCenter()))
 		{
-				//If the hunt bound is within the visible map bounds, then add it to the table.
+			addHuntToViewTable(map, hunts[i], table, rectangles, i);
+		}
+	}
+
+}
+
+// This function is the function responsible for adding hunts to table on the public view page.
+// Is passed four different parameters, the google map object, the hunt to add to the table,
+// the table itself, the array of rectangles displayed on the map, and which hunt the hunt is in hunts.
+function addHuntToViewTable(map, hunt, table, rectangles, huntValue){
 				// For some reason, -1 is the parameter you pass to indicate you want the row inserted at the end.
 				var row=table.insertRow(-1);
-				row.insertCell(-1).innerHTML=hunts[i].title;
+				row.insertCell(-1).innerHTML=hunt.title;
 				// Currently, we have no way of accessing the teachers name via the hunt.  It's starting to seem like we may want to change some structuring in the database, so I'm going to wait to add this.
 				row.insertCell(-1).innerHTML="TODO: Add teacher name"
 				// This is the rectangle the user currently has selected.
-				if(rectangles[i].fillColor=="#FFFF00") row.className="highlight";
+				if(rectangles[huntValue].fillColor=="#FFFF00") row.className="highlight";
 				// Each row needs it's own rectNumber stored in itself, so that way each onclick function can have it's own rectNumber.
-				row.rectNumber=i;
-				row.hunt=hunts[i];
+				row.rectNumber=huntValue;
+				row.hunt=hunt;
 				// Store things in local memory so it's usable in the onclick function.
 				var map=map;
 				// The first time a row is clicked, it selects the hunt, and then unselects all other hunts.
@@ -101,7 +111,6 @@ function displayVisibleHunts(map, hunts, table, rectangles){
 							activities=JSON.parse(serverResponse);
 							rectangles.placemarks=new Array();
 							for(var i=0; i<activities.length; i++){
-								// TODO:  We need to create a new table display for the public view.
 								// TODO: Get rid of displaying the unverified activities.
 								// Currently making it so all activities are displayed.
 								// if(activities[i].status=="Verified" || activities[i].status=="unverified"){
@@ -111,9 +120,6 @@ function displayVisibleHunts(map, hunts, table, rectangles){
 						});
 					}
 				};
-		}
-	}
-
 }
 
 // Called by the Teacher Login and Student Login buttons.
@@ -197,5 +203,28 @@ function deselectAllHunts(rectangles,selectedHunt){
 		// Remove student/teacher login textareas (if they are showing).
 		document.getElementById("loginArea").innerHTML="";
 		}
+	}
+}
+
+// This function reads the string from the searchArea, and then searches through all hunt titles for any hunts containing that phrase.
+// Currently, we are going to do a simple .contains to search through all of the hunts.  Maybe in the future we'll want a more complicated
+// search?
+// Currently has four parameters passed, searchArea is the HTML node that contains the phrase the user is searching for.
+// hunts is the variable containing the list of all of the hunts.
+// map is just the google map object.
+// rectangles is an array that currently contains all of the rectangles being displayed on the map.
+function searchHunts(searchArea, hunts, map, rectangles){
+	var table=document.getElementById("huntTable");
+	// Deletes all rows except the header row from the table.
+	while(table.rows.length>1) table.deleteRow(1);
+	// Pass deselectAllHunts -1 as the selectedHunt because there can be no hunt in the -1 index, therefore no hunt is selected.
+	deselectAllHunts(rectangles, -1);
+	var searchPhrase=searchArea.value;
+	var containedHunts=new Array();
+	// Loop through all of the hunts and check if any of them contain the phrase in their title.
+	for(var i=0; i<hunts.length; i++){
+		// indexOf returns -1 if it doesn't contain it (== false) returns the starting index (>0 ==true) if it contains that string.
+		// Currently the only normalization of strings that occurs is lowercasing.  Further normalization we might chose to do includes removing punctuation.
+		if(hunts[i].title.toLowerCase().indexOf(searchPhrase.toLowerCase())+1) addHuntToViewTable(map, hunts[i], table, rectangles, i);
 	}
 }
