@@ -104,8 +104,11 @@ function fillActivityTable(activity, isStudent, tableNumber){
 	// Take care of the special cases for the private view.
 	if(isStudent!=2){
 		fillAnswerDiv(document.getElementsByName("partner_names")[tableNumber], activity.partner_names);
+		/*
+		We no longer want to display the teacher comments/status in the activityView.
 		document.getElementsByName("comments")[tableNumber].innerHTML=activity.comments;
 		document.getElementsByName("status")[tableNumber].innerHTML=activity.status;
+*/
 		// Sets up the multiple choice display.
 		var orderedList = document.getElementsByName("manswers")[tableNumber];
 		orderedList.className = "multipleChoiceAnswers";
@@ -193,10 +196,13 @@ function fillActivityTable(activity, isStudent, tableNumber){
 
 	if(isStudent==1){
 		document.getElementsByName("editButton")[tableNumber].onclick=function(){editActivityAsStudent(activity);};
+		/*
+		Removing this section removes the ability for teachers to edit the activity and add their own comments/accept the activity.
 	} else if(activity.status!="incomplete" && isStudent!=2){
 		document.getElementsByName("editButton")[tableNumber].onclick=function(){ addTeacherComments(document.getElementsByName("editButton")[tableNumber].parentNode,
 																									document.getElementsByName("editButton")[tableNumber],
 																									activity.id);};
+		*/
 	}else{
 		if(isStudent!=2) document.getElementsByName("editButton")[tableNumber].style.display="none";
 	}
@@ -270,6 +276,8 @@ function generateMultipleChoiceList(question, answerList) {
 var huntboundary;
 // This is the function that is going to be called when a teacher clicks on the edit button for an activity.
 // Changes the view of that specific activity to the teacher edit view.
+// CURRENTLY DOES NOT WORK.  activityTable.ChildNodes[2].childNodes[1].innerHTML cannot read property of undefined.
+// CURRENTLY NOT USED.
 function addTeacherComments(activityTable, editButton, activity_id){
 	var textView=document.createElement("textarea");
 	textView.innerHTML=activityTable.childNodes[2].childNodes[1].innerHTML;

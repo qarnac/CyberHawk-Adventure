@@ -67,10 +67,14 @@ function mapListButton(){
 	else {
 	// Currently, not a lot is done to show the list again, so it doesn't need to be wrapped into a function.
 		document.getElementById("activity").removeChild(document.getElementById("map_canvas"))
-		if(document.getElementById("slist")) document.getElementById("slist").style.display="block";
+		var slist=document.getElementById("slist");
+		// If there is more than one student, then we want to display the list of students.
+		if(slist!=undefined && slist.options.length>1) slist.style.display="block";
+		// If there is only one student, automatically selects the first student and calls the onchange function.
+		// Does not display the slist.
 		else{
-			document.getElement
-			
+			slist.value=slist.options[0].value;
+			slist.onchange();
 		}
 		document.getElementById("mapButton").value="Map View";
 		}
