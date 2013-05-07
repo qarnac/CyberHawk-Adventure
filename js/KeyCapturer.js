@@ -69,5 +69,5 @@ function keyUp(event) {
   
 }
 
-document.onkeydown = keyDown;
-document.onkeyup = keyUp;
+window.onkeydown = keyDown;
+window.onkeyup = keyUp;

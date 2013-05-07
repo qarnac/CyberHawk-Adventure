@@ -67,7 +67,12 @@ function FileDragHover(e) {
 var morc; // image object with compressed image with geo location
 
 function FileSelectHandler(e) {
-
+	var activity=new Object();
+	form=document.getElementById("activity").childNodes[3];
+	for (var i=0; i<form.length; i++) {
+			activity[form[i].name] = form[i].value;
+	}
+	sessionStorage.activity=JSON.stringify(activity);
 	FileDragHover(e);
 	var files = e.target.files || e.dataTransfer.files;
 	if (files.length >= 1) {

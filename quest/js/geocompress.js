@@ -165,12 +165,14 @@ function submitLatLng(location) {
 		} else{
 			// TODO: Find a way to check if additional questions exist.
 			document.getElementById("activity").innerHTML=multiple;
-				document.getElementsByName("optionalQuestion1")[0].style.display="none";
-				document.getElementsByName("optionalAnswer1")[0].style.display="none";
-				document.getElementsByName("optionalQuestion2")[0].style.display="none";
-				document.getElementsByName("optionalAnswer2")[0].style.display="none";
-				document.getElementsByName("optionalQuestion3")[0].style.display="none";
-				document.getElementsByName("optionalAnswer3")[0].style.display="none";
+			var activity=JSON.parse(sessionStorage.activity);
+			var additionalAnswers={answera:activity.optionalAnswer1, answerb:activity.optionalAnswer2, answerc:activity.optionalAnswer3};
+			document.getElementsByName("interesting_url")[0].innerHTML=activity.interesting_url;
+			document.getElementsByName("partner_names")[0].innerHTML=activity.partner_names;
+			// While the next function is going to have to parse the function, it provides more usability if this function is passed the JSON encoded string.
+			// My reasoning for this is that when the additionalAnswers are taken from an activity, they will already be JSON encoded.
+			// This should be the ONLY case where additionalAnswers aren't JSON encoded by default.
+			displayAdditionalQuestions(JSON.stringify(additionalAnswers));
 		}
 	} else{
 		// TODO: How to handle the user not submitting local storage?
@@ -191,7 +193,6 @@ function submitLatLng(location) {
 function GoToControlOnSubmit() {
 		// BUG: If you move the marker out of bounds and click submit, this function still submits
 		// TODO: bounds checking?
-
 		var latitude;
 		var longitude;
 		

@@ -101,10 +101,11 @@ AnzaMarker.prototype.addGEMarker = function(ge)
 	ge.getFeatures().appendChild(me.marker);
 }
 
+// The function to add a google map marker object to a google map.
+// Parameter gm is the google map object.
 AnzaMarker.prototype.addGMMarker = function(gm)
 {
-	var me = this;
-	gm.addOverlay(me.gmMarker);
+	this.gmMarker.setMap(gm);
 }
 
 AnzaMarker.prototype.openBalloon = function(ge)
@@ -168,17 +169,12 @@ AnzaMarker.prototype.initGEMarker = function(ge)
 AnzaMarker.prototype.initGMMarker = function(gm)
 {
 	var me = this;
-
-	var questionIcon = new GIcon(G_DEFAULT_ICON);
+	var questionIcon;
+	var markerOptions = { icon:'images/icon/ball_green.png'};
 	if ( me.type == 'clue' )
-		questionIcon.image = 'images/icon/ball_green.png';
+		var markerOptions = { icon:'images/icon/ball_green.png'};
 	else if (me.type == 'question' )
-		questionIcon.image = 'images/icon/ball_red.png';
-	questionIcon.iconSize = new GSize(10, 10);
-	questionIcon.shadowSize = new GSize(1, 1);
-	questionIcon.iconAnchor = new GPoint(15, 0);
-	questionIcon.infoWindowAnchor = new GPoint(5, 1);
-	var markerOptions = { icon:questionIcon };
+		var markerOptions = { icon:'images/icon/ball_red.png'};
 	
-	me.gmMarker = new GMarker(new GLatLng(me.lat, me.lng), markerOptions);	
+	me.gmMarker = new google.maps.Marker(new google.maps.LatLng(me.lat, me.lng), markerOptions);	
 }

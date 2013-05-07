@@ -8,8 +8,8 @@ function verify()
 {
 	var user=$('username').value;
 	var pwd=$('password').value;
-	var who=$('who').value;
-	var parentHunt=0;
+	var who=getQueryVariable("who");
+	var parentHunt=getQueryVariable("parentHunt");
 	var data="user="+user+"&pwd="+pwd+"&who="+who+"&parent=" +parentHunt;
 	ajax(data, GLOBALS.PHP_FOLDER_LOCATION + "login.php",verifyLogin);
 	return false;
@@ -24,4 +24,16 @@ function verifyLogin(x)
 	window.location.reload();
 	else if(x=="false")
 	alert("Username or Password is not correct");
+}
+
+function getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            return decodeURIComponent(pair[1]);
+        }
+    }
+    console.log('Query variable %s not found', variable);
 }

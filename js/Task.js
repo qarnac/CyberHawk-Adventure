@@ -57,7 +57,7 @@ Task.prototype.addMarkersTo = function(ge, gm) {
 		me.markers[i].initGMMarker(gm);
 		me.markers[i].addGMMarker(gm);
 	
-		latlngList[i] = new GLatLng(me.markers[i].lat, me.markers[i].lng);
+		latlngList[i] = new google.maps.LatLng(me.markers[i].lat, me.markers[i].lng);
 	}
 
 	for (var i = 0; i < MODEL_BUILDS.length; i++) { 
@@ -73,8 +73,10 @@ Task.prototype.addMarkersTo = function(ge, gm) {
 	
 	latlngList.sort(SortLatLng); // sort the markers from low latitude to high latitude
 	// generate path in side map
-	var polyline = new GPolyline(latlngList, "#ff0000", 2);
-	gm.addOverlay(polyline);
+	var polyline = new google.maps.Polyline({path:latlngList, 
+											strokeColor:"#ff0000", 
+											zIndex:2,
+											map:gm});
 	
 	
 	/*

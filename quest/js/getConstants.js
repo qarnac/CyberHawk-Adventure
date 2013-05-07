@@ -39,4 +39,5 @@ function createGlobalConstant(serverResponse){
 	ajax("GET", GLOBALS.HTML_FOLDER_LOCATION + "activityView.html", function(serverResponse){GLOBALS.activityView=serverResponse;});
 	ajax("GET", GLOBALS.HTML_FOLDER_LOCATION + "huntInformation.html", function(serverResponse){GLOBALS.huntInformation=serverResponse;});
 	ajax("GET", GLOBALS.HTML_FOLDER_LOCATION + "publicActivityView.html", function(serverResponse){GLOBALS.publicActivityView=serverResponse;});
+	ajax("GET", GLOBALS.HTML_FOLDER_LOCATION + "createHunt.html", function(serverResponse){GLOBALS.createHunt=serverResponse;});
 }

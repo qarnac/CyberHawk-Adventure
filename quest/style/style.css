@@ -362,7 +362,7 @@ input[type="number"] {
 	width: 200px;
 	margin: 2px 0 5px 5px;
 }
-input[type="submit"] {
+input[type="submitButton"] {
 
 	float: right;
 	margin: 2px 0 5px 5px;
@@ -504,4 +504,56 @@ label.float_none {
 #students {
 	float:right;
 }
+/* Styling class used for the infoWindow when a student activity is clicked on
+on the google map object. */
+.infoWindow {
+}
 
+/* Start styling for createHunt.html */
+form#createHuntForm textarea{
+	float:left;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	-khtml-border-radius:10px;
+	border-radius:10px;
+	background:#e9fff9;
+}
+form#createHuntForm input{
+	float:left;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	-khtml-border-radius:10px;
+	border-radius:10px;
+	background:#e9fff9;
+}
+form#createHuntForm{
+	background:#d2fff2;
+	height:100%;
+	width:100%
+}
+form#createHuntForm fieldset{
+	width:100%;
+}
+
+form#createHuntForm button{
+	background:#17d0db;
+	border:none;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	-khtml-border-radius:10px;
+	border-radius:10px;
+	font-size:18px;
+	font-weight:bold;
+	padding: 5px 10px;
+	text-shadow: 0 1px 1px #000000;
+	color: #ffffff;
+}
+form#createHuntForm button:hover{
+	cursor:pointer;
+	background:#0d7c83;
+}
+form#createHuntForm legend {
+	color: #0d7c83;
+	font-size: 16px;
+	font-weight: bold;
+}

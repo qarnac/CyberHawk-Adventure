@@ -26,6 +26,23 @@ function initializeMap(lat, lng){
 	return mapInstance;
 }
 
+// This function is called from createHunt.html
+// The purpose of this function is to display the hunt bounds on the right side of the form.
+function displayHuntBounds(){
+	var bounds=JSON.parse(sessionStorage.toPlot);
+	// Convert the bounds to a google maps LatLngBounds object.
+	bounds=new google.maps.LatLngBounds(new google.maps.LatLng(bounds.minLat, bounds.minLng), new google.maps.LatLng(bounds.maxLat, bounds.maxLng));
+	// Initialize the options for the google maps.
+	var myOptions = {
+		center :new google.maps.LatLng(bounds.getCenter().lat(),bounds.getCenter().lng()),
+		zoom : 14,
+		mapTypeId : google.maps.MapTypeId.SATELLITE
+	};
+	var map=new google.maps.Map(document.getElementById("map"), myOptions);
+	var rectangle=createRectangleOverlay(map, bounds);
+	rectangle.setDraggable(false);
+}
+
 function removeMap(){
 	$('map_canvas').style.display = 'none';
 	$('contents').style.display = 'block';
@@ -72,21 +89,27 @@ function searchAddress(){
 }
 
 // Is called by the submit button in the gotoControlBox submit for a new hunt.
-function submitNewHunt(toPlot){
+function submitNewHunt(){
+	var toPlot=JSON.parse(sessionStorage.toPlot);
+	var additionalQuestions=new Object();
+	additionalQuestions["questiona"]=document.getElementById("additionalQuestion1").value;
+	additionalQuestions["questionb"]=document.getElementById("additionalQuestion2").value;
+	additionalQuestions["questionc"]=document.getElementById("additionalQuestion3").value;
 	var date=(Date.parse(document.getElementById("dateOfTrip").value)/1000)+86400
 	ajax("title=" + document.getElementById("title").value +
 		"&username=" + document.getElementById("huntUsername").value +
 		"&password=" + document.getElementById("password").value +
-		"&maxLat=" + toPlot.getBounds().getNorthEast().lat() +
-		"&minLat=" + toPlot.getBounds().getSouthWest().lat() +
-		"&minLng=" + toPlot.getBounds().getSouthWest().lng() +
-		"&maxLng=" + toPlot.getBounds().getNorthEast().lng() +
+		"&maxLat=" + toPlot.maxLat +
+		"&minLat=" + toPlot.minLat +
+		"&minLng=" + toPlot.minLng +
+		"&maxLng=" + toPlot.maxLng +
+		"&additionalQuestions=" + JSON.stringify(additionalQuestions) +
 		"&dateOfTrip=" + date
-		, PHP_FOLDER_LOCATION + "createHunt.php", function(serverResponse){
+		, GLOBALS.PHP_FOLDER_LOCATION + "createHunt.php", function(serverResponse){
 			if(serverResponse=="success") window.location.reload();
 			else console.log(serverResponse);
 		});
-	
+	return false;
 }
 
 function takeMeThereActivity(toPlot){
@@ -108,10 +131,46 @@ function takeMeThereActivity(toPlot){
 				
 			latValue = toDecimal(latDirection, document.getElementById("latDegrees").value, document.getElementById("latMinutes").value);
 			longValue = toDecimal(longDirection, document.getElementById("longDegrees").value, document.getElementById("longMinutes").value);
-			}
-		placeMarker(toPlot, new google.maps.LatLng(latValue, longValue));
-		
+		}
+	placeMarker(toPlot, new google.maps.LatLng(latValue, longValue));	
+}
+// This is the function that is called when the users clicks the edit lat/lng button on the createHunt.html form.
+// The goal of this function is to store all entered values into the sessionStorage and then create the map view.
+function editHuntLatLng(){
+	var form=document.getElementById("createHuntForm");
+	var answers=new Object();
+	for(var i = 0; i < form.length; i++) {
+			answers[form[i].id] = form[i].value;
 	}
+	sessionStorage.huntInformation=JSON.stringify(answers);
+	createhunt();
+}
+// This is the new function that is called from clicking the submit button in the new hunt control.
+// The goal of this function is to remove the map display, and show the new hunt form.
+// The variable toPlot is the hunt boundaries.  Store that into sessionStorage.
+function displayNewHuntForm(toPlot){
+	// Store toPlot into the sessionStorage.
+	var bounds=new Object();
+	bounds.maxLat=toPlot.getBounds().getNorthEast().lat();
+	bounds.minLat=toPlot.getBounds().getSouthWest().lat();
+	bounds.minLng=toPlot.getBounds().getSouthWest().lng();
+	bounds.maxLng=toPlot.getBounds().getNorthEast().lng();
+	sessionStorage.toPlot=JSON.stringify(bounds);
+	// The display is going to be needed a lot, so store it in a variable for faster runtime.
+	var display=document.getElementById("activity");
+	display.innerHTML=GLOBALS.createHunt;
+	// Force a DOM refresh.
+	display.style.display="none";
+	display.style.display="block";
+	// If the user has previously entered information about the hunt, plug it in.
+	if(sessionStorage.huntInformation!=""){
+		var hunt=JSON.parse(sessionStorage.huntInformation);
+		for(element in hunt){
+			document.getElementById(element).value=hunt[element];
+		}
+	}
+	displayHuntBounds();
+}	
 
 // Is called by createGotoControl in order to fill in the goToControlbox and set up events.
 function initializeLatLng(toPlot, isRectangle){
@@ -126,7 +185,7 @@ function initializeLatLng(toPlot, isRectangle){
 	document.getElementById("longMinutes").value=lngDMS.minutes;
 	google.maps.event.addDomListener(document.getElementById("decimalDMSSelect"), 'change', changeSelectedLatLngDisplay);
 	if(isRectangle){
-		google.maps.event.addDomListener(document.getElementById("submitButton"), 'click', function(event){ submitNewHunt(toPlot); });
+		google.maps.event.addDomListener(document.getElementById("submitButton"), 'click', function(event){ displayNewHuntForm(toPlot); });
 		google.maps.event.addDomListener(document.getElementById("takeMeThere"), 'click', function(event) { updateRectangle(toPlot);});
 	} else{
 		google.maps.event.addDomListener(document.getElementById("submitButton"), 'click', function(event){ GoToControlOnSubmit(); });
@@ -177,11 +236,14 @@ function createGotoControl(map, center, onSubmit, toPlot, isRectangle)
 	// file and then plug in the values where needed.
 	if(isRectangle){
 		ajax("GET", GLOBALS.HTML_FOLDER_LOCATION + "newHuntControl.html", function(serverResponse){
+			document.body.appendChild(ctrlDiv);
 			ctrlDiv.innerHTML=serverResponse;
 			map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(ctrlDiv);
-			// Using setTimeout enables the browser to reset the DOM before executing the code to fill it in.
-			// TODO:  Find a reliable way to handle this.
-			setTimeout(function(){initializeLatLng(toPlot, isRectangle);}, 750);
+			// Changing the display to none/block is a reliable way to refresh the DOM.
+			ctrlDiv.style.display="none";
+			ctrlDiv.style.display="block";
+			initializeLatLng(toPlot, isRectangle);
+			document.body.removeChild(ctrlDiv);
 			});
 		sessionStorage.lat=center.lat();
 		sessionStorage.lng=center.lng();

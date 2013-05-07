@@ -3,15 +3,20 @@
 	include '../php/getConstants.php';
 	$content=$_POST['contents'];
 	$content=json_decode($content);
+		// If the optional questions are answered, store the answers into an array and JSON encode the array to store into the database.
+	$answera=(isset($content->optionalAnswer1))? $content->optionalAnswer1:"";
+	$answerb=(isset($content->optionalAnswer2))? $content->optionalAnswer2:"";
+	$answerc=(isset($content->optionalAnswer3))? $content->optionalAnswer3:"";
+	$additionalAnswers=array("answera"=>$answera, "answerb"=>$answerb, "answerc"=>$answerc);
+	$additionalAnswers=json_encode($additionalAnswers);
+
 	mysql_query("UPDATE stud_activity" .
-				" SET aboutmedia=" .'"'. mysql_escape_string($content->aboutmedia) .'"' .
-				", partner_names=" .'"'. mysql_escape_string($content->partner_names) .'"' .
-//				" , whythis=" . '"'.mysql_escape_string($content->whythis) .'"'.
-				" , howhelpfull=" . '"'.mysql_escape_string($content->howhelpful).'"' .
-				" , yourdoubt=" . '"'.mysql_escape_string($content->yourdoubt) .'"'.
-				" , mquestion=" . '"'.mysql_escape_string($content->mquestion) .'"' .
+				" SET partner_names=" .'"'. mysql_escape_string($content->partner_names) .'"' .
+				", additionalAnswers=" .'"' . mysql_escape_string($additionalAnswers) .'"' .
 				" , choices=" . '"' . mysql_escape_string(choic($content)) .'"' .
 				" , status=" . '"' . mysql_escape_string($content->status) . '"' .
+				" , mquestion=" . '"' . mysql_escape_string($content->mquestion) . '"' .
+				", interesting_url=" . '"' . mysql_escape_string($content->interesting_url) . '"' .
 				" WHERE  `id` = " . mysql_escape_string($content->id) . ";") or die(mysql_error());
 				
 	echo "true";

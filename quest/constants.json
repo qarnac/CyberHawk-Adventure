@@ -1,6 +1,5 @@
 {
-"EMPTY_QUESTION_RESPONSE":"This question has not been responded to.",
-"NEW_ACTIVITY_MAP_INSTRUCTIONS":"Please enter the latitude and longitude for the place in your photo. Click <strong>'Take me there!'</strong> to find this place on the map.  If the map takes you to the right place, click <strong>'Submit!'</strong>",
+"EMPTY_QUESTION_RESPONSE":"N/A",
 "DEFAULT_LAT":33.128760,
 "DEFAULT_LNG":-117.159450,
 "DEFAULT_RECT_SIZE":0.012810068401734043,

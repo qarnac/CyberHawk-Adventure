@@ -34,9 +34,9 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 		
 		<script type="text/javascript" src="http://www.google.com/jsapi"></script>
 		
-		<!--Google Map API
-		<script src="http://maps.google.com/maps?file=api&v=2&key=AIzaSyDSwGeMX946SO8b3_sZqqAbCzM5eloG-os"></script>
-		-->
+		<script type="text/javascript"
+      src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDhO5A_ntE4_02AkVzfEerAmBJjVQKy7mk&sensor=false">
+    </script>
 		<script type="text/javascript" src="js/config.js"></script>
 		<script type="text/javascript" src="js/index.js"></script>
 
@@ -58,7 +58,6 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 			var id=<? echo $_REQUEST['q'];?>;
 
 			google.load("earth", "1");
-			google.load("maps", "2.99");
 	
 			
 			var ge = null;
@@ -90,10 +89,12 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 			}
 
 			function init() {
-				if (GBrowserIsCompatible()) {
-					gm = new GMap2(document.getElementById("map_canvas"));
-					sideMap = new SideMap(gm);
-				}
+				gm = new google.maps.Map(document.getElementById("map_canvas"), {
+																				zoom: 6,
+																				center: new google.maps.LatLng(57.8, 14.0),
+																				mapTypeId: google.maps.MapTypeId.SATELLITE
+																				});
+				sideMap = new SideMap(gm);
 				
 				
 				document.getElementById("tele").focus();

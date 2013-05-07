@@ -1,5 +1,10 @@
+// This is the function that seems to initialize the map on the left?
+// topMap is the google map object being passed to this function.
+// I really have no idea what all of the values being set to for the sideMap are
+// used for.
 function SideMap(topMap) {
 	var me = this;
+	me.imagepath = "images/hawks/car_left_";
 
 	me.topMap = topMap;
 	me.mapLevel = 11;
@@ -12,34 +17,25 @@ function SideMap(topMap) {
 	me.loopCounter = 0;
 	me.carMarker = null;
 
-	me.imagepath = "images/hawks/car_left_";
 	var carIcon;
 	var markerOptions;
 	var widthOfCar = .000020;
 	var heightOfCar = .000030;
 
-	if (!me.topMap) return;
-	me.topMap.setCenter(new GLatLng(me.centLat, me.centerLong), me.mapLevel);
-	me.topMap.setMapType(G_SATELLITE_MAP);
-	// Create our "tiny" marker icon
-	carIcon = new GIcon(G_DEFAULT_ICON);
-	carIcon.image = me.imagepath+"0.png";
-	carIcon.iconSize = new GSize(40, 40);
-	carIcon.shadowSize = new GSize(1, 1);
-	carIcon.iconAnchor = new GPoint(12, 12);
-	carIcon.infoWindowAnchor = new GPoint(5, 1);
-	markerOptions = { icon:carIcon };
-
-	var point = new GLatLng(me.centLat,me.centerLong);
-	me.carMarker = new GMarker(point, markerOptions);
-	me.topMap.addOverlay(me.carMarker);
+	topMap.setCenter(new google.maps.LatLng(me.centLat, me.centerLong));
+	topMap.setZoom(10);
+	new google.maps.Marker({
+      position: new google.maps.LatLng(me.centLat, me.centerLong),
+      map: me.topMap,
+      icon: me.imagepath + "0.png"
+	});
 }
 
 SideMap.prototype.setZoomLevel = function(lv) {
 	var me = this;
 
 	me.mapLevel = lv;
-	me.topMap.setCenter(new GLatLng(me.centLat, me.centerLong), me.mapLevel);
+	me.topMap.setCenter(new google.maps.LatLng(me.centLat, me.centerLong), me.mapLevel);
 }
 
 SideMap.prototype.refresh = function(centLat, centerLong, centerAlt, heading )

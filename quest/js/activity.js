@@ -54,7 +54,7 @@ function feedactivity(x, list_box) {
 }
 
 // This is the listbox which houses each teacher's students.
-function listbox(activityList) {
+function listbox(activityList){
 	var temp = document.createElement('select');
 	temp.id = 'slist';
 	temp.size = 20;
@@ -145,15 +145,29 @@ function fillActivityTable(activity, isStudent, tableNumber){
 			document.getElementById("answer4").innerHTML=choices[3].content;
 			document.getElementsByName("mchoice")[tableNumber*4+3].onclick=function(){radioSelect(document.getElementById("q3"), document.getElementById("answer4"), choices[3].ans!="false");};
 		} else{ document.getElementById("q3").style.display="none"; }
+		if(choices[4]!=undefined){
+			document.getElementById("answer5").innerHTML=choices[4].content;
+			document.getElementsByName("mchoice")[tableNumber*4+4].onclick=function(){radioSelect(document.getElementById("q4"), document.getElementById("answer5"), choices[4].ans!="false");};
+		} else{ document.getElementById("q4").style.display="none"; }
 	}
 	// Everything else is the same for both views.
-	fillAnswerDiv(document.getElementsByName("aboutmedia")[tableNumber],activity.aboutmedia);
-	// Question removed on 2/21/2013.
-	//fillAnswerDiv(document.getElementsByName("whythis")[tableNumber], activity.whythis);
-	fillAnswerDiv(document.getElementsByName("howhelpfull")[tableNumber], activity.howhelpfull);
-	fillAnswerDiv(document.getElementsByName("yourdoubt")[tableNumber], activity.yourdoubt);
 	fillAnswerDiv(document.getElementsByName("mquestion")[tableNumber], activity.mquestion);
+	var link=document.createElement("a");
+	document.getElementsByName("interesting_url")[tableNumber].innerHTML="";
+	document.getElementsByName("interesting_url")[tableNumber].appendChild(link);
+	fillAnswerDiv(link, activity.interesting_url);
+	fillAnswerDiv(document.getElementsByName("partner_names")[tableNumber], activity.partner_names);
+;
+	if(activity.interesting_url!=""){
+		link.setAttribute("href", activity.interesting_url)
+		link.onclick=function(){
+			var win=window.open(activity.interesting_url, "_blank");
+			win.focus();
+			return false;
+		}
+	}
 	document.getElementsByName("activityImage")[tableNumber].src= GLOBALS.PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
+	/*
 	if(isStudent==2){
 		document.getElementsByName("optionalQuestion1")[tableNumber].style.display="none";
 		document.getElementsByName("optionalAnswer1")[tableNumber].style.display="none";
@@ -161,7 +175,7 @@ function fillActivityTable(activity, isStudent, tableNumber){
 		document.getElementsByName("optionalAnswer2")[tableNumber].style.display="none";
 		document.getElementsByName("optionalQuestion3")[tableNumber].style.display="none";
 		document.getElementsByName("optionalAnswer3")[tableNumber].style.display="none";
-	}else {
+	} */
 		var hunt=JSON.parse(sessionStorage.hunts)[getHuntSelectNumber(activity.hunt_id)];
 		if(hunt.additionalQuestions==undefined || hunt.additionalQuestions==""){
 			document.getElementsByName("optionalQuestion1")[tableNumber].style.display="none";
@@ -173,7 +187,7 @@ function fillActivityTable(activity, isStudent, tableNumber){
 		} else{
 			// If the student answered answered the additional questions, parse the answers.
 			// Otherwise just leave the variable blank (but still initialize)
-			if(activity.additionalQuestions) var additionalAnswers=JSON.parse(activity.additionalQuestions);
+			if(activity.additionalAnswers) var additionalAnswers=JSON.parse(activity.additionalAnswers);
 			else var additionalAnswers={a:"",b:"",c:""};
 			// Parse the questions from the hunt.
 			var additionalQuestions=JSON.parse(hunt.additionalQuestions);
@@ -181,18 +195,18 @@ function fillActivityTable(activity, isStudent, tableNumber){
 			// Fill in the Divs with the questions and answers (only if they exist).
 			if(additionalQuestions.questiona){
 				document.getElementsByName("optionalQuestion1")[tableNumber].innerHTML=additionalQuestions.questiona;
-				fillAnswerDiv(document.getElementsByName("optionalAnswer1")[tableNumber], additionalAnswers.a);
+				fillAnswerDiv(document.getElementsByName("optionalAnswer1")[tableNumber], additionalAnswers.answera);
 			}
 			if(additionalQuestions.questionb){
 				document.getElementsByName("optionalQuestion2")[tableNumber].innerHTML=additionalQuestions.questionb;
-				fillAnswerDiv(document.getElementsByName("optionalAnswer2")[tableNumber], additionalAnswers.b);
+				fillAnswerDiv(document.getElementsByName("optionalAnswer2")[tableNumber], additionalAnswers.answerb);
 			}
 			if(additionalQuestions.questionc){
 				document.getElementsByName("optionalQuestion3")[tableNumber].innerHTML=additionalQuestions.questionc;
-				fillAnswerDiv(document.getElementsByName("optionalAnswer3")[tableNumber], additionalAnswers.c);
+				fillAnswerDiv(document.getElementsByName("optionalAnswer3")[tableNumber], additionalAnswers.answerc);
 			}
 		} // end of dealing with additional questions.
-	}
+	
 
 	if(isStudent==1){
 		document.getElementsByName("editButton")[tableNumber].onclick=function(){editActivityAsStudent(activity);};
@@ -224,11 +238,16 @@ function radioSelect(button, label, isCorrect){
 
 // Is now also called from studentActivityList to create the list.
 // Added isStudent parameter so that way the specifications that only need to be shown to teachers aren't shown to students.
+// Is also called from createPlacemark for the activity map.
 function generateActivityView(activity, isStudent, tableNumber) {
 	var activityTable = document.createElement('table');
-	if(isStudent==2) activityTable.innerHTML=GLOBALS.publicActivityView;
-	else activityTable.innerHTML=GLOBALS.activityView;
-	setTimeout(function(){fillActivityTable(activity, isStudent, tableNumber);}, 500);
+	// activityTable is appended to the body so that way it's elements will be returned during a document.getElementsByName() request.
+	document.body.appendChild(activityTable);
+	if(isStudent==2) activityTable.insertAdjacentHTML("afterbegin",GLOBALS.publicActivityView);
+	else activityTable.insertAdjacentHTML("afterbegin",GLOBALS.activityView);
+	fillActivityTable(activity, isStudent, tableNumber);
+	// Remove the table from the body so that way the other functions can place the table wherever they would like.
+	document.body.removeChild(activityTable);
 	return activityTable;
 }
 
@@ -299,7 +318,7 @@ function addTeacherComments(activityTable, editButton, activity_id){
 function submitTeacherComments(activityTable, activity_id){
 	var comment=activityTable.childNodes[2].childNodes[1].childNodes[0].value;
 	var status=activityTable.childNodes[2].childNodes[3].childNodes[0].value;
-	var content="comments=" + comment;
+	var content="comments=" + encodeURIComponent(comment);
 	content+="&status=" + status;
 	content+="&id=" + activity_id;
 	ajax(content, PHP_FOLDER_LOCATION + "teacher_upload.php", function(){successfulCommentUpdate(activity_id, comment, status)});
@@ -345,18 +364,16 @@ function editActivityAsStudent(activity) {
 		submitEdit(activity['id']); return false;
 	};
 	// Adds the image that was already uploaded to the edit page.
-	document.getElementById("activityImage").src = PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
+	document.getElementById("activityImage").src = GLOBALS.PHP_FOLDER_LOCATION + "image.php?id=" + activity.media_id;
 	
 	// At some point in time, we need to redo the way choices is encoded.  There is no reason the following line should be needed.
 	choices=choices.choices;
 	// Sets up the non-multiple choice questions.
 	document.getElementsByName("partner_names")[0].innerHTML = activity.partner_names;
-	document.getElementsByName("aboutmedia")[0].innerHTML = activity.aboutmedia;
 	// Question removed on 2/21/2013
 //	document.getElementsByName("whythis")[0].innerHTML = activity.whythis;
-	document.getElementsByName("howhelpful")[0].innerHTML = activity.howhelpfull;
-	document.getElementsByName("yourdoubt")[0].innerHTML = activity.yourdoubt;
 	document.getElementsByName("mquestion")[0].innerHTML = activity.mquestion;
+	document.getElementsByName("interesting_url")[0].innerHTML= activity.interesting_url;
 	
 	for(var i=0; i<document.getElementById("selecthunt").options.length; i++){
 		if(document.getElementById("selecthunt").options[i].value==activity.hunt_id){
@@ -365,7 +382,7 @@ function editActivityAsStudent(activity) {
 		}
 	}
 	// Sets up whether or not to display additional questions.
-	displayAdditionalQuestions(activity.additionalQuestions);
+	displayAdditionalQuestions(activity.additionalAnswers);
 	
 	// Selects the correct Radio Button for the multiple choice questions.
 	for(var i=0; i<choices.length; i++) {
@@ -417,14 +434,14 @@ function submitEdit(id) {
 			mediaContents.lng=morc.loc.lng();
 			mediaContents.id=id;
 			mediaContents=JSON.stringify(mediaContents);
-			ajax("content="+mediaContents, PHP_FOLDER_LOCATION + "updateImage.php", function(serverResponse){ console.log(serverResponse);});
+			ajax("content="+mediaContents, GLOBALS.PHP_FOLDER_LOCATION + "updateImage.php", function(serverResponse){ console.log(serverResponse);});
 		} else if(sessionStorage.lat && sessionStorage.lng){
 			var mediaContents={};
 			mediaContents.lat=sessionStorage.lat;
 			mediaContents.lng=sessionStorage.lng;
 			mediaContents.id=id;
 			mediaContents=JSON.stringify(mediaContents);
-			ajax("content=" + mediaContents, PHP_FOLDER_LOCATION + "updateImage.php", function(serverResponse){console.log(serverResponse);});
+			ajax("content=" + mediaContents, GLOBALS.PHP_FOLDER_LOCATION + "updateImage.php", function(serverResponse){console.log(serverResponse);});
 		}
 		// Checks to make sure that all of the required attribute are filled in.
 		if(contents.aboutmedia && contents.a && contents.b && contents.howhelpful && contents.mquestion && contents.yourdoubt){
@@ -432,8 +449,13 @@ function submitEdit(id) {
 		} else{
 			contents.status="Incomplete";
 		}
+		// If the url does not start with http:// add http:// to the start.  This makes it so that when the page is linked to, it doesn't look for the page
+		// on the ouyangdev server.
+		if(contents.interesting_url.indexOf("http://")==-1 && contents.interesting_url!="") contents.interesting_url= "http://" + contents.interesting_url;
 		contents=JSON.stringify(contents);
-	ajax("contents="+contents, PHP_FOLDER_LOCATION + "updateActivity.php", successfulUpload);
+		// The encodeURIComponent enables the use of special characters such as & to be sent in the string contents.
+		// PHP automatically decodes the post data, so no changes need to be made in php code.
+	ajax("contents="+ encodeURIComponent(contents), GLOBALS.PHP_FOLDER_LOCATION + "updateActivity.php", successfulUpload);
 }
 
 function successfulUpload(serverResponse){

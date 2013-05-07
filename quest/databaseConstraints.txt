@@ -1,0 +1,17 @@
+ALTER TABLE hunt
+ADD CONSTRAINT ck_start_latlng CHECK(start_lat>=-90 AND start_lat<=90 AND start_lng>=-180 AND start_lng<=180),
+ADD CONSTRAINT ck_min_latlng CHECK(minlat>=-90 AND minlat<=90 AND minlng>=-180 AND minlng<=180),
+ADD CONSTRAINT ck_max_latlng CHECK(maxlat>=-90 AND maxlat<=90 AND maxlng>=-180 AND maxlng<=180),
+ADD CONSTRAINT fk_hunt_teacher FOREIGN KEY (teacher_id) REFERENCES teacher(id) ON DELETE CASCADE ON UPDATE CASCADE
+;
+ALTER TABLE students
+ADD CONSTRAINT fk_student_teacher FOREIGN KEY (teacher_id) REFERENCES teacher(id) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT fk_student_hunt FOREIGN KEY (parentHunt) REFERENCES hunt(id) ON DELETE CASCADE ON UPDATE CASCADE
+;
+
+ALTER TABLE stud_activity
+ADD CONSTRAINT fk_activity_hunt FOREIGN KEY(hunt_id) REFERENCES hunt(id) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT fk_activity_student FOREIGN KEY(student_id) REFERENCES students(id) ON DELETE CASCADE ON UPDATE CASCADE
+ADD CONSTRAINT ck_latlng CHECK(lat>=-90 AND lat<=90 AND lng>=-180 AND lng<=180)
+;
+

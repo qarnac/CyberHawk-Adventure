@@ -9,6 +9,7 @@ if($_SESSION['who']=="teacher"){
 	"', minlng='" . mysql_escape_string($_POST["minLng"]) . 
 	"', maxlat='" . mysql_escape_string($_POST["maxLat"]) . 
 	"', maxlng='" . mysql_escape_string($_POST["maxLng"]) . 
+	"', additionalQuestions='" . mysql_escape_string($_POST["additionalQuestions"]) .
 	"', eventdate=FROM_UNIXTIME(" . $_POST["dateOfTrip"] .
 	"), id='" . $hunt_id .
 	"', teacher_id='" . $_SESSION['id'] .

@@ -8,7 +8,7 @@
 // Simply calls the getAllActivitiesFromHunt.php, and sets jsonToMap as the callback function.
 function createTeacherMap(){
 	ajax("huntid=" + document.getElementById("selecthunt").value,
-		PHP_FOLDER_LOCATION + "getAllActivitiesFromHunt.php",
+		GLOBALS.PHP_FOLDER_LOCATION + "getAllActivitiesFromHunt.php",
 		jsonToMap);
 }
 
@@ -49,11 +49,17 @@ function createPlacemark(activity, map, isStudent){
 	marker.setMap(map);
 	// By storing the infoWindows on the map itself, there can only be one active infoWindow at a time.
 	if(map.info==undefined) map.info=new google.maps.InfoWindow();
-	map.info.open(map);
 	// This sets it up so that way an infowindow pops up and shows the text that we just created in the text variable above.
 	google.maps.event.addListener(marker, "click", function(){
-		map.info.close();
-		map.info.setContent(generateActivityView(activity, isStudent, document.getElementsByName("partner_names").length));
+	if(map.info.getMap==map) map.info.close();
+		var div=createElement("div", "");
+		div.className="infoWindow";
+		// If there is already an existing infoWindow, this if will go ahead and clear out it's content.
+		// This prevents issues when using document.getElementsByName() to edit contents within an infoWindow.
+		if(document.getElementsByClassName("infoWindow").length)
+			document.getElementsByClassName("infoWindow")[0].parentNode.removeChild(document.getElementsByClassName("infoWindow")[0])
+		div.appendChild(generateActivityView(activity, isStudent, document.getElementsByName("partner_names").length));
+		map.info.setContent(div);
 		map.info.open(map);
 		map.info.setPosition(new google.maps.LatLng(activity.lat, activity.lng));
 	});
@@ -63,18 +69,32 @@ function createPlacemark(activity, map, isStudent){
 // This is the function called by the view Map button.
 // It's responsible for setting up the display of the map, and then setting up the display of the list if the map already exists.
 function mapListButton(){
-	if(document.getElementById("map_canvas")==null) createTeacherMap();
+	document.getElementById("editHunt").value="View Hunt Info";
+	if(document.getElementById("map_canvas")==null || document.getElementById("map_canvas").style.display=="none") createTeacherMap();
 	else {
 	// Currently, not a lot is done to show the list again, so it doesn't need to be wrapped into a function.
-		document.getElementById("activity").removeChild(document.getElementById("map_canvas"))
+		// If the map_canvas exists, remove it.
+		if(document.getElementById("map_canvas")!=null) document.getElementById("map_canvas").style.display="none";
+		else{
+			
+		}
 		var slist=document.getElementById("slist");
 		// If there is more than one student, then we want to display the list of students.
-		if(slist!=undefined && slist.options.length>1) slist.style.display="block";
+		if(slist!=undefined && slist.options.length>1){
+			slist.style.display="block";
+			document.getElementById("students").style.display="block";
+		}
 		// If there is only one student, automatically selects the first student and calls the onchange function.
 		// Does not display the slist.
-		else{
+		else if(slist==undefined){
+			huntsel();
+			document.getElementById("mapButton").onclick();
+			
+		}else{
 			slist.value=slist.options[0].value;
 			slist.onchange();
+			slist.style.display="block";
+			document.getElementById("students").style.display="block";
 		}
 		document.getElementById("mapButton").value="Map View";
 		}

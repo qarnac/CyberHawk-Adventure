@@ -1,5 +1,8 @@
-<div id="latlongctrl" style="width:300px; background-color: white; border-style: solid; border-width: 1px;  margin:5px; text-align:left; cursor:pointer; z-index: 0; padding:10px;" >
-	<div id="welcomeTxt" style="text-align:left;" > Please adjust the four corners of the proposed quadrant for your field trip. The geo-coordinates of the center point of your quadrant will be adjusted accordingly as you stretch the corners. By default, the geo-coordinates reflect the GPS location of your computer </div>
+<div id="latlongctrl" style="width:300px; background-color: white; border-style: solid; border-width: 1px;  margin:5px; text-align:left; cursor:pointer; z-index: 0; padding:10px;
+    overflow-y:auto;" >
+	<div style="text-align:center;"> <strong> Mark Hunt Boundary: </strong> </div>
+	<div id="welcomeTxt" style="text-align:left;" > 
+Mark the hunt boundary by adjusting the four corners of the proposed quadrant on the map. The following geo-coordinates reflects the center point of your quadrant. Alternately, you can also enter the geo-coordinates for your hunt center directly.</div>
 	
 <!-- Start newHuntControl.html -->
 	<div>
@@ -35,9 +38,8 @@
 		<label class="float_none" style="display:inline;" for="longitudeIn"> Longitude </label>
 		<input id="longitudeIn" name="longitudeIn" />
 		<br />
-	
 	</div>
-	
+		<a id="takeMeThere" style="text-align: right;"> Take me There! </a>
 	<div>
 		<label class="float_none" style="display:inline;" for="searchBar"> Search Address: </label>
 		<input id="searchBar" />
@@ -46,25 +48,9 @@
 	
 	<br />
 	
-
-	
-	<div style="padding-bottom: 5px; padding-top: 5px; display:block">
-		<label class="float_none" style="display:inline;" for="title"> Title: </label>
-		<input id="title" />
-		<label class="float_none" style="display:inline;" for="huntUsername"> Username: </label>
-		<input id="huntUsername" />
-		<br />
-		<label class="float_none" style="display:inline;" for="password"> Password: </label>
-		<input id="password" />
-		<br/>
-		<label class="float_none" style="display:inline;" for="dateOfTrip"> Field Trip Date: </label>
-		<input type="date" id="dateOfTrip" />
-	</div>
-	
-	
 	<div>
 	<a style="background-color: green; border-style: dotted; border-width: 1px; padding: 1px; text-align:left;" id="submitButton"> Submit! </a>
-	<a id="takeMeThere" style="text-align: right; padding-left:150px"> Take me There! </a>
+	
 	</div>
 </div>
 <!-- End newHuntControl.html -->

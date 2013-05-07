@@ -9,7 +9,7 @@
 function createStudentActivityList(){
 	ajax('hunt=' + document.getElementById("selecthunt").value + // POSTS the huntid.
 		"&id=" + document.getElementById("username").innerHTML,    // Posts student firstname
-		PHP_FOLDER_LOCATION + "getStudentActivities.php", studentActivityList);  // Gives filename to post to and callback function.
+		GLOBALS.PHP_FOLDER_LOCATION + "getStudentActivities.php", studentActivityList);  // Gives filename to post to and callback function.
 }
 
 
