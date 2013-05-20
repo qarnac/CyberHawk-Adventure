@@ -7,7 +7,7 @@ include "credentials.php";	 //dbase credentials + dbase connection
 
 $qid=$_REQUEST['qid'];//pulls question id from the url 
 
-$query = "SELECT * FROM multiple_choice where qid=$qid";
+$query = "SELECT * FROM stud_activity where id=$qid";
 $ques = mysql_query($query, $dbconnect);
 $result=mysql_fetch_array($ques);
 ?>
@@ -20,7 +20,7 @@ $result=mysql_fetch_array($ques);
 					document.getElementById("content").innerHTML="<iframe src='"+alt+"' height='230' width='450'></iframe>" ;	
 
 	}
-	var rewardScore = <?php echo $result['reward'];?>;		//assigns value to reward score from database
+	var rewardScore = 100;		//assigns value to reward score from database
 	
 	var ans=JSON.parse('<?php echo $result['choices']?>');
 	answer=ans.choices;
@@ -34,8 +34,10 @@ $result=mysql_fetch_array($ques);
 /* currentPage is used to set and verify the status of the current page.
 	 if the value of currrent page = 1 means user havent succedded the activity and its havent been invoked yet,where 2 means activity is already beeen completed 
 	*/
-	var currentPage = <?php echo $result['currentpage'];?>;	//default currentpage status which is 1 by default 
-	var alt="<?php echo $result['alt'];?>";					//This has one more media location which is shown after finishing the activity sucessfully
+	var currentPage = 1;	//default currentpage status which is 1 by default 
+	// RACKAUCKAS
+	// I changed the alternate to be the interesting url, as it is another media location it seemed like it makes sense.
+	var alt="<?php echo $result['interesting_url'];?>"; //This has one more media location which is shown after finishing the activity sucessfully
 
 	function verifyAnswer()
 	{
@@ -54,12 +56,13 @@ $result=mysql_fetch_array($ques);
 					} else {
 						window.parent.appendMessageToInfoBox("You are getting closer. Try again! ", "hint");
 						radioButtons[i].parentNode.innerHTML = "";
-						rewardScore -=<?php echo $result['reward'];?>/radioButtons.length ;		//displays answer after minimum trys
+						rewardScore -=100/radioButtons.length ;		//displays answer after minimum trys
 						if(radioButtons.length<2)
 						{
 						marker.setPageStatus(currentPage, 2);
 						window.parent.updatePageBar(currentPage);
-						window.parent.appendMessageToInfoBox(" <?php echo $result['hint'];?>", "hint");
+						// RACKAUCKAS: Unfortunately, none of the questions will have a hint.
+						window.parent.appendMessageToInfoBox("", "hint");
 						window.location.reload();
 						
 						
@@ -69,7 +72,7 @@ $result=mysql_fetch_array($ques);
 				}
 			}
 		} else {
-			window.parent.appendMessageToInfoBox("<?php echo $result['hint']?>", "hint");
+			window.parent.appendMessageToInfoBox("", "hint");
 	
 
 		}
