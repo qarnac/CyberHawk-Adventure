@@ -1,5 +1,4 @@
 <?php 
-header ("Content-Type:text/xml");  //php will act as a xml document to the client side
 //================Database====================================
 include "credentials.php";	 //dbase credentials + dbase connection
 
@@ -11,9 +10,10 @@ $table_id = 'quadrants'; //this table has the information about all the quadrant
 $query = "SELECT * FROM hunts where id=$what";
 $quadrants = mysql_query($query, $dbconnect);
 
-//=============================================================
 
-$doc=new DOMDocument('1.0');	
+//=============================================================
+/*
+$doc=new DOMDocument('1.0');
 $root=$doc->createElement('task');	
 
 //===== Quadrants =========
@@ -99,6 +99,6 @@ $root=$doc->appendChild($root);
 
 echo $doc->saveXML();
 
-
+*/
 
 ?>

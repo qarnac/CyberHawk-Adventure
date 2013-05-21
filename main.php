@@ -68,6 +68,8 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 			var sideMap = null;
 			function tele()
 			{
+				/*
+				Removed for Cyberscavenger version, as all of the values were hardcoded for specific Cyberhawk quadrants.
 				if(id=="10")
 				{
 					document.getElementById("quickstop").innerHTML="<option value='0' selected>Visitor Center</option><option value='1'>Mountain Range</option><option value='2'>North Fk Palm Canyon</option><option value='3'>Collins Valley</option><option value='4'>Sheep Canyon</option><option value='5'>Bailey's Cabin</option><option value='6'>Maidenhair Falls</option><option value='7'>Hidden Spring</option>";
@@ -84,7 +86,7 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 				{
 								document.getElementById("quickstop").innerHTML="<option value='0' selected>Red Hill</option><option value='1'>Agua Caliente</option><option value='2'>Bow Willow</option><option value='3'>Egg Mountain</option><option value='4'>Mud Caves</option><option value='5'>Mtn Palm/Mary's Grove</option><option value='6'>Stromatolites</option><option value='7'>G0at Canyon Trestle</option><option value='8'>Dolomite Mine</option>";
 					}
-						
+					*/	
 			
 			}
 
@@ -96,9 +98,6 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 																				});
 				sideMap = new SideMap(gm);
 				
-				
-				document.getElementById("tele").focus();
-				tele();
 								google.earth.createInstance("map3d", initCallback, failureCallback);
 				
 			}
@@ -111,7 +110,7 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 				ge.getOptions().setMouseNavigationEnabled(false);
 				ge.getOptions().setFlyToSpeed(100);
 			
-				task = new Task('php/generate.php?q='+id);
+				task = new Task('/cyberhawk/quest/CyberhawkIntegration/php/generate.php?q='+id);
 				task.parse();  
 
 				task.addMarkersTo(ge, gm);
@@ -258,27 +257,6 @@ More information about CyberTEAM can be found at http://www.csusm.edu/cyberteam/
 					</td>
 				</tr>
 				
-				<!-- The second row is the information section. -->
-				<tr>
-					<td>
-						<div id="info_box">
-							<div id="info_content">
-							</div>
-							<br/>
-							<!-- uncommented on June 6 -->
-							<h5>For quick stops during demo, use the following drop-down list.</h5>
-							<div id="quadrant"><center>
-												<button type="button" id="tele" onClick="teleportTo(document.getElementById('quickstop').value);this.blur();">Teleport to</Button>
-</Button>  
-									<select name="quickstop" id="quickstop">
-                                  
-									</select>
-								</center>
-							</div>
-							<!-- uncommented on June 6 -->
-						</div>
-					</td>
-				</tr>
 			</table>
 			<!-- End of the table in the second column of the second row. -->
 		</td>

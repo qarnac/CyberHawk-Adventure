@@ -103,9 +103,7 @@ $result=mysql_fetch_array($ques);
 	<td width="2%"/>
 	 
 	<td>
-		<p>
-        <?php echo $result['description'];//retrives description from db
-		?>	</p>
+		
 		<script type="text/javascript">
 			if ( marker.getPageStatus(currentPage) != 2 ) {		
 				
